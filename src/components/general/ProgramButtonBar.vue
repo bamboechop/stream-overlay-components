@@ -16,7 +16,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-const buttons = ref([{ keyboardShortcutWidth: '6px', title: 'File' }, { keyboardShortcutWidth: '7px', title: 'View' }, { keyboardShortcutWidth: '7px', title: 'Play' }, { keyboardShortcutWidth: '7px', title: 'Navigate' }, { keyboardShortcutWidth: '6px', title: 'Favorites' }, { keyboardShortcutWidth: '7px', title: 'Help' }]);
+const buttons = ref([
+  { keyboardShortcutWidth: '6px', title: 'File' },
+  { keyboardShortcutWidth: '7px', title: 'View' },
+  { keyboardShortcutWidth: '7px', title: 'Play' },
+  { keyboardShortcutWidth: '7px', title: 'Navigate' },
+  { keyboardShortcutWidth: '6px', title: 'Favorites' },
+  { keyboardShortcutWidth: '7px', title: 'Help' },
+]);
 </script>
 
 <style lang="scss" scoped>

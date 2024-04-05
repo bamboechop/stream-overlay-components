@@ -46,7 +46,10 @@ defineProps<{ active: boolean; iconPath: string; text: string }>();
 }
 
 .program-button--active {
-  background-image: linear-gradient(45deg, #fff 25%, transparent 25%), linear-gradient(-45deg, #fff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #fff 75%), linear-gradient(-45deg, transparent 75%, #fff 75%);
+  background-image: linear-gradient(45deg, #fff 25%, transparent 25%),
+                    linear-gradient(-45deg, #fff 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #fff 75%),
+                    linear-gradient(-45deg, transparent 75%, #fff 75%);
   background-size: 2px 2px;
   background-position: 0 0, 0 1px, 1px -1px, -1px 0px;
   border-bottom-color: #fff;

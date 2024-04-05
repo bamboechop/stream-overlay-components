@@ -18,11 +18,8 @@ import ProgramBottomBar from '@/components/general/ProgramBottomBar.vue';
 </script>
 
 <style lang="scss" scoped>
-:global(#app) {
-  min-height: 100dvh;
-}
-
 .media-player-view {
+  background-color: #c3c3c3;
   border-bottom: 2px solid #000;
   border-left: 2px solid #efefef;
   border-right: 2px solid #000;
@@ -30,8 +27,12 @@ import ProgramBottomBar from '@/components/general/ProgramBottomBar.vue';
   display: grid;
   gap: 2px;
   grid-template-rows: 18px 18px 1fr 40px 20px;
-  height: 100vh;
+  min-height: 100dvh;
   padding: 2px;
+
+  * {
+    font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
 
   &__player {
     background-color: #62f500;

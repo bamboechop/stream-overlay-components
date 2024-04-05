@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-// @ts-expect-error
+// @ts-expect-error "cannot find module or its corresponding type declarations", I just want the icon ;_;
 import IndicatorSvg from '@/assets/indicator-horizontal.svg?component';
 </script>
 

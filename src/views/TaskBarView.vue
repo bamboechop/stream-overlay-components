@@ -39,6 +39,10 @@ const programs = ref([
   height: 29px;
   padding-top: 2px;
 
+  * {
+    font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
+
   &__border {
     background-color: #fff;
     border: 0;

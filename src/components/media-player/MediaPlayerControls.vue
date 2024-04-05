@@ -1,7 +1,11 @@
 <template>
   <div class="media-player-controls">
-    <template v-for="(control, index) of controls">
-      <template v-for="button of control">
+    <template
+      v-for="(control, controlsIndex) of controls"
+      :key="`media-player-controls-${controlsIndex}`">
+      <template
+        v-for="(button, controlIndex) of control"
+        :key="`media-player-control-button-${controlIndex}`">
         <button
           class="media-player-controls__button"
           :class="{ 'media-player-controls__button--enabled': button.enabled }"
@@ -14,7 +18,7 @@
         </button>
       </template>
       <hr
-        v-if="index + 1 < controls.length"
+        v-if="controlsIndex + 1 < controls.length"
         class="media-player-controls__divider" />
     </template>
   </div>
@@ -24,9 +28,44 @@
 import { ref } from 'vue';
 
 const controls = ref([
-  [{ enabled: false, iconPath: '/windows-95/play.icon.png' }, { enabled: true, iconPath: '/windows-95/pause.icon.png' }, { enabled: false, iconPath: '/windows-95/stop.icon.png' }],
-  [{ enabled: false, iconPath: '/windows-95/begin.icon.png' }, { enabled: false, iconPath: '/windows-95/back.icon.png' }, { enabled: false, iconPath: '/windows-95/forward.icon.png' }, { enabled: false, iconPath: '/windows-95/end.icon.png' }],
-  [{ enabled: true, iconPath: '/windows-95/fullscreen.icon.png' }],
+  [
+    {
+      enabled: false,
+      iconPath: '/windows-95/play.icon.png',
+    },
+    {
+      enabled: true,
+      iconPath: '/windows-95/pause.icon.png',
+    },
+    {
+      enabled: false,
+      iconPath: '/windows-95/stop.icon.png',
+    },
+  ],
+  [
+    {
+      enabled: false,
+      iconPath: '/windows-95/begin.icon.png',
+    },
+    {
+      enabled: false,
+      iconPath: '/windows-95/back.icon.png',
+    },
+    {
+      enabled: false,
+      iconPath: '/windows-95/forward.icon.png',
+    },
+    {
+      enabled: false,
+      iconPath: '/windows-95/end.icon.png',
+    },
+  ],
+  [
+    {
+      enabled: true,
+      iconPath: '/windows-95/fullscreen.icon.png',
+    },
+  ],
 ]);
 </script>
 

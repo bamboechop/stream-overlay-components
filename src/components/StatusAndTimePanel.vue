@@ -1,7 +1,9 @@
 <template>
   <div class="status-and-time-panel">
     <div class="status-and-time-panel__status">
-      <template v-for="path of statusIconPaths">
+      <template
+        v-for="(path, index) of statusIconPaths"
+        :key="`status-and-time-${index}`">
         <img
           alt=""
           class="status-and-time-panel__icon"
