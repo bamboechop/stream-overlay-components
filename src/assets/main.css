@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Windows-95';
+  src: url("/windows-95/font.woff2") format("woff2");
+}
+
+:root {
+  font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+
+  color-scheme: light dark;
+  color: #000;
+  background-color: #000;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  background-color: transparent;
+  margin: 0;
+  min-width: 320px;
+  padding: 0;
+}
