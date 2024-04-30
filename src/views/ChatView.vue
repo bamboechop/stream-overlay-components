@@ -43,6 +43,8 @@ import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ThemeWra
 import Windows95Theme from '@/components/chat/windows95/ThemeWrapper.vue';
 import { useMessagesStore } from '@/stores/twitch.store';
 
+// TODO move everything related to connecting to the Twitch IRC to a composable for reusability
+
 const broadcaster = {
   id: import.meta.env.VITE_TWITCH_BROADCASTER_ID,
   name: import.meta.env.VITE_TWITCH_BROADCASTER_NAME,
@@ -126,7 +128,7 @@ onMounted(async () => {
     });
 
     if (!client) {
-      console.warn('No client!');
+      console.error('No client!');
       return;
     }
 
@@ -412,7 +414,7 @@ onMounted(async () => {
 
     loading.value = false;
 
-    await client.say('#channel', 'submysterygift --count 20 --username zebiniasis');
+    // await client.say('#channel', 'submysterygift --count 20 --username zebiniasis');
   } catch (err) {
     console.error(err);
   }

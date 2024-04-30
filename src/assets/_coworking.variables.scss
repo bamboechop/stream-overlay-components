@@ -1,0 +1,18 @@
+@font-face {
+  font-display: swap;
+  font-family: Caveat;
+  font-weight: 400;
+  src: url('/fonts/Caveat/Caveat-Regular.ttf');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Caveat;
+  font-weight: 600;
+  src: url('/fonts/Caveat/Caveat-SemiBold.ttf');
+}
+
+$badge-size: 18px;
+$emote-size: 28px;
+$note-avatar-size: 40px;
+$note-background-color: #fde047;

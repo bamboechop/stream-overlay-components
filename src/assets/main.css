@@ -36,20 +36,6 @@ body[data-theme="windows-95"] {
   font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-/* TODO check what this is for */
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 .v-enter-active,
 .v-leave-active {
   transition: opacity .5s ease;
