@@ -19,11 +19,14 @@ import MainArea from '@/components/coworking/MainArea.vue';
 import SideStrip from '@/components/coworking/SideStrip.vue';
 import { useCoworkingStore } from '@/stores/coworking.store';
 import type { Note } from '@/common/interfaces/notes.interface';
+import { useTwitchChat } from '@/composables/twitch-chat.composable';
 
 let eventSource: EventSource | null = null;
 
 const store = useCoworkingStore();
 const { setNotes, updateNote } = store;
+
+await useTwitchChat();
 
 function eventSourceSetup() {
   eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_COWORKING_URL}/eventstream`);
@@ -40,6 +43,8 @@ function eventSourceSetup() {
 }
 
 onMounted(async () => {
+  console.log('coworkingview onmounted');
+
   try {
     eventSourceSetup();
 
@@ -66,16 +71,16 @@ onBeforeUnmount(() => {
 }
 
 :global(#app) {
-  background-image: url('/coworking/bg.png');
   height: 100%;
-  overflow: hidden;
 }
 
 .coworking-view {
-  background-color: transparent;
+  background-color: #000;
+  background-image: url('/coworking/bg.png');
   display: grid;
   grid-template-columns: min-content 1fr;
   height: 100%;
+  overflow: hidden;
   position: relative;
 
   &__pencil {

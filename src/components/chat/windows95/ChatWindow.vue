@@ -14,9 +14,9 @@
 <script lang="ts" setup>
 import EnterMessage from './EnterMessage.vue';
 import ChatMessages from './ChatMessages.vue';
-import ProgramTitleBar from '@/components/general/ProgramTitleBar.vue';
-import ProgramButtonBar from '@/components/general/ProgramButtonBar.vue';
-import ProgramBottomBar from '@/components/general/ProgramBottomBar.vue';
+import ProgramTitleBar from '@/components/general/windows95/ProgramTitleBar.vue';
+import ProgramButtonBar from '@/components/general/windows95/ProgramButtonBar.vue';
+import ProgramBottomBar from '@/components/general/windows95/ProgramBottomBar.vue';
 
 defineProps<{ active: boolean }>();
 </script>
@@ -32,5 +32,9 @@ defineProps<{ active: boolean }>();
   grid-template-rows: 18px 18px 1fr 20px 20px;
   height: 100%;
   padding: 2px;
+
+  * {
+    font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
 }
 </style>

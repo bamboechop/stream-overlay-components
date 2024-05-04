@@ -23,22 +23,20 @@ const { messages } = storeToRefs(store);
 
 <style lang="scss" scoped>
 .chat-messages {
-  color: #fff;
   display: flex;
   flex-direction: column-reverse;
-  font-size: 14px;
-  height: 370px;
+  height: 100%;
   line-height: 1.5;
   overflow-anchor: auto;
   overflow: hidden;
-  padding: 4px 8px 8px 8px;
   position: relative;
+  width: 100%;
 
   &__list {
     align-items: start;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     justify-content: start;
     list-style: none;
     margin: 0;

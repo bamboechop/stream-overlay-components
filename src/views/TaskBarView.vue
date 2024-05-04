@@ -1,65 +1,53 @@
 <template>
-  <section class="task-bar-view">
-    <hr class="task-bar-view__border" />
-    <div class="task-bar-view__elements">
-      <ButtonComponent
-        icon-path="/windows-95/windows.png"
-        text="Start" />
-      <div class="task-bar-view__programs">
-        <template
-          v-for="program of programs"
-          :key="program.text">
-          <ProgramButton
-            :active="program.active"
-            :icon-path="program.iconPath"
-            :text="program.text" />
-        </template>
-      </div>
-      <StatusAndTimePanel />
-    </div>
-  </section>
+  <template v-if="theme === 'modern'">
+    <ModernTheme :programs="programs" />
+  </template>
+  <template v-if="theme === 'windows-95'">
+    <Windows95Theme :programs="programs" />
+  </template>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import ButtonComponent from '@/components/ButtonComponent.vue';
-import ProgramButton from '@/components/ProgramButton.vue';
-import StatusAndTimePanel from '@/components/StatusAndTimePanel.vue';
+import { computed, ref } from 'vue';
+import { useUrlSearchParams } from '@vueuse/core';
+import ModernTheme from '@/components/task-bar/modern/TaskBar.vue';
+import Windows95Theme from '@/components/task-bar/windows95/TaskBar.vue';
+import type { TTheme } from '@/common/types/index.type';
+import type { IProgram } from '@/components/task-bar/task-bar.interface';
 
-const programs = ref([
-  { active: false, iconPath: '/programs/player.icon.png', text: 'Media Player' },
-  { active: true, iconPath: '/programs/chat.icon.png', text: 'Chat' },
-  { active: false, iconPath: '/programs/pokemon-community-game.icon.png', text: 'Pokémon Community Game' },
+const searchParams = useUrlSearchParams('history');
+const theme: TTheme = searchParams.theme as TTheme ?? import.meta.env.VITE_THEME;
+
+const themePath = theme.replace('-', '');
+
+// TODO Listen to twitch stream update event to get the currently selected game and update it in programs ref
+const game = ref('');
+
+const mediaPlayerIcon = computed(() => {
+  if (theme === 'windows-95') {
+    return `/programs/${themePath}/player.icon.png`;
+  }
+  switch (game.value) {
+    default:
+      return `/programs/${themePath}/player.icon.png`;
+  }
+});
+
+const programs = ref<IProgram[]>([
+  {
+    active: false,
+    iconPath: mediaPlayerIcon.value,
+    text: 'Media Player',
+  },
+  {
+    active: true,
+    iconPath: `/programs/${themePath}/chat.icon.png`,
+    text: 'Chat',
+  },
+  {
+    active: false,
+    iconPath: `/programs/${themePath}/pokemon-community-game.icon.png`,
+    text: 'Pokémon Community Game',
+  },
 ]);
 </script>
-
-<style lang="scss" scoped>
-.task-bar-view {
-  background-color: #c3c3c3;
-  height: 29px;
-  padding-top: 2px;
-
-  * {
-    font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  }
-
-  &__border {
-    background-color: #fff;
-    border: 0;
-    height: 1px;
-    margin: 0;
-  }
-
-  &__elements {
-    display: grid;
-    grid-template-columns: 54px 1fr minmax(auto, 114px);
-    padding: 2px;
-  }
-
-  &__programs {
-    display: flex;
-    gap: 3px;
-    justify-content: start;
-  }
-}
-</style>

@@ -13,6 +13,8 @@
 <style lang="scss" scoped>
 @use "sass:math";
 
+@import '@/assets/coworking.variables';
+
 $tablet-width: 1644px;
 
 .tablet-shell {
@@ -81,7 +83,7 @@ $tablet-width: 1644px;
   }
 
   &__display {
-    background-color: #dd00f5;
+    background-color: $chroma-key-color;
     border-radius: 8px;
     height: 100%;
     position: relative;

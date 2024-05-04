@@ -1,4 +1,4 @@
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useLocalStorage, useUrlSearchParams } from '@vueuse/core';
 import axios from 'axios';
 import type {
@@ -25,10 +25,11 @@ import type {
   ISubscription,
   ITwitchBadgeResponse,
 } from '@/common/interfaces/index.interface';
-import { getUserIdByUserName, parsePlan } from '@/common/helpers/twitch-message.helper';
+import { getUserIdByUserName, getUserImageByUserId, parsePlan } from '@/common/helpers/twitch-message.helper';
 import { useMessagesStore } from '@/stores/twitch.store';
+import type { TTheme } from '@/common/types/index.type';
 
-export function useTwitchChat() {
+export async function useTwitchChat(theme?: TTheme) {
   const broadcaster = {
     id: import.meta.env.VITE_TWITCH_BROADCASTER_ID,
     name: import.meta.env.VITE_TWITCH_BROADCASTER_NAME,
@@ -41,7 +42,9 @@ export function useTwitchChat() {
   const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
 
-  const userImage = 'https://placekitten.com/35/35';
+  const loading = ref(true);
+
+  let userImage = 'https://placekitten.com/35/35';
 
   const store = useMessagesStore();
   const { viewers } = storeToRefs(store);
@@ -131,9 +134,9 @@ export function useTwitchChat() {
           return;
         }
 
-        // if (theme === 'cities-skylines-ii') {
-        //   userImage = await getUserImageByUserId(userId);
-        // }
+        if (theme === 'cities-skylines-ii') {
+          userImage = await getUserImageByUserId(userId);
+        }
 
         addMessage({
           availableBadges,
@@ -183,9 +186,9 @@ export function useTwitchChat() {
           return;
         }
 
-        // if (theme === 'cities-skylines-ii') {
-        //   userImage = await getUserImageByUserId(userId);
-        // }
+        if (theme === 'cities-skylines-ii') {
+          userImage = await getUserImageByUserId(userId);
+        }
 
         addMessage({
           availableBadges,
@@ -228,11 +231,11 @@ export function useTwitchChat() {
 
       client.on('raided', async (_channel: string, username: string, viewers: number) => {
         const userId = await getUserIdByUserName(username);
-        // if (theme === 'cities-skylines-ii') {
-        //   if (userId) {
-        //     userImage = await getUserImageByUserId(userId);
-        //   }
-        // }
+        if (theme === 'cities-skylines-ii') {
+          if (userId) {
+            userImage = await getUserImageByUserId(userId);
+          }
+        }
 
         addMessage({
           msgType: 'raid',
@@ -263,9 +266,9 @@ export function useTwitchChat() {
           return;
         }
 
-        // if (theme === 'cities-skylines-ii') {
-        //   userImage = await getUserImageByUserId(userId);
-        // }
+        if (theme === 'cities-skylines-ii') {
+          userImage = await getUserImageByUserId(userId);
+        }
 
         addMessage({
           color,
@@ -306,12 +309,12 @@ export function useTwitchChat() {
         }
 
         let recipientImage, senderImage;
-        // if (theme === 'cities-skylines-ii') {
-        //   [recipientImage, senderImage] = await Promise.all([
-        //     getUserImageByUserId(recipientId),
-        //     getUserImageByUserId(senderId),
-        //   ]);
-        // }
+        if (theme === 'cities-skylines-ii') {
+          [recipientImage, senderImage] = await Promise.all([
+            getUserImageByUserId(recipientId),
+            getUserImageByUserId(senderId),
+          ]);
+        }
 
         addMessage({
           id,
@@ -361,9 +364,9 @@ export function useTwitchChat() {
           return;
         }
 
-        // if (theme === 'cities-skylines-ii') {
-        //   userImage = await getUserImageByUserId(userId);
-        // }
+        if (theme === 'cities-skylines-ii') {
+          userImage = await getUserImageByUserId(userId);
+        }
 
         addMessage({
           color,
@@ -388,6 +391,8 @@ export function useTwitchChat() {
           removeMessagesByUserId(userstate['target-user-id']);
         }
       });
+
+      loading.value = false;
     } catch (err) {
       if ((err as { code: string }).code === 'ERR_BAD_REQUEST' && !retry) {
         token.value = null;
@@ -400,6 +405,7 @@ export function useTwitchChat() {
   }
 
   onMounted(async () => {
+    console.log('composable onmounted');
     await initTwitch();
 
     if (messageDebug) {
@@ -411,4 +417,8 @@ export function useTwitchChat() {
     }, 1000 * 60);
     await updateViewerCount(broadcaster.name);
   });
+
+  return {
+    loading,
+  };
 }

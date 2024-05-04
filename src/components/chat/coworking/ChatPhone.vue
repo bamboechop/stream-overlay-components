@@ -16,10 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import ChatMessages from '@/components/chat/coworking/ChatMessages.vue';
-
-useTwitchChat();
 </script>
 
 <style lang="scss" scoped>
