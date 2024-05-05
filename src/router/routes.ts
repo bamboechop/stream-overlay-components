@@ -5,6 +5,7 @@ import ChatView from '@/views/ChatView.vue';
 import CoworkingView from '@/views/CoworkingView.vue';
 import ClockView from '@/views/ClockView.vue';
 import PokemonCommunityGameView from '@/views/PokemonCommunityGameView.vue';
+import WebcamView from '@/views/WebcamView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -36,5 +37,10 @@ export const routes: RouteRecordRaw[] = [
     component: TaskBarView,
     name: 'Task Bar Component',
     path: '/task-bar',
+  },
+  {
+    component: WebcamView,
+    name: 'Webcam Component',
+    path: '/webcam',
   },
 ];
