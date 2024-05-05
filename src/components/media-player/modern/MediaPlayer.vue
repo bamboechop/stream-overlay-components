@@ -14,15 +14,13 @@ import WindowFrame from '@/components/desktop/WindowFrame.vue';
 @import '@/assets/desktop.variables';
 
 .media-player {
+  aspect-ratio: 16 / 9;
   background-color: $chroma-key-color;
   border-radius: $window-frame-border-radius - $window-frame-padding;
   color: #fff;
-  height: 100%;
-  width: 100%;
 }
 
 .media-player-window {
-  height: 100%;
   width: 100%;
 }
 </style>
