@@ -4,7 +4,7 @@
       <button class="task-bar__button">
         <img
           alt="Start"
-          class="task-bar__icon"
+          class="task-bar__icon task-bar__icon--start"
           src="/modern/task-bar/start-button.png" />
       </button>
       <template
@@ -77,6 +77,10 @@ defineProps<{ programs: IProgram[] }>();
   &__icon {
     height: 100%;
     width: 100%;
+  }
+
+  &__icon:not(&__icon--start) {
+    border-radius: $window-frame-border-radius;
   }
 }
 
