@@ -26,7 +26,7 @@ import type {
   ITwitchBadgeResponse,
 } from '@/common/interfaces/index.interface';
 import { getUserIdByUserName, getUserImageByUserId, parsePlan } from '@/common/helpers/twitch-message.helper';
-import { useMessagesStore } from '@/stores/twitch.store';
+import { useTwitchStore } from '@/stores/twitch.store';
 import type { TTheme } from '@/common/types/index.type';
 
 export async function useTwitchChat(theme?: TTheme) {
@@ -46,7 +46,7 @@ export async function useTwitchChat(theme?: TTheme) {
 
   let userImage = 'https://placekitten.com/35/35';
 
-  const store = useMessagesStore();
+  const store = useTwitchStore();
   const { viewers } = storeToRefs(store);
   const {
     addMessage,
@@ -405,7 +405,6 @@ export async function useTwitchChat(theme?: TTheme) {
   }
 
   onMounted(async () => {
-    console.log('composable onmounted');
     await initTwitch();
 
     if (messageDebug) {

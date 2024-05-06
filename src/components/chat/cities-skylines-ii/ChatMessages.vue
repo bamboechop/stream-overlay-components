@@ -78,11 +78,11 @@ import RaidMessage from '@/components/chat/cities-skylines-ii/messages/Raid.vue'
 import ResubMessage from '@/components/chat/cities-skylines-ii/messages/Resub.vue';
 import SubGiftMessage from '@/components/chat/cities-skylines-ii/messages/SubGift.vue';
 import SubscriptionMessage from '@/components/chat/cities-skylines-ii/messages/Subscription.vue';
-import { useMessagesStore } from '@/stores/twitch.store';
+import { useTwitchStore } from '@/stores/twitch.store';
 
 defineProps<{ loading: boolean }>();
 
-const store = useMessagesStore();
+const store = useTwitchStore();
 const { messages } = storeToRefs(store);
 const { removeMessageByMessageId } = store;
 

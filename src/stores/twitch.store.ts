@@ -9,8 +9,9 @@ import { raidDummy } from '@data/raid.data';
 import axios from 'axios';
 import type { TMessage } from '@/common/types/index.type';
 
-export const useMessagesStore = defineStore('Twitch Chat Messages', () => {
+export const useTwitchStore = defineStore('Twitch Store', () => {
   const messages = ref<TMessage[]>([]);
+  const category = ref('Media Player');
   const viewers = ref(0);
 
   const addDebugMessages = () => {
@@ -43,17 +44,27 @@ export const useMessagesStore = defineStore('Twitch Chat Messages', () => {
     });
   };
 
+  const getChannelInformation = async () => {
+    const response = await axios.get(`${import.meta.env.VITE_BAMBBOT_API_TWITCH_URL}/channel-information`);
+    const { data } = response;
+    if (data) {
+      category.value = data.game_name;
+    }
+  };
+
   const updateViewerCount = async (name: string) => {
     const response = await axios.get(`https://api.twitch.tv/helix/streams?user_login=${name}`);
     viewers.value = response.data.data?.[0]?.viewer_count ?? 0;
   };
 
   return {
+    category,
     messages,
     viewers,
     addMessage,
     addDebugMessages,
     clearMessages,
+    getChannelInformation,
     removeMessageByMessageId,
     removeMessagesByUserId,
     updateViewerCount,

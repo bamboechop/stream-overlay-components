@@ -43,8 +43,6 @@ function eventSourceSetup() {
 }
 
 onMounted(async () => {
-  console.log('coworkingview onmounted');
-
   try {
     eventSourceSetup();
 

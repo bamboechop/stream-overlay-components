@@ -8,9 +8,9 @@
 <script lang="ts" setup>
 import { SendHorizontal } from 'lucide-vue-next';
 import { storeToRefs } from 'pinia';
-import { useMessagesStore } from '@/stores/twitch.store';
+import { useTwitchStore } from '@/stores/twitch.store';
 
-const store = useMessagesStore();
+const store = useTwitchStore();
 const { viewers } = storeToRefs(store);
 </script>
 

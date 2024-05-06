@@ -14,10 +14,10 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { useMessagesStore } from '@/stores/twitch.store';
+import { useTwitchStore } from '@/stores/twitch.store';
 import ChatMessage from '@/components/chat/coworking/messages/Message.vue';
 
-const store = useMessagesStore();
+const store = useTwitchStore();
 const { messages } = storeToRefs(store);
 </script>
 

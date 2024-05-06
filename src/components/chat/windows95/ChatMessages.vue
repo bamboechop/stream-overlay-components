@@ -35,9 +35,9 @@ import RaidMessage from '@/components/chat/windows95/messages/Raid.vue';
 import ResubMessage from '@/components/chat/windows95/messages/Resub.vue';
 import SubGiftMessage from '@/components/chat/windows95/messages/SubGift.vue';
 import SubscriptionMessage from '@/components/chat/windows95/messages/Subscription.vue';
-import { useMessagesStore } from '@/stores/twitch.store';
+import { useTwitchStore } from '@/stores/twitch.store';
 
-const store = useMessagesStore();
+const store = useTwitchStore();
 const { messages } = storeToRefs(store);
 </script>
 

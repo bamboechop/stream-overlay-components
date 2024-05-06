@@ -12,11 +12,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useMessagesStore } from '@/stores/twitch.store';
+import { useTwitchStore } from '@/stores/twitch.store';
 
 withDefaults(defineProps<{ showViewers: boolean }>(), { showViewers: false });
 
-const store = useMessagesStore();
+const store = useTwitchStore();
 const { viewers } = storeToRefs(store);
 </script>
 

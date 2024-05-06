@@ -1,13 +1,18 @@
 <template>
   <WindowFrame
     class="media-player-window"
-    title="TODO Twitch Category Name">
+    :title="category">
     <div class="media-player"></div>
   </WindowFrame>
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
+import { useTwitchStore } from '@/stores/twitch.store';
+
+const store = useTwitchStore();
+const { category } = storeToRefs(store);
 </script>
 
 <style lang="scss" scoped>
