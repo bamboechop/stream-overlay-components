@@ -9,10 +9,9 @@ export function useSearchParamsComposable() {
     'message-debug'?: 'true' | 'false';
     'theme'?: TTheme;
   }>('history');
+  const localStorageTheme = useLocalStorage<TTheme>('theme', import.meta.env.VITE_THEME);
 
   const theme = computed(() => {
-    const localStorageTheme = useLocalStorage<TTheme>('theme', import.meta.env.VITE_THEME);
-
     if (searchParams.theme) {
       if (localStorageTheme.value !== searchParams.theme) {
         localStorageTheme.value = searchParams.theme;
