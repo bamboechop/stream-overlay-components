@@ -35,7 +35,7 @@ defineProps<{ programs: IProgram[] }>();
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/desktop.variables';
+@import '@/assets/modern.variables';
 
 .task-bar {
   align-items: end;

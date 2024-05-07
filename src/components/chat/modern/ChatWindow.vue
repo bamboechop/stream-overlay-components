@@ -17,7 +17,7 @@ import EnterMessage from '@/components/chat/modern/EnterMessage.vue';
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/desktop.variables';
+@import '@/assets/modern.variables';
 
 .chat-window {
   background-color: rgba(14, 14, 16, 0.95);

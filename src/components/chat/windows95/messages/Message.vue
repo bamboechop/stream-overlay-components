@@ -1,26 +1,28 @@
 <template>
-  <li class="chat-message">
-    <header class="chat-message__header">
+  <li
+    class="message"
+    :class="{ 'message--highlighted': msgId === 'highlighted-message' }">
+    <header class="message__header">
       <div
         v-if="userBadges.length > 0"
-        class="chat-message__images">
+        class="message__images">
         <template
           v-for="(badge, index) of userBadges"
           :key="`badge-${badge.description}-${index}`">
           <img
             :alt="badge.description"
-            class="chat-message__badge"
+            class="message__badge"
             :src="badge.imageUrl" />
         </template>
       </div>
-      <span class="chat-message__name">
+      <span class="message__name">
         {{ displayName }}
         <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
           ({{ userName }})
         </template>
       </span>
     </header>
-    <main class="chat-message__text">
+    <main class="message__text">
       <template
         v-for="(part, index) of messageParts"
         :key="`message-${part.value}-part-${index}`">
@@ -30,7 +32,7 @@
         <template v-if="part.type === 'emote'">
           <img
             :alt="part.raw"
-            class="chat-message__emote"
+            class="message__emote"
             :src="part.value" />
         </template>
       </template>
@@ -39,11 +41,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRefs } from 'vue';
 import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 
 const props = defineProps<IChat>();
+const { msgId } = toRefs(props);
 
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
@@ -60,12 +63,13 @@ onMounted(() => {
 <style lang="scss" scoped>
 @import '@/assets/windows95.variables';
 
-.chat-message {
+.message {
   color: #000;
   display: grid;
   gap: 4px;
   grid-template-rows: 18px 1fr;
   justify-content: start;
+  position: relative;
   width: 100%;
 
   &:not(:last-of-type) {
@@ -91,6 +95,20 @@ onMounted(() => {
 
   &__text {
     text-align: left;
+  }
+}
+
+.message--highlighted {
+  padding-right: calc(2px + #{$highlight-element-size});
+
+  &::before {
+    background-color: #755ebc;
+    bottom: 0;
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -9px;
+    width: $highlight-element-size;
   }
 }
 </style>

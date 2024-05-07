@@ -1,20 +1,22 @@
 <template>
-  <li class="message">
+  <li
+    class="action"
+    :class="{ 'action--me': isMeMessage }">
     <div
-      class="message__info"
-      :class="{ 'message__info--has-emote': messageParts.find(part => part.type === 'emote') }">
+      class="action__info"
+      :class="{ 'action__info--has-emote': messageParts.find(part => part.type === 'emote') }">
       <template v-if="userBadges.length > 0">
         <template
           v-for="(badge, index) of userBadges"
-          :key="`badge-${badge.description}.${index}`">
+          :key="`badge-${badge.description}-${index}`">
           <img
             :alt="badge.description"
-            class="message__badge"
+            class="action__badge"
             :src="badge.imageUrl" />
         </template>
       </template>
       <span
-        class="message__name"
+        class="action__name"
         :style="{ color }">
         <strong>{{ displayName }}</strong>
         <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
@@ -22,17 +24,17 @@
         </template>
       </span>
     </div>
-    <span class="message__text">
+    <span class="action__text">
       <template
         v-for="(part, index) of messageParts"
-        :key="`message-${part.value}-part-${index}`">
+        :key="`action-${part.value}-part-${index}`">
         <template v-if="part.type === 'text'">
           {{ part.value }}
         </template>
         <template v-if="part.type === 'emote'">
           <img
             :alt="part.raw"
-            class="message__emote"
+            class="action__emote"
             :src="part.value" />
         </template>
       </template>
@@ -42,16 +44,21 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import type { IChat } from '@/common/interfaces/index.interface';
+import type { IAction, IBadge } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 
-const props = defineProps<IChat>();
+const props = defineProps<IAction>();
 
+const isMeMessage = ref(false);
 const messageParts = ref<Record<string, string | undefined>[]>([]);
-const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
+const userBadges = ref<IBadge[]>([]);
 
 onMounted(() => {
   messageParts.value = parseMessage(props.emotes, props.text);
+
+  if (props.userName) {
+    isMeMessage.value = !(['pokemoncommunitygame'].includes(props.userName.toLowerCase()));
+  }
 
   if (props.userBadges) {
     userBadges.value = parseUserBadges(props.userBadges, props.availableBadges);
@@ -60,11 +67,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/coworking.variables';
+@use 'sass:math';
 
-.message {
+@import '@/assets/modern.variables';
+
+.action {
   display: flex;
   flex-direction: column;
+  text-align: left;
 
   &__badge {
     height: $badge-size;
@@ -92,9 +102,12 @@ onMounted(() => {
   &__name {
     margin-top: 3px;
   }
+}
 
-  &__text {
-    text-align: left;
+.action--me {
+  .action__text {
+    color: #ededed;
+    font-style: italic;
   }
 }
 </style>

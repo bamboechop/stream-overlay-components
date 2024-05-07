@@ -15,7 +15,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   const viewers = ref(0);
 
   const addDebugMessages = () => {
-    messages.value.push(resubDummy, subscriptionDummy, subgiftDummy, ...actionDummy, chatDummy, raidDummy);
+    messages.value.push(resubDummy, subscriptionDummy, subgiftDummy, actionDummy, ...chatDummy, raidDummy);
   };
 
   const addMessage = (message: TMessage) => {

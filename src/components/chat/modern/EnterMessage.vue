@@ -15,7 +15,7 @@ const { viewers } = storeToRefs(store);
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/desktop.variables';
+@import '@/assets/modern.variables';
 
 .enter-message {
   align-items: center;

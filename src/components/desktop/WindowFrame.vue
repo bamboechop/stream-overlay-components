@@ -38,7 +38,7 @@ withDefaults(defineProps<{ active?: boolean; title?: string }>(), { active: fals
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/desktop.variables';
+@import '@/assets/modern.variables';
 
 .window-frame {
   background: rgba(255, 255, 255, 0.75);

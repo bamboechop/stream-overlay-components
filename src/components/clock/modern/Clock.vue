@@ -16,7 +16,7 @@ const time = useDateFormat(useNow(), 'HH:mm:ss');
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/desktop.variables';
+@import '@/assets/modern.variables';
 
 .clock-window {
   align-items: center;

@@ -1,5 +1,7 @@
 <template>
-  <li class="message">
+  <li
+    class="message"
+    :class="{ 'message--highlighted': msgId === 'highlighted-message' }">
     <div class="message__images">
       <img
         :alt="displayName"
@@ -49,12 +51,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRefs } from 'vue';
 import type { IMessage } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 import MessageInteraction from '@/components/chat/cities-skylines-ii/MessageInteraction.vue';
 
 const props = defineProps<IMessage>();
+const { msgId } = toRefs(props);
 
 const audioPlayer = ref<HTMLAudioElement>();
 const humanReadableTimestamp = ref('');
@@ -160,6 +163,21 @@ onMounted(() => {
     align-self: start;
     font-size: 16px;
     margin: 0 0 2px auto;
+  }
+}
+
+.message--highlighted {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    border-width: 70px 0 0 70px;
+    border-color: transparent transparent transparent #755ebc;
+    bottom: 0;
+    border-style: solid;
+    left: 0;
+    border-bottom-left-radius: 5px;
   }
 }
 </style>

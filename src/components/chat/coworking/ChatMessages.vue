@@ -4,8 +4,23 @@
       <template
         v-for="message of messages"
         :key="message.id">
+        <template v-if="message.msgType === 'action'">
+          <ActionMessage v-bind="message" />
+        </template>
         <template v-if="message.msgType === 'chat'">
           <ChatMessage v-bind="message" />
+        </template>
+        <template v-if="message.msgType === 'raid'">
+          <RaidMessage v-bind="message" />
+        </template>
+        <template v-if="message.msgType === 'resub'">
+          <ResubMessage v-bind="message" />
+        </template>
+        <template v-if="message.msgType === 'subgift'">
+          <SubGiftMessage v-bind="message" />
+        </template>
+        <template v-if="message.msgType === 'subscription'">
+          <SubscriptionMessage v-bind="message" />
         </template>
       </template>
     </ul>
@@ -15,7 +30,12 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useTwitchStore } from '@/stores/twitch.store';
-import ChatMessage from '@/components/chat/coworking/messages/Message.vue';
+import ActionMessage from '@/components/chat/modern/messages/Action.vue';
+import ChatMessage from '@/components/chat/modern/messages/Message.vue';
+import RaidMessage from '@/components/chat/modern/messages/Raid.vue';
+import ResubMessage from '@/components/chat/modern/messages/Resub.vue';
+import SubGiftMessage from '@/components/chat/modern/messages/SubGift.vue';
+import SubscriptionMessage from '@/components/chat/modern/messages/Subscription.vue';
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);

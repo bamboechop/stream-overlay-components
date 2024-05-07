@@ -44,7 +44,7 @@ export async function useTwitchChat(theme?: TTheme) {
 
   const loading = ref(true);
 
-  let userImage = 'https://placekitten.com/35/35';
+  let userImage = 'https://placebacon.net/40/40';
 
   const store = useTwitchStore();
   const { viewers } = storeToRefs(store);
@@ -177,6 +177,7 @@ export async function useTwitchChat(theme?: TTheme) {
           'display-name': displayName,
           emotes,
           id,
+          'msg-id': msgId = undefined,
           'tmi-sent-ts': timestamp,
           'user-id': userId,
           username: userName,
@@ -196,6 +197,7 @@ export async function useTwitchChat(theme?: TTheme) {
           displayName,
           emotes,
           id,
+          msgId,
           msgType: 'chat',
           show: true,
           text: message,

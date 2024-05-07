@@ -16,7 +16,7 @@ const { category } = storeToRefs(store);
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/desktop.variables';
+@import '@/assets/modern.variables';
 
 .media-player {
   aspect-ratio: 16 / 9;

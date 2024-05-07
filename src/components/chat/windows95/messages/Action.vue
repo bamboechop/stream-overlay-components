@@ -1,7 +1,7 @@
 <template>
   <li
     class="action"
-    :class="messageTypeClass">
+    :class="{ 'action--me': isMeMessage }">
     <header class="action__header">
       <template v-if="userBadges.length > 0">
         <div class="action__images">
@@ -41,29 +41,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { IAction, IBadge } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 
 const props = defineProps<IAction>();
-const { msgId, msgType } = toRefs(props);
 
 const isMeMessage = ref(false);
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<IBadge[]>([]);
-
-const messageTypeClass = computed(() => {
-  if (!msgType.value) {
-    return;
-  }
-  const classes = [];
-  if (msgId.value === 'highlighted-message') {
-    classes.push(`action--highlighted`);
-  } else if (isMeMessage.value) {
-    classes.push(`action--me`);
-  }
-  return classes.join(' ');
-});
 
 onMounted(() => {
   messageParts.value = parseMessage(props.emotes, props.text);
@@ -134,20 +120,6 @@ onMounted(() => {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-  }
-}
-
-.action--highlighted {
-  padding-right: calc(2px + #{$highlight-element-size});
-
-  &::before {
-    background-color: #755ebc;
-    bottom: 0;
-    content: '';
-    position: absolute;
-    right: 0;
-    top: -9px;
-    width: $highlight-element-size;
   }
 }
 </style>

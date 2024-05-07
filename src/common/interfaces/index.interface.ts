@@ -30,7 +30,6 @@ export interface IAction {
   displayName?: string;
   emotes?: { [emoteid: string]: string[] };
   id?: string;
-  msgId?: 'highlighted-message';
   msgType: 'action';
   show: boolean;
   text: string;
@@ -48,6 +47,7 @@ export interface IChat {
   displayName?: string;
   emotes?: { [emoteid: string]: string[] };
   id?: string;
+  msgId?: 'highlighted-message';
   msgType: 'chat';
   show: boolean;
   text: string;

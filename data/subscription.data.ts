@@ -1,7 +1,7 @@
 import type { ISubscription } from '@/common/interfaces/index.interface';
 
 export const subscriptionDummy: ISubscription = {
-  color: '#ffac12',
+  color: '#ffdf12',
   displayName: 'SubscriptionDummy',
   emotes: {
     305054953: ['31-43'],
@@ -14,7 +14,7 @@ export const subscriptionDummy: ISubscription = {
   show: true,
   timestamp: Date.now(),
   userId: 'subscriptiondummyuser',
-  userImage: 'https://placekitten.com/35/35',
+  userImage: 'https://placebacon.net/40/40',
   userName: 'subscriptiondummyuser',
   viewerCount: 2,
 };

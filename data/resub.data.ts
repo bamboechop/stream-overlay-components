@@ -17,7 +17,7 @@ export const resubDummy: IResub = {
   text: 'I am a resub dummy messages, yay!',
   timestamp: Date.now(),
   userId: 'resubdummyuser',
-  userImage: 'https://placekitten.com/35/35',
+  userImage: 'https://placebacon.net/40/40',
   userName: 'resubdummyuser',
   viewerCount: 2,
 };

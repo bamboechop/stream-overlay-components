@@ -5,7 +5,7 @@ export const raidDummy: IRaid = {
   show: true,
   timestamp: Date.now(),
   userId: 'raiddummyuser',
-  userImage: 'https://placekitten.com/35/35',
+  userImage: 'https://placebacon.net/40/40',
   userName: 'RaidDummy',
   viewerCount: 2,
 };

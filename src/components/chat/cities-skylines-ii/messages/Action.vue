@@ -1,7 +1,7 @@
 <template>
   <li
     class="action"
-    :class="messageTypeClass">
+    :class="{ 'action--me': isMeMessage }">
     <div class="action__images">
       <img
         :alt="displayName"
@@ -51,32 +51,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 import MessageInteraction from '@/components/chat/cities-skylines-ii/MessageInteraction.vue';
 import type { IAction, IBadge } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 
 const props = defineProps<IAction>();
-const { msgId, msgType } = toRefs(props);
 
 const audioPlayer = ref<HTMLAudioElement>();
 const humanReadableTimestamp = ref('');
 const isMeMessage = ref(false);
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<IBadge[]>([]);
-
-const messageTypeClass = computed(() => {
-  if (!msgType.value) {
-    return;
-  }
-  const classes = [];
-  if (msgId.value === 'highlighted-message') {
-    classes.push(`action--highlighted`);
-  } else if (isMeMessage.value) {
-    classes.push(`action--me`);
-  }
-  return classes.join(' ');
-});
 
 onMounted(() => {
   messageParts.value = parseMessage(props.emotes, props.text);
@@ -192,20 +178,5 @@ onMounted(() => {
   opacity: .5;
   left: 8px;
   position: absolute;
-}
-
-.action--highlighted {
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    border-width: 70px 0 0 70px;
-    border-color: transparent transparent transparent #755ebc;
-    bottom: 0;
-    border-style: solid;
-    left: 0;
-    border-bottom-left-radius: 5px;
-  }
 }
 </style>
