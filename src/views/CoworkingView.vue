@@ -46,7 +46,7 @@ onMounted(async () => {
   try {
     eventSourceSetup();
 
-    const notes: Note[] = await (await window.fetch(`${import.meta.env.VITE_DIGITAL_DOPPLER_API_URL}/open-notes`)).json();
+    const notes: Note[] = await (await window.fetch(`${import.meta.env.VITE_DIGITAL_DOPPLER_BASE_URL}/api/open-notes`)).json();
     setNotes(notes);
   } catch (err) {
     // eslint-disable-next-line no-alert
