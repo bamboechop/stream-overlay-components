@@ -24,6 +24,8 @@ const themePath = theme.value.replace('-', '');
 const store = useTwitchStore();
 const { category } = storeToRefs(store);
 
+useTwitchStreamInfo();
+
 const programs = computed<IProgram[]>(() => {
   let mediaPlayerIcon = `/programs/${themePath}/player.icon.png`;
 
@@ -99,6 +101,4 @@ const programs = computed<IProgram[]>(() => {
     },
   ];
 });
-
-useTwitchStreamInfo();
 </script>

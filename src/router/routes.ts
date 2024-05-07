@@ -6,6 +6,7 @@ import CoworkingView from '@/views/CoworkingView.vue';
 import ClockView from '@/views/ClockView.vue';
 import PokemonCommunityGameView from '@/views/PokemonCommunityGameView.vue';
 import WebcamView from '@/views/WebcamView.vue';
+import IntermissionView from '@/views/IntermissionView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -22,6 +23,11 @@ export const routes: RouteRecordRaw[] = [
     component: CoworkingView,
     name: 'Coworking Component',
     path: '/coworking',
+  },
+  {
+    component: IntermissionView,
+    name: 'Intermission Component',
+    path: '/intermission',
   },
   {
     component: MediaPlayerView,

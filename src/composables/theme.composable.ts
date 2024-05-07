@@ -6,6 +6,7 @@ export function useSearchParamsComposable() {
   const searchParams = useUrlSearchParams<{
     'active'?: 'true' | 'false';
     'debug'?: 'true' | 'false';
+    'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
     'theme'?: TTheme;
   }>('history');
@@ -26,6 +27,7 @@ export function useSearchParamsComposable() {
     active: searchParams.active === 'true',
     debug: searchParams.debug === 'true',
     messageDebug: searchParams['message-debug'] === 'true',
+    mode: searchParams.mode,
     theme,
   };
 }
