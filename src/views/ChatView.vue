@@ -7,24 +7,21 @@
       <Windows95Theme :active="active" />
     </template>
     <template v-if="theme === 'modern'">
-      <ModernTheme />
+      <ModernTheme :active="active" />
     </template>
   </section>
 </template>
 
 <script setup lang="ts">
-import { useUrlSearchParams } from '@vueuse/core';
-import type { TTheme } from '@/common/types/index.type';
 import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ChatMessages.vue';
 import ModernTheme from '@/components/chat/modern/ChatWindow.vue';
 import Windows95Theme from '@/components/chat/windows95/ChatWindow.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
+import { useSearchParamsComposable } from '@/composables/theme.composable';
 
-const searchParams = useUrlSearchParams('history');
-const active = searchParams.active === 'true';
-const theme: TTheme = searchParams.theme as TTheme ?? import.meta.env.VITE_THEME;
+const { active, theme } = useSearchParamsComposable();
 
-const { loading } = await useTwitchChat(theme);
+const { loading } = await useTwitchChat(theme.value);
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <template>
   <WindowFrame
-    active
+    :active="active"
     class="chat-window-window"
     title="Chat">
     <div class="chat-window">
@@ -14,6 +14,8 @@
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import ChatMessages from '@/components/chat/modern/ChatMessages.vue';
 import EnterMessage from '@/components/chat/modern/EnterMessage.vue';
+
+defineProps<{ active?: boolean }>();
 </script>
 
 <style lang="scss" scoped>

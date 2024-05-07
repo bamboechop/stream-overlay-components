@@ -8,11 +8,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useUrlSearchParams } from '@vueuse/core';
 import ModernTheme from '@/components/pokemon-community-game/modern/PokemonCommunityGame.vue';
 import Windows95Theme from '@/components/pokemon-community-game/windows95/PokemonCommunityGame.vue';
-import type { TTheme } from '@/common/types/index.type';
+import { useSearchParamsComposable } from '@/composables/theme.composable';
 
-const searchParams = useUrlSearchParams('history');
-const theme: TTheme = searchParams.theme as TTheme ?? import.meta.env.VITE_THEME;
+const { theme } = useSearchParamsComposable();
 </script>

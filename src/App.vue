@@ -6,13 +6,11 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import { useUrlSearchParams } from '@vueuse/core';
-import type { TTheme } from '@/common/types/index.type';
+import { useSearchParamsComposable } from '@/composables/theme.composable';
 
-const searchParams = useUrlSearchParams('history');
-const theme: TTheme = searchParams.theme as TTheme ?? import.meta.env.VITE_THEME;
+const { theme } = useSearchParamsComposable();
 
 onMounted(() => {
-  document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.theme = theme.value;
 });
 </script>

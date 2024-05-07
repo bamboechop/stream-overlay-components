@@ -14,7 +14,7 @@
 import { storeToRefs } from 'pinia';
 import { useTwitchStore } from '@/stores/twitch.store';
 
-withDefaults(defineProps<{ showViewers: boolean }>(), { showViewers: false });
+withDefaults(defineProps<{ showViewers?: boolean }>(), { showViewers: false });
 
 const store = useTwitchStore();
 const { viewers } = storeToRefs(store);

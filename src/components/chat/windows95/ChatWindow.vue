@@ -18,7 +18,7 @@ import ProgramTitleBar from '@/components/general/windows95/ProgramTitleBar.vue'
 import ProgramButtonBar from '@/components/general/windows95/ProgramButtonBar.vue';
 import ProgramBottomBar from '@/components/general/windows95/ProgramBottomBar.vue';
 
-defineProps<{ active: boolean }>();
+defineProps<{ active?: boolean }>();
 </script>
 
 <style lang="scss" scoped>

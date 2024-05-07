@@ -9,18 +9,16 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { useUrlSearchParams } from '@vueuse/core';
 import ModernTheme from '@/components/task-bar/modern/TaskBar.vue';
 import Windows95Theme from '@/components/task-bar/windows95/TaskBar.vue';
-import type { TTheme } from '@/common/types/index.type';
 import type { IProgram } from '@/components/task-bar/task-bar.interface';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
+import { useSearchParamsComposable } from '@/composables/theme.composable';
 
-const searchParams = useUrlSearchParams('history');
-const theme: TTheme = searchParams.theme as TTheme ?? import.meta.env.VITE_THEME;
+const { theme } = useSearchParamsComposable();
 
-const themePath = theme.replace('-', '');
+const themePath = theme.value.replace('-', '');
 
 const store = useTwitchStore();
 

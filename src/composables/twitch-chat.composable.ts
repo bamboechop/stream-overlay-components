@@ -1,5 +1,5 @@
 import { onMounted, ref } from 'vue';
-import { useLocalStorage, useUrlSearchParams } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
 import axios from 'axios';
 import type {
   AnonSubMysteryGiftUserstate,
@@ -28,6 +28,7 @@ import type {
 import { getUserIdByUserName, getUserImageByUserId, parsePlan } from '@/common/helpers/twitch-message.helper';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { TTheme } from '@/common/types/index.type';
+import { useSearchParamsComposable } from '@/composables/theme.composable';
 
 export async function useTwitchChat(theme?: TTheme) {
   const broadcaster = {
@@ -35,9 +36,7 @@ export async function useTwitchChat(theme?: TTheme) {
     name: import.meta.env.VITE_TWITCH_BROADCASTER_NAME,
   };
 
-  const searchParams = useUrlSearchParams('history');
-  const debug = searchParams.debug === 'true';
-  const messageDebug = searchParams['message-debug'] === 'true';
+  const { debug, messageDebug } = useSearchParamsComposable();
 
   const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;

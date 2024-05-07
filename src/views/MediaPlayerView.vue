@@ -10,14 +10,12 @@
 </template>
 
 <script setup lang="ts">
-import { useUrlSearchParams } from '@vueuse/core';
 import ModernTheme from '@/components/media-player/modern/MediaPlayer.vue';
 import Windows95Theme from '@/components/media-player/windows95/MediaPlayer.vue';
-import type { TTheme } from '@/common/types/index.type';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
+import { useSearchParamsComposable } from '@/composables/theme.composable';
 
-const searchParams = useUrlSearchParams('history');
-const theme: TTheme = searchParams.theme as TTheme ?? import.meta.env.VITE_THEME;
+const { theme } = useSearchParamsComposable();
 
 useTwitchStreamInfo();
 </script>
