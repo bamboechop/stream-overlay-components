@@ -1,45 +1,25 @@
 # stream-overlay-components
 
-This template should help get you started developing with Vue 3 in Vite.
+## Setting up the SSL certificate for the local server
 
-## Recommended IDE Setup
+Twitch needs a https connection for the callback when it isn't calling back to localhost. For this every few years a new certificate needs to be created. The following steps are needed to create a new certificate:
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+1. Open a terminal
+2. Navigate to a folder where you can temporarily store the created certificate
+3. run `mkcert.exe 192.168.1.144 127.0.0.1 localhost ::1`
+   1. Make sure to include all domains/ips you want the certificate to cover
+4. Rename the created files to `cert.pem` and `key.pem`
+5. Move the files to wherever your start-up batch file is located
+   1. At the time of writing this documentation the location is `C:\Users\<username>\OneDrive\<personaname>\STREAM\obs\overlays\apps`
 
-## Type Support for `.vue` Imports in TS
+## Starting the local server for running the built overlay in OBS
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+1. Open a terminal
+2. Navigate to the folder where the start-up batch file is located
+   1. At the time of writing this documentation the location is `C:\Users\<username>\OneDrive\<personaname>\STREAM\obs\overlays\apps`
+3. Run `start-obs.bat`
 
-## Customize configuration
+### Prerequisites
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+1. For creating the ssl certificate `mkcert` is required
+2. For the local server [`serve`](https://www.npmjs.com/package/serve) is required
