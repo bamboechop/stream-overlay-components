@@ -45,8 +45,7 @@ const programs = computed<IProgram[]>(() => ([
 useTwitchStreamInfo();
 
 watch(() => store.category, (newCategory) => {
-  console.log(newCategory);
-  if (theme === 'windows-95') {
+  if (theme.value === 'windows-95') {
     return;
   }
   switch (newCategory) {
