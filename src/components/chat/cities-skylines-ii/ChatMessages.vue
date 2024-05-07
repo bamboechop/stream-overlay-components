@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { type DebuggerEvent, onMounted, ref } from 'vue';
 import { useMediaControls } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 // @ts-expect-error "cannot find module or its corresponding type declarations", I just want the icon ;_;
@@ -92,8 +92,8 @@ const { playing } = useMediaControls(audioPlayer, { src: 'chirper.mp3' });
 onMounted(async () => {
   window.setInterval(async () => {
     for (const message of messages.value) {
-      if (!message.show) {
-        removeMessageByMessageId(message.id!);
+      if (!message.show && 'id' in message) {
+        removeMessageByMessageId(message.id as string);
       }
 
       // set stale messages to be hidden
@@ -105,7 +105,7 @@ onMounted(async () => {
 });
 
 store.$subscribe((mutation) => {
-  if (audioPlayer.value && !playing.value && mutation.events.type === 'add') {
+  if (audioPlayer.value && !playing.value && (mutation.events as DebuggerEvent).type === 'add') {
     playing.value = true;
   }
 });
