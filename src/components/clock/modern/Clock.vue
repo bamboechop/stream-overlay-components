@@ -24,6 +24,7 @@ const time = useDateFormat(useNow(), 'HH:mm:ss');
   flex-direction: column;
   gap: 4px;
   padding: $window-frame-padding * 2 $window-frame-padding * 4;
+  width: 116px;
 
   &__date {
     font-size: 16px;
