@@ -99,6 +99,11 @@ const programs = computed<IProgram[]>(() => {
       iconPath: `/programs/${themePath}/pokemon-community-game.icon.png`,
       text: 'Pokémon Community Game',
     },
+    {
+      active: false,
+      iconPath: `/programs/${themePath}/webcam.icon.png`,
+      text: 'Webcam',
+    },
   ];
 });
 </script>
