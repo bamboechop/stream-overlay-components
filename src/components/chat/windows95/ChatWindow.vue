@@ -2,7 +2,7 @@
   <div class="chat-window">
     <ProgramTitleBar
       :active="active"
-      icon-path="/windows-95/chat.icon.png"
+      icon-path="/programs/windows-95/chat.icon.png"
       title="Chat" />
     <ProgramButtonBar />
     <ChatMessages />

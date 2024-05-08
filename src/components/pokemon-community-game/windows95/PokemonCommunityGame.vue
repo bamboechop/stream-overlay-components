@@ -1,7 +1,7 @@
 <template>
   <div class="pokemon-community-game">
     <ProgramTitleBar
-      icon-path="/programs/pokemon-community-game.icon.png"
+      icon-path="/programs/windows95/pokemon-community-game.icon.png"
       title="Pokémon Community Game" />
     <div class="pokemon-community-game__frame-container">
       <iframe

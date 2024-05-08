@@ -1,7 +1,7 @@
 <template>
   <section class="media-player">
     <ProgramTitleBar
-      icon-path="/windows-95/player.icon.png"
+      icon-path="/programs/windows-95/player.icon.png"
       title="Media Player" />
     <ProgramButtonBar />
     <main class="media-player__player"></main>
@@ -35,7 +35,7 @@ import ProgramBottomBar from '@/components/general/windows95/ProgramBottomBar.vu
   }
 
   &__player {
-    background-color: #62f500;
+    background-color: #dd00f5;
     border-bottom: 1px solid #fff;
     border-left: 1px solid #7f7f7f;
     border-right: 1px solid #fff;

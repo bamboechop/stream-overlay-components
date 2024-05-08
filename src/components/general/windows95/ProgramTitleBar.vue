@@ -37,7 +37,8 @@ const buttonIcons = ref(['/windows-95/minimize.png', '/windows-95/maximize.png',
   background-color: #808080;
   color: #c4c2c4;
   display: grid;
-  grid-template-columns: 20px 1fr min-content;
+  gap: 4px;
+  grid-template-columns: 14px 1fr min-content;
   height: 100%;
   line-height: 1;
   padding: 2px;
@@ -77,6 +78,12 @@ const buttonIcons = ref(['/windows-95/minimize.png', '/windows-95/maximize.png',
     display: inline-flex;
     height: 14px;
     place-items: center;
+  }
+
+  &__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
