@@ -17,7 +17,7 @@ import { useTwitchStore } from '@/stores/twitch.store';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
 import { useSearchParamsComposable } from '@/composables/theme.composable';
 
-const { theme } = useSearchParamsComposable();
+const { amountOfPrograms, theme } = useSearchParamsComposable();
 
 const themePath = theme.value.replace('-', '');
 
@@ -104,6 +104,6 @@ const programs = computed<IProgram[]>(() => {
       iconPath: `/programs/${themePath}/webcam.icon.png`,
       text: 'Webcam',
     },
-  ];
+  ].slice(0, amountOfPrograms);
 });
 </script>
