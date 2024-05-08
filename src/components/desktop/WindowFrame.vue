@@ -75,25 +75,6 @@ withDefaults(defineProps<{ active?: boolean; title?: string }>(), { active: fals
     gap: 6px;
     padding: $window-frame-padding;
   }
-
-  &__title {
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    border-bottom-left-radius: calc($window-frame-border-radius / 2);
-    border-bottom-right-radius: calc($window-frame-border-radius / 2);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-top: none;
-    bottom: -26px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: row;
-    font-weight: 700;
-    gap: 6px;
-    line-height: 16px;
-    padding: $window-frame-padding;
-    position: absolute;
-    left: -1px;
-  }
 }
 
 .window-frame--active {
