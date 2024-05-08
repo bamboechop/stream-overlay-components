@@ -23,10 +23,10 @@ import ProgramTitleBar from '@/components/general/windows95/ProgramTitleBar.vue'
   display: grid;
   gap: 2px;
   grid-template-rows: 18px 1fr 20px;
-  min-height: 100vh;
   padding: 2px;
 
   &__main {
+    aspect-ratio: 16/9;
     background-color: #dd00f5;
     border-bottom: 1px solid #fff;
     border-left: 1px solid #7f7f7f;
