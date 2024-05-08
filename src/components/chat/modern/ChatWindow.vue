@@ -29,8 +29,8 @@ defineProps<{ active?: boolean }>();
   gap: 16px;
   grid-template-rows: 1fr auto;
   font-size: 16px;
-  height: 100%;
-  padding: 4px 8px 8px 8px;
+  height: calc(100% - 28px);
+  padding: 0 8px 8px 8px;
 }
 
 .chat-window-window {
