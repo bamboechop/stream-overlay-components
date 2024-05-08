@@ -77,7 +77,7 @@ const startingSoonTextBackgroundColor = computed(() => {
     case 'Cult of the Lamb':
       return 'rgba(239, 17, 30, 0.35)';
     case 'Dorfromantik':
-      return 'url(\'/modern/game-backgrounds/dorfromantik.jpg\')';
+      return 'rgba(130, 186, 209, 0.75)';
     case 'Deep Rock Galactic: Survivor':
       return 'transparent';
     case 'Golf It!':
