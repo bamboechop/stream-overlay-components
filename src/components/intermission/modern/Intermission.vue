@@ -4,6 +4,10 @@
       class="intermission"
       :class="`intermission--${mode}`">
       <span class="intermission__text">{{ intermissionText }}</span>
+      <img
+        alt=""
+        class="intermission__image"
+        :src="startingSoonImage" />
     </div>
   </WindowFrame>
 </template>
@@ -104,32 +108,32 @@ const startingSoonImage = computed(() => {
 
   switch (category.value) {
     case 'Bloons TD 6':
-      return 'url(\'/modern/game-backgrounds/bloons-td-6.jpg\')';
+      return '/modern/game-backgrounds/bloons-td-6.jpg';
     case 'Brotato':
-      return 'url(\'/modern/game-backgrounds/brotato.jpg\')';
+      return '/modern/game-backgrounds/brotato.jpg';
     case 'Cities: Skylines II':
-      return 'url(\'/modern/game-backgrounds/cities-skylines-ii.jpg\')';
+      return '/modern/game-backgrounds/cities-skylines-ii.jpg';
     case 'Cult of the Lamb':
-      return 'url(\'/modern/game-backgrounds/cult-of-the-lamb.jpg\')';
+      return '/modern/game-backgrounds/cult-of-the-lamb.jpg';
     case 'Dorfromantik':
-      return 'url(\'/modern/game-backgrounds/dorfromantik.jpg\')';
+      return '/modern/game-backgrounds/dorfromantik.jpg';
     case 'Deep Rock Galactic: Survivor':
-      return 'url(\'/modern/game-backgrounds/drg-survivor.jpg\')';
+      return '/modern/game-backgrounds/drg-survivor.jpg';
     case 'Golf It!':
-      return 'url(\'/modern/game-backgrounds/golf-it.jpg\')';
+      return '/modern/game-backgrounds/golf-it.jpg';
     case 'Minecraft':
-      return 'url(\'/modern/game-backgrounds/minecraft.jpg\')';
+      return '/modern/game-backgrounds/minecraft.jpg';
     case 'Project Zomboid':
-      return 'url(\'/modern/game-backgrounds/project-zomboid.jpg\')';
+      return '/modern/game-backgrounds/project-zomboid.jpg';
     case 'Pokémon Trading Card Game Live':
-      return 'url(\'/modern/game-backgrounds/ptcgl.jpg\')';
+      return '/modern/game-backgrounds/ptcgl.jpg';
     case 'shapez':
-      return 'url(\'/modern/game-backgrounds/shapez.jpg\')';
+      return '/modern/game-backgrounds/shapez.jpg';
     case 'Stray':
-      return 'url(\'/modern/game-backgrounds/stray.jpg\')';
+      return '/modern/game-backgrounds/stray.jpg';
     case 'Just Chatting':
     default:
-      return 'url(\'/modern/game-backgrounds/default.jpg\')';
+      return '/modern/game-backgrounds/default.jpg';
   }
 });
 </script>
@@ -140,14 +144,35 @@ const startingSoonImage = computed(() => {
 .intermission {
   aspect-ratio: 16 / 9;
   background-color: #121212;
-  background-image: v-bind(startingSoonImage);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: $window-frame-border-radius - $window-frame-padding;
-  display: flex;
-  flex-direction: row;
   overflow: hidden;
+  position: relative;
+
+  &__image {
+    animation: scaleUpDown 15s ease-in-out infinite alternate;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+
+    @keyframes scaleUpDown {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &__text {
+    left: 0;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+  }
 }
 
 .intermission--end {
@@ -159,13 +184,14 @@ const startingSoonImage = computed(() => {
     padding: 32px 24px;
     text-align: center;
     text-shadow: 0 0 10px #000;
+    top: 0;
     width: 100%;
   }
 }
 
 .intermission--break {
   .intermission__text {
-    align-self: end;
+    bottom: 0;
   }
 }
 
@@ -185,7 +211,7 @@ const startingSoonImage = computed(() => {
 
 .intermission--start {
   .intermission__text {
-    align-self: start;
+    top: 0;
   }
 }
 
