@@ -29,7 +29,7 @@ const { setNotes, updateNote } = store;
 await useTwitchChat();
 
 function eventSourceSetup() {
-  eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_COWORKING_URL}/eventstream`);
+  eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/coworking/eventstream`);
 
   eventSource.addEventListener('note-update', (event) => {
     const data = JSON.parse(event.data) as Note;

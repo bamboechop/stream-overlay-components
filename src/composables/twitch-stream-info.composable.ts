@@ -11,7 +11,7 @@ export function useTwitchStreamInfo() {
   const { category } = storeToRefs(store);
 
   function eventSourceSetup() {
-    eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_TWITCH_URL}/eventstream`);
+    eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/eventstream`);
 
     eventSource.addEventListener('channel.update', (event) => {
       const data = JSON.parse(event.data) as IEventStreamData;

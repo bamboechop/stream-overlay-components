@@ -45,7 +45,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   };
 
   const getChannelInformation = async () => {
-    const response = await axios.get(`${import.meta.env.VITE_BAMBBOT_API_TWITCH_URL}/channel-information`);
+    const response = await axios.get(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`);
     const { data } = response;
     if (data) {
       category.value = data.game_name;
