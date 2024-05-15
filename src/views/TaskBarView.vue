@@ -55,6 +55,12 @@ const programs = computed<IProgram[]>(() => {
       case 'Minecraft':
         mediaPlayerIcon = `/programs/${themePath}/minecraft.icon.png`;
         break;
+      case 'Mini Metro':
+        mediaPlayerIcon = `/programs/${themePath}/mini-metro.icon.png`;
+        break;
+      case 'Mini Motorways':
+        mediaPlayerIcon = `/programs/${themePath}/mini-motorways.icon.png`;
+        break;
       case 'Project Zomboid':
         mediaPlayerIcon = `/programs/${themePath}/project-zomboid.icon.png`;
         break;

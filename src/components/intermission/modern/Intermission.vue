@@ -123,6 +123,10 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/golf-it.jpg';
     case 'Minecraft':
       return '/modern/game-backgrounds/minecraft.jpg';
+    case 'Mini Metro':
+      return '/modern/game-backgrounds/mini-metro.jpg';
+    case 'Mini Motorways':
+      return '/modern/game-backgrounds/mini-motorways.jpg';
     case 'Project Zomboid':
       return '/modern/game-backgrounds/project-zomboid.jpg';
     case 'Pokémon Trading Card Game Live':
