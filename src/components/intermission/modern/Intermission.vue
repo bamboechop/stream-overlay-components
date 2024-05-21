@@ -145,6 +145,10 @@ const startingSoonImage = computed(() => {
 <style lang="scss" scoped>
 @import '@/assets/modern.variables';
 
+:global(body) {
+  overflow: hidden; // for some reason within OBS the body sometimes overflows without any reason
+}
+
 .intermission {
   aspect-ratio: 16 / 9;
   background-color: #121212;
@@ -154,6 +158,7 @@ const startingSoonImage = computed(() => {
   border-radius: $window-frame-border-radius - $window-frame-padding;
   overflow: hidden;
   position: relative;
+  width: 100%;
 
   &__image {
     animation: scaleUpDown 15s ease-in-out infinite alternate;
