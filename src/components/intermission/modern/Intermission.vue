@@ -103,7 +103,7 @@ const startingSoonTextBackgroundColor = computed(() => {
 });
 const startingSoonImage = computed(() => {
   if (props.mode === 'end') {
-    return undefined;
+    return '/bamboechop.png';
   }
 
   switch (category.value) {
@@ -185,15 +185,24 @@ const startingSoonImage = computed(() => {
 }
 
 .intermission--end {
+  .intermission__image {
+    animation: none;
+    bottom: 0;
+    height: auto;
+    left: 0;
+    opacity: .25;
+    width: 600px;
+  }
+
   .intermission__text {
-    align-self: center;
     color: #fff;
     display: block;
     font-size: 60px;
     padding: 32px 24px;
     text-align: center;
     text-shadow: 0 0 10px #000;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
     width: 100%;
   }
 }
