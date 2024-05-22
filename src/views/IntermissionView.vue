@@ -8,11 +8,29 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue';
 import { useSearchParamsComposable } from '@/composables/theme.composable';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
 import ModernTheme from '@/components/intermission/modern/Intermission.vue';
+import { useApplicationStore } from '@/stores/application.store';
 
-const { mode, theme } = useSearchParamsComposable();
+const { mode, theme, themePath } = useSearchParamsComposable();
+
+const applicationStore = useApplicationStore();
+const { addActiveApplication, removeActiveApplication } = applicationStore;
 
 useTwitchStreamInfo();
+
+onMounted(() => {
+  addActiveApplication({
+    active: false,
+    iconPath: `/programs/${themePath}/intermission.icon.png`,
+    id: 'intermission',
+    text: 'Intermission',
+  });
+
+  window.addEventListener('beforeunload', () => {
+    removeActiveApplication('intermission');
+  });
+});
 </script>

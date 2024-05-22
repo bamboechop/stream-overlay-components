@@ -13,15 +13,33 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ChatMessages.vue';
 import ModernTheme from '@/components/chat/modern/ChatWindow.vue';
 import Windows95Theme from '@/components/chat/windows95/ChatWindow.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useSearchParamsComposable } from '@/composables/theme.composable';
+import { useApplicationStore } from '@/stores/application.store';
 
-const { active, theme } = useSearchParamsComposable();
+const { active, theme, themePath } = useSearchParamsComposable();
+
+const applicationStore = useApplicationStore();
+const { addActiveApplication, removeActiveApplication } = applicationStore;
 
 const { loading } = await useTwitchChat(theme.value);
+
+onMounted(() => {
+  addActiveApplication({
+    active: true,
+    iconPath: `/programs/${themePath}/chat.icon.png`,
+    id: 'chat',
+    text: 'Chat',
+  });
+
+  window.addEventListener('beforeunload', () => {
+    removeActiveApplication('chat');
+  });
+});
 </script>
 
 <style lang="scss" scoped>

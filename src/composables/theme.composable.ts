@@ -4,7 +4,6 @@ import type { TTheme } from '@/common/types/index.type';
 
 export function useSearchParamsComposable() {
   const searchParams = useUrlSearchParams<{
-    'amount-of-programs'?: string;
     'active'?: 'true' | 'false';
     'debug'?: 'true' | 'false';
     'mode'?: 'break' | 'end' | 'start';
@@ -26,10 +25,10 @@ export function useSearchParamsComposable() {
 
   return {
     active: searchParams.active === 'true',
-    amountOfPrograms: searchParams['amount-of-programs'] ? Number.parseInt(searchParams['amount-of-programs'], 10) : 4,
     debug: searchParams.debug === 'true',
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,
     theme,
+    themePath: theme.value.replace('-', ''),
   };
 }
