@@ -24,12 +24,17 @@ import { useTwitchChat } from '@/composables/twitch-chat.composable';
 let eventSource: EventSource | null = null;
 
 const store = useCoworkingStore();
-const { setNotes, updateNote } = store;
+const { removeNotesFromUser, setNotes, updateNote } = store;
 
 await useTwitchChat();
 
 function eventSourceSetup() {
   eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/coworking/eventstream`);
+
+  eventSource.addEventListener('ban-user', (event) => {
+    const { displayName } = JSON.parse(event.data) as { displayName: string };
+    removeNotesFromUser(displayName);
+  });
 
   eventSource.addEventListener('note-update', (event) => {
     const data = JSON.parse(event.data) as Note;

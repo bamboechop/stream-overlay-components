@@ -8,6 +8,10 @@ export const useCoworkingStore = defineStore('Coworking', () => {
   const myNotes = computed(() => notes.value.filter(note => note.displayName === 'bamboechop'));
   const viewerNotes = computed(() => notes.value.filter(note => note.displayName !== 'bamboechop'));
 
+  const removeNotesFromUser = (displayName: string) => {
+    notes.value = notes.value.filter(n => n.displayName !== displayName);
+  };
+
   const updateNote = (note: Note) => {
     if (note.status === 'in-progress') {
       notes.value.push(note);
@@ -22,6 +26,7 @@ export const useCoworkingStore = defineStore('Coworking', () => {
 
   return {
     myNotes,
+    removeNotesFromUser,
     setNotes,
     updateNote,
     viewerNotes,
