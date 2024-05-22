@@ -19,6 +19,7 @@
     "lucide-vue-next": "^0.376.0",
     "pinia": "^2.1.7",
     "pinia-shared-state": "^0.5.1",
+    "obs-websocket-js": "^5.0.5",
     "tmi-utils": "^1.0.1",
     "tmi.js": "^1.8.5",
     "vue": "^3.4.21",

@@ -6,22 +6,21 @@ export const useApplicationStore = defineStore('Application Store', () => {
   const activeApplications = ref<IProgram[]>([]);
 
   const addActiveApplication = (application: IProgram) => {
-    /* timeout is necessary for pinia-shared-state to finish initializing
-     * without it every application would be added to an empty state
-     * resulting in only the last application added to be shown
-     */
-    window.setTimeout(() => {
-      activeApplications.value.push(application);
-    }, 1000);
+    activeApplications.value.push(application);
   };
 
   const removeActiveApplication = (id: string) => {
     activeApplications.value = activeApplications.value.filter(activeApplication => activeApplication.id !== id);
   };
 
+  const removeActiveApplications = () => {
+    activeApplications.value = [];
+  };
+
   return {
     activeApplications,
     addActiveApplication,
     removeActiveApplication,
+    removeActiveApplications,
   };
 });
