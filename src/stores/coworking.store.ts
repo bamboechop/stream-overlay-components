@@ -16,7 +16,7 @@ export const useCoworkingStore = defineStore('Coworking', () => {
     if (note.status === 'in-progress') {
       notes.value.push(note);
     } else {
-      notes.value = notes.value.filter(n => n.id !== note.id);
+      notes.value = notes.value.filter(n => n.note_id !== note.note_id);
     }
   };
 

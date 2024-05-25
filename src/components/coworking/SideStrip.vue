@@ -13,26 +13,45 @@
       </template>
     </div>
     <div class="side-strip__viewer-notes">
-      <template v-if="viewerNotes.length === 0">
-        <NoViewerNote />
-      </template>
-      <template
-        v-for="(note, index) of viewerNotes"
-        :key="`${note.displayName}-note-${index}`">
-        <SingleNote
-          :note="note"
-          :parent-width="sideStripWidth" />
-      </template>
+      <Splide :options="splideOptions">
+        <SplideSlide class="side-strip__viewer-note-slide">
+          <NoViewerNote />
+        </SplideSlide>
+        <template
+          v-for="(note, index) of viewerNotes"
+          :key="`${note.displayName}-note-${index}`">
+          <SplideSlide class="side-strip__viewer-note-slide">
+            <SingleNote
+              :note="note"
+              :parent-width="sideStripWidth" />
+          </SplideSlide>
+        </template>
+      </Splide>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { Splide, SplideSlide } from '@splidejs/vue-splide';
+import type { Options } from '@splidejs/vue-splide';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useCoworkingStore } from '@/stores/coworking.store';
 import SingleNote from '@/components/coworking/SingleNote.vue';
 import NoViewerNote from '@/components/coworking/NoViewerNote.vue';
+
+import '@splidejs/vue-splide/css/core';
+
+const splideOptions: Options = {
+  arrows: false,
+  autoplay: true,
+  height: '445px',
+  interval: 30000,
+  pagination: false,
+  rewind: true,
+  type: 'fade',
+  width: '772px',
+};
 
 const store = useCoworkingStore();
 const { myNotes, viewerNotes } = storeToRefs(store);
@@ -40,7 +59,7 @@ const { myNotes, viewerNotes } = storeToRefs(store);
 const sideStripRef = ref<HTMLDivElement | null>(null);
 
 const padding = ref(12);
-const paddingString = computed(() => `${padding.value}px`);
+const transitionDelay = ref(0);
 
 const sideStripWidth = computed(() => {
   if (!sideStripRef.value) {
@@ -48,6 +67,17 @@ const sideStripWidth = computed(() => {
   }
   const width = sideStripRef.value.getBoundingClientRect().width;
   return width - (padding.value * 2);
+});
+
+onMounted(() => {
+  /*
+   * 1s timeout to render the first item immediately
+   * and afterward have a 2.5s transition delay
+   * applied to every item when it transitions
+   */
+  window.setTimeout(() => {
+    transitionDelay.value = 2500;
+  }, 1000);
 });
 </script>
 
@@ -60,7 +90,6 @@ const sideStripWidth = computed(() => {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
   height: max-content;
   min-height: calc(100% - 24px);
   margin-left: 6px;
@@ -84,14 +113,23 @@ const sideStripWidth = computed(() => {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding: 48px v-bind(paddingString);
+    padding: 48px calc(v-bind(padding) * 1px) 24px;
+  }
+
+  &__viewer-note-slide {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__viewer-note-slide.is-active {
+    transition-delay: calc(v-bind(transitionDelay) * 1ms) !important; // delay the transition to fade out old note first
   }
 
   &__viewer-notes {
     display: flex;
     justify-content: center;
     margin-top: auto;
-    padding-bottom: 50px;
   }
 }
 </style>
