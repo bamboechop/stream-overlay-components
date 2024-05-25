@@ -43,7 +43,7 @@ export async function useTwitchChat(theme?: TTheme) {
 
   const loading = ref(true);
 
-  let userImage = 'https://placebacon.net/40/40';
+  let userImage = 'https://picsum.photos/40';
 
   const store = useTwitchStore();
   const { viewers } = storeToRefs(store);

@@ -7,13 +7,13 @@ export const subgiftDummy: ISubGift = {
   recipient: {
     displayName: 'SubgiftRecipientDummy',
     id: 'subgift-recipient-123',
-    image: 'https://placebacon.net/40/40',
+    image: 'https://picsum.photos/40',
     userName: 'subgiftrecipientdummyuser',
   },
   sender: {
     displayName: 'SubgiftSenderDummy',
     id: 'subgift-sender-123',
-    image: 'https://placebacon.net/40/40',
+    image: 'https://picsum.photos/40',
     userName: 'subgiftsenderdummyuser',
   },
   show: true,

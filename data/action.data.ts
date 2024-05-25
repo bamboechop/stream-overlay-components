@@ -15,7 +15,7 @@ export const actionDummy: IAction = {
   timestamp: Date.now(),
   userBadges: {},
   userId: 'abc-action-me-dummy-123',
-  userImage: 'https://placebacon.net/40/40',
+  userImage: 'https://picsum.photos/40',
   userName: 'actionmedummyuser',
   viewerCount: 2,
 };

@@ -14,7 +14,7 @@ export const subscriptionDummy: ISubscription = {
   show: true,
   timestamp: Date.now(),
   userId: 'subscriptiondummyuser',
-  userImage: 'https://placebacon.net/40/40',
+  userImage: 'https://picsum.photos/40',
   userName: 'subscriptiondummyuser',
   viewerCount: 2,
 };

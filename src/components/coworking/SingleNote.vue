@@ -7,7 +7,7 @@
       <template v-if="note.displayName !== 'bamboechop'">
         <img
           :alt="`${note.displayName}'s avatar`"
-          :src="note.avatarUrl ?? 'https://placebacon.net/48/48'" />
+          :src="note.avatarUrl ?? 'https://picsum.photos/48'" />
         {{ note.displayName }}
       </template>
       <span class="single-note__date">{{ date }}</span>

@@ -20,7 +20,7 @@ export async function getUserImageByUserId(userId: string): Promise<string> {
       window.sessionStorage.setItem('user-avatars', JSON.stringify(storedImages));
     }
   }
-  return userImage ?? 'https://placebacon.net/40/40';
+  return userImage ?? 'https://picsum.photos/40';
 }
 
 export function parseMessage(emotes: { [emoteid: string]: string[] } | undefined, text: string) {
