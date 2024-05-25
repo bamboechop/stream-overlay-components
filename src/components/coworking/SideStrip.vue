@@ -155,9 +155,26 @@ onMounted(() => {
 
   &__my-notes {
     display: flex;
+    flex: 1 0 100%;
     flex-direction: column;
     gap: 24px;
     padding: 48px calc(v-bind(padding) * 1px) 24px;
+    position: relative;
+
+    &::before {
+      border: 4px dashed rgba(255, 255, 255, 0.125);
+      bottom: 1rem;
+      color: rgba(255, 255, 255, 0.25);
+      content: 'Meine Todos';
+      display: flex;
+      font-size: 48px;
+      justify-content: center;
+      left: 1rem;
+      padding: 2rem;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+    }
   }
 
   &__viewer-note-slide {
@@ -174,6 +191,22 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     margin-top: auto;
+    position: relative;
+
+    &::before {
+      border: 4px dashed rgba(255, 255, 255, 0.125);
+      bottom: 1rem;
+      color: rgba(255, 255, 255, 0.25);
+      content: 'Eure Todos';
+      display: flex;
+      font-size: 48px;
+      justify-content: center;
+      left: 1rem;
+      padding: 2rem;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+    }
   }
 }
 </style>
