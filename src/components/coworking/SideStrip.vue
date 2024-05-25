@@ -13,7 +13,9 @@
       </template>
     </div>
     <div class="side-strip__viewer-notes">
-      <Splide :options="splideOptions">
+      <Splide
+        ref="splide"
+        :options="splideOptions">
         <SplideSlide class="side-strip__viewer-note-slide">
           <NoViewerNote />
         </SplideSlide>
@@ -42,19 +44,23 @@ import NoViewerNote from '@/components/coworking/NoViewerNote.vue';
 
 import '@splidejs/vue-splide/css/core';
 
-const splideOptions: Options = {
+const store = useCoworkingStore();
+const { myNotes, viewerNotes } = storeToRefs(store);
+
+const splide = ref<Splide>();
+const splideActiveIndex = ref(0);
+
+const splideOptions = computed<Options>(() => ({
   arrows: false,
   autoplay: true,
   height: '445px',
   interval: 30000,
   pagination: false,
   rewind: true,
+  start: splideActiveIndex.value,
   type: 'fade',
   width: '772px',
-};
-
-const store = useCoworkingStore();
-const { myNotes, viewerNotes } = storeToRefs(store);
+}));
 
 const sideStripRef = ref<HTMLDivElement | null>(null);
 
@@ -69,7 +75,8 @@ const sideStripWidth = computed(() => {
   return width - (padding.value * 2);
 });
 
-onMounted(() => {
+function setTransitionDelay(value: number = 0) {
+  transitionDelay.value = value;
   /*
    * 1s timeout to render the first item immediately
    * and afterward have a 2.5s transition delay
@@ -78,6 +85,43 @@ onMounted(() => {
   window.setTimeout(() => {
     transitionDelay.value = 2500;
   }, 1000);
+}
+
+function setSplideListeners() {
+  /*
+   * track the active index to update the start value
+   * needed for when the slider refreshes so it stays
+   * on the active slide after refresh is done
+   */
+  splide.value.splide.on('moved', (activeIndex: number) => {
+    splideActiveIndex.value = activeIndex;
+  });
+
+  /*
+   * destroy the splide slider
+   * reset the transition delay
+   * update the start slide in case the removed slide is the last slide
+   * remount the splide slider
+   * reapply the listeners
+   */
+  splide.value.splide.on('refresh', () => {
+    splide.value.splide.destroy();
+
+    setTransitionDelay();
+
+    if (splideActiveIndex.value > viewerNotes.value.length) {
+      splideActiveIndex.value = viewerNotes.value.length;
+    }
+
+    splide.value.splide.mount();
+
+    setSplideListeners();
+  });
+}
+
+onMounted(() => {
+  setTransitionDelay();
+  setSplideListeners();
 });
 </script>
 
