@@ -1,5 +1,5 @@
 import OBSWebSocket from 'obs-websocket-js';
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import type { TProgramId } from '@/common/types/index.type';
 import { useApplicationStore } from '@/stores/application.store';
@@ -111,9 +111,9 @@ export async function useObsComposable() {
 
   const obs = new OBSWebSocket();
 
-  await obs.connect('ws://localhost:4455', 'AXZoGMtV3txpUYDc');
+  await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
 
-  async function getSceneItems(resetPrograms = false) {
+  async function getSceneItems() {
     const { currentProgramSceneUuid: sceneUuid } = await obs.call('GetSceneList');
     const sceneItemList = await obs.call('GetSceneItemList', { sceneUuid });
     programs.value = {};
@@ -127,9 +127,9 @@ export async function useObsComposable() {
   await getSceneItems();
 
   // handle scene switches
-  obs.on('CurrentProgramSceneChanged', async (event) => {
+  obs.on('CurrentProgramSceneChanged', async () => {
     removeActiveApplications();
-    await getSceneItems(true);
+    await getSceneItems();
   });
 
   // handle source visibility changes
@@ -149,8 +149,16 @@ export async function useObsComposable() {
 
   updateProgramVisibility();
 
-  window.addEventListener('beforeunload', () => {
-    obs.disconnect();
+  async function disconnectWebSocketConnection() {
+    await obs.disconnect();
+  }
+
+  window.addEventListener('beforeunload', async () => {
+    await disconnectWebSocketConnection();
+  });
+
+  onBeforeUnmount(async () => {
+    await disconnectWebSocketConnection();
   });
 
   watch(category, (newCategory, oldCategory) => {
