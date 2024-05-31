@@ -34,7 +34,9 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-expect-error @splidejs/vue-splide typing definition couldn't be found
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
+// @ts-expect-error @splidejs/vue-splide typing definition couldn't be found
 import type { Options } from '@splidejs/vue-splide';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref } from 'vue';
