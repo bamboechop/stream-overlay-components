@@ -23,3 +23,7 @@ Twitch needs a https connection for the callback when it isn't calling back to l
 
 1. For creating the ssl certificate `mkcert` is required
 2. For the local server [`serve`](https://www.npmjs.com/package/serve) is required
+
+## OBS Websocket connection in production
+
+As long as the stream overlay components application is running on the same machine as OBS the websocket connection can be established using `ws://127.0.0.1:4455` / `ws://localhost:4455`. It doesn't matter that the application itself is served via `https` as the mixed content policy includes an exception for localhost connections as those are generally seen as non-risky due to the fact that they are only accessible from the local machine.
