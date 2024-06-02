@@ -18,6 +18,16 @@ const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
 };
 
 export async function useObsComposable() {
+  /*
+   * needs to be before any async call otherwise Vue will show a warning in the console
+   * [Vue warn]: onBeforeUnmount is called when there is no active component instance to be associated with.
+   * Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(),
+   * make sure to register lifecycle hooks before the first await statement.
+   */
+  onBeforeUnmount(async () => {
+    await disconnectWebSocketConnection();
+  });
+
   const programs = ref<{ [programName: string]: boolean }>({});
 
   const applicationStore = useApplicationStore();
@@ -111,6 +121,16 @@ export async function useObsComposable() {
 
   const obs = new OBSWebSocket();
 
+  function updateProgramVisibility() {
+    for (const [id, visible] of Object.entries(programs.value)) {
+      if (visible && !activeApplications.value.find(application => application.id === id)) {
+        addActiveApplication(programInformation.value[id as TProgramId]);
+      } else if (!visible) {
+        removeActiveApplication(id);
+      }
+    }
+  }
+
   await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
 
   async function getSceneItems() {
@@ -122,6 +142,7 @@ export async function useObsComposable() {
         programs.value[obsSceneIdToProgramIdMapping[item.sceneItemId as number]] = item.sceneItemEnabled as boolean;
       }
     }
+    updateProgramVisibility();
   }
 
   await getSceneItems();
@@ -135,29 +156,14 @@ export async function useObsComposable() {
   // handle source visibility changes
   obs.on('SceneItemEnableStateChanged', (event) => {
     programs.value[obsSceneIdToProgramIdMapping[event.sceneItemId]] = event.sceneItemEnabled;
+    updateProgramVisibility();
   });
-
-  function updateProgramVisibility() {
-    for (const [id, visible] of Object.entries(programs.value)) {
-      if (visible && !activeApplications.value.find(application => application.id === id)) {
-        addActiveApplication(programInformation.value[id as TProgramId]);
-      } else if (!visible) {
-        removeActiveApplication(id);
-      }
-    }
-  }
-
-  updateProgramVisibility();
 
   async function disconnectWebSocketConnection() {
     await obs.disconnect();
   }
 
   window.addEventListener('beforeunload', async () => {
-    await disconnectWebSocketConnection();
-  });
-
-  onBeforeUnmount(async () => {
     await disconnectWebSocketConnection();
   });
 
