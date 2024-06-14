@@ -171,6 +171,7 @@ export async function useTwitchChat(theme?: TTheme) {
         }
 
         const {
+          'animation-id': animationId,
           badges: userBadges,
           color,
           'display-name': displayName,
@@ -191,6 +192,7 @@ export async function useTwitchChat(theme?: TTheme) {
         }
 
         addMessage({
+          animationId,
           availableBadges,
           color,
           displayName,

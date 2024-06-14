@@ -1,48 +1,56 @@
 <template>
   <li
     class="message"
-    :class="{ 'message--highlighted': msgId === 'highlighted-message' }">
-    <div
-      class="message__info"
-      :class="{ 'message__info--has-emote': messageParts.find(part => part.type === 'emote') }">
-      <template v-if="userBadges.length > 0">
-        <template
-          v-for="(badge, index) of userBadges"
-          :key="`badge-${badge.description}-${index}`">
-          <img
-            :alt="badge.description"
-            class="message__badge"
-            :src="badge.imageUrl" />
+    :class="[
+      { 'message--highlighted': msgId === 'highlighted-message' },
+      { 'message--rainbow-eclipse': animationId === 'rainbow-eclipse' },
+    ]">
+    <template v-if="animationId === 'rainbow-eclipse'">
+      <div class="message__rainbow-eclipse"></div>
+    </template>
+    <div class="message__container">
+      <div
+        class="message__info"
+        :class="{ 'message__info--has-emote': messageParts.find(part => part.type === 'emote') }">
+        <template v-if="userBadges.length > 0">
+          <template
+            v-for="(badge, index) of userBadges"
+            :key="`badge-${badge.description}-${index}`">
+            <img
+              :alt="badge.description"
+              class="message__badge"
+              :src="badge.imageUrl" />
+          </template>
         </template>
-      </template>
-      <span
-        class="message__name"
-        :style="{ color }">
-        <strong>{{ displayName }}</strong>
-        <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
-          ({{ userName }})
+        <span
+          class="message__name"
+          :style="{ color }">
+          <strong>{{ displayName }}</strong>
+          <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+            ({{ userName }})
+          </template>
+        </span>
+      </div>
+      <span class="message__text">
+        <template
+          v-for="(part, index) of messageParts"
+          :key="`message-${part.value}-part-${index}`">
+          <template v-if="part.type === 'text'">
+            {{ part.value }}
+          </template>
+          <template v-if="part.type === 'emote'">
+            <template v-if="messageParts.length > 1 && index === messageParts.length - 1 && isGigantifiedEmoteMessage">
+              <br />
+            </template>
+            <img
+              :alt="part.raw"
+              class="message__emote"
+              :class="{ 'message__emote--gigantified': index === messageParts.length - 1 && isGigantifiedEmoteMessage }"
+              :src="part.value" />
+          </template>
         </template>
       </span>
     </div>
-    <span class="message__text">
-      <template
-        v-for="(part, index) of messageParts"
-        :key="`message-${part.value}-part-${index}`">
-        <template v-if="part.type === 'text'">
-          {{ part.value }}
-        </template>
-        <template v-if="part.type === 'emote'">
-          <template v-if="messageParts.length > 1 && index === messageParts.length - 1 && isGigantifiedEmoteMessage">
-            <br />
-          </template>
-          <img
-            :alt="part.raw"
-            class="message__emote"
-            :class="{ 'message__emote--gigantified': index === messageParts.length - 1 && isGigantifiedEmoteMessage }"
-            :src="part.value" />
-        </template>
-      </template>
-    </span>
   </li>
 </template>
 
@@ -52,7 +60,7 @@ import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 
 const props = defineProps<IChat>();
-const { msgId } = toRefs(props);
+const { animationId, msgId } = toRefs(props);
 
 const isGigantifiedEmoteMessage = msgId.value === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
@@ -71,13 +79,21 @@ onMounted(() => {
 @import '@/assets/modern.variables';
 
 .message {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
+  position: relative;
+  width: 100%;
 
   &__badge {
     height: $badge-size;
     width: $badge-size;
+  }
+
+  &__container {
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    text-align: left;
+    z-index: 1;
   }
 
   &__emote {
@@ -106,6 +122,37 @@ onMounted(() => {
   &__name {
     margin-top: 3px;
   }
+
+  &__rainbow-eclipse {
+    border-radius: 8px;
+    bottom: 0;
+    filter: blur(4px);
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &::before {
+      animation: rotate 4s linear infinite;
+      background-image: conic-gradient(#b23ff8, #3cc890, #38a7ca, #b23ff8);
+      background-position: 0 0;
+      background-repeat: no-repeat;
+      content: '';
+      height: 99999px;
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(0deg);
+      width: 99999px;
+    }
+
+    @keyframes rotate {
+      to {
+        transform: translate(-50%, -50%) rotate(1turn)
+      }
+    }
+  }
 }
 
 .message--highlighted {
@@ -114,5 +161,14 @@ onMounted(() => {
   border-radius: $window-frame-border-radius;
   padding: $window-frame-padding $window-frame-padding * 2;
   width: 100%;
+}
+
+.message--rainbow-eclipse {
+  padding: 4px;
+
+  .message__container {
+    background-color: rgba(14, 14, 16, 0.95);
+    padding: 10px;
+  }
 }
 </style>

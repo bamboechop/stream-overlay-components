@@ -42,6 +42,7 @@ export interface IAction {
 }
 
 export interface IChat {
+  animationId?: 'rainbow-eclipse' | 'simmer';
   availableBadges: Record<string, IBadge[]>;
   color?: string;
   displayName?: string;
@@ -124,6 +125,7 @@ export interface ISubscription {
 }
 
 export interface IMessage {
+  animationId?: 'rainbow-eclipse' | 'simmer';
   availableBadges: Record<string, IBadge[]>;
   color?: string;
   displayName?: string;
