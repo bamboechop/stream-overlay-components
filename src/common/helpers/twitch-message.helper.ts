@@ -23,13 +23,13 @@ export async function getUserImageByUserId(userId: string): Promise<string> {
   return userImage ?? 'https://picsum.photos/40';
 }
 
-export function parseMessage(emotes: { [emoteid: string]: string[] } | undefined, text: string) {
+export function parseMessage(emotes: { [emoteid: string]: string[] } | undefined, text: string, theme: 'dark' | 'light' = 'dark', scale: '1.0' | '2.0' | '3.0' = '1.0') {
   const messageParts: Record<string, string | undefined>[] = [];
   for (const messagePart of parseEmotesInMessage(emotes as Record<string, string[]>, text)) {
     messageParts.push({
       raw: messagePart.raw,
       type: messagePart.type,
-      value: messagePart.type === 'emote' ? getEmoteAsUrl(messagePart.value) : messagePart.value,
+      value: messagePart.type === 'emote' ? getEmoteAsUrl(messagePart.value, theme, scale) : messagePart.value,
     });
   }
   return messageParts;

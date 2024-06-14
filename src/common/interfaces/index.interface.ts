@@ -47,7 +47,7 @@ export interface IChat {
   displayName?: string;
   emotes?: { [emoteid: string]: string[] };
   id?: string;
-  msgId?: 'highlighted-message';
+  msgId?: 'gigantified-emote-message' | 'highlighted-message';
   msgType: 'chat';
   show: boolean;
   text: string;
@@ -129,7 +129,7 @@ export interface IMessage {
   displayName?: string;
   emotes?: { [emoteid: string]: string[] };
   id?: string;
-  msgId?: 'highlighted-message' | 'resub' | 'sub' | 'subgift'; // TODO check screenshots and set accordingly
+  msgId?: 'gigantified-emote-message' | 'highlighted-message' | 'resub' | 'sub' | 'subgift'; // TODO check screenshots and set accordingly
   msgType: 'action' | 'chat' | 'raid' | 'resub' | 'sub' | 'subgift' | 'whisper'; // action = /me bla | chat = regular messages
   show: boolean;
   subCumulativeMonthsString?: boolean | string; // TODO refactor to always be a number - true => 1, otherwise parse string to number

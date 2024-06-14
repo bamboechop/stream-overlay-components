@@ -32,9 +32,13 @@
           {{ part.value }}
         </template>
         <template v-if="part.type === 'emote'">
+          <template v-if="messageParts.length > 1 && index === messageParts.length - 1 && isGigantifiedEmoteMessage">
+            <br />
+          </template>
           <img
             :alt="part.raw"
             class="message__emote"
+            :class="{ 'message__emote--gigantified': index === messageParts.length - 1 && isGigantifiedEmoteMessage }"
             :src="part.value" />
         </template>
       </template>
@@ -50,11 +54,12 @@ import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.h
 const props = defineProps<IChat>();
 const { msgId } = toRefs(props);
 
+const isGigantifiedEmoteMessage = msgId.value === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
 
 onMounted(() => {
-  messageParts.value = parseMessage(props.emotes, props.text);
+  messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
 
   if (props.userBadges) {
     userBadges.value = parseUserBadges(props.userBadges, props.availableBadges);
@@ -79,6 +84,11 @@ onMounted(() => {
     max-height: $emote-size;
     max-width: $emote-size;
     vertical-align: middle;
+  }
+
+  &__emote--gigantified {
+    max-height: $emote-size * 4;
+    max-width: $emote-size * 4;
   }
 
   &__info {
