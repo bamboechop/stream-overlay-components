@@ -3,10 +3,36 @@
     class="message"
     :class="[
       { 'message--highlighted': msgId === 'highlighted-message' },
-      { 'message--rainbow-eclipse': animationId === 'rainbow-eclipse' },
+      { [`message--${animationId}`]: animationId },
     ]">
-    <template v-if="animationId === 'rainbow-eclipse'">
-      <div class="message__rainbow-eclipse"></div>
+    <template v-if="animationId">
+      <div
+        :class="[
+          { [`message__${animationId}`]: animationId },
+          animationId,
+        ]">
+        <template v-if="animationId === 'simmer'">
+          <template
+            v-for="(emote, index) of emotes"
+            :key="`emote-${emote}-${index}`">
+            <div
+              class="simmer__emote-container"
+              :style="{
+                animationDelay: `${delays[index]}s`,
+                animationDuration: `${durations[index]}s`,
+                left: `${offsets[index]}%`,
+              }">
+              <img
+                alt=""
+                class="simmer__emote"
+                :src="emote"
+                :style="{
+                  transform: `rotate(${rotations[index]}deg) scale(${sizes[index]})`,
+                }" />
+            </div>
+          </template>
+        </template>
+      </div>
     </template>
     <div class="message__container">
       <header class="message__header">
@@ -64,6 +90,27 @@ const isGigantifiedEmoteMessage = msgId.value === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
 
+const emotes = [
+  '/bamboe1ANGRY.png',
+  '/bamboe1LOVE.png',
+  '/bamboe1SAD.png',
+  '/bamboe1SMILE.png',
+  '/bamboe1ANGRY.png',
+  '/bamboe1LOVE.png',
+  '/bamboe1SAD.png',
+  '/bamboe1SMILE.png',
+  '/bamboe1ANGRY.png',
+  '/bamboe1LOVE.png',
+  '/bamboe1SAD.png',
+  '/bamboe1SMILE.png',
+];
+
+const durations = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 0.75 + 0.5).toFixed(2)))); // Random duration between 0.5 and 1.25 seconds
+const delays = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 3).toFixed(2)))); // Random delay up to 3 seconds
+const offsets = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 96).toFixed(2)))); // Random left offset between 0 and 96%
+const rotations = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 20 - 10).toFixed(2)))); // Random rotation between -10 and 10 degrees
+const sizes = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 0.75 + 0.25).toFixed(2)))); // Random size between 0.25 and 1.0
+
 onMounted(() => {
   messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
 
@@ -117,69 +164,74 @@ onMounted(() => {
     gap: 2px;
   }
 
-  &__rainbow-eclipse {
-    border-radius: 8px;
-    bottom: 0;
-    filter: blur(4px);
-    left: 0;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    top: 0;
-
-    &::before {
-      animation: rotate 4s linear infinite;
-      background-image: conic-gradient(#b23ff8, #3cc890, #38a7ca, #b23ff8);
-      background-position: 0 0;
-      background-repeat: no-repeat;
-      content: '';
-      height: 99999px;
-      left: 50%;
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
-      width: 99999px;
-    }
-
-    @keyframes rotate {
-      to {
-        transform: translate(-50%, -50%) rotate(1turn)
-      }
-    }
-  }
-
-  &__rainbow-eclipse {
-    bottom: 10px;
-    filter: blur(4px);
-    left: 0;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    top: 0;
-
-    &::before {
-      animation: rotate 4s linear infinite;
-      background-image: conic-gradient(#b23ff8, #3cc890, #38a7ca, #b23ff8);
-      background-position: 0 0;
-      background-repeat: no-repeat;
-      content: '';
-      height: 99999px;
-      left: 50%;
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
-      width: 99999px;
-    }
-
-    @keyframes rotate {
-      to {
-        transform: translate(-50%, -50%) rotate(1turn)
-      }
-    }
-  }
-
   &__text {
     text-align: left;
+  }
+}
+
+.message__rainbow-eclipse {
+  bottom: 10px;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  &::before {
+    animation: rotate 4s linear infinite;
+    background-image: conic-gradient(#b23ff8, #3cc890, #38a7ca, #b23ff8);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    content: '';
+    height: 99999px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    width: 99999px;
+  }
+
+  @keyframes rotate {
+    to {
+      transform: translate(-50%, -50%) rotate(1turn)
+    }
+  }
+}
+
+.simmer {
+  background: linear-gradient(90deg, #00ccad, #cc00b1);
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  &__emote-container {
+    animation-iteration-count: infinite;
+    animation-name: jump;
+    animation-timing-function: ease-in-out;
+    bottom: 8px;
+    position: absolute;
+  }
+
+  &__emote {
+    bottom: 8px;
+    max-height: $emote-size * 2;
+    max-width: $emote-size * 2;
+    position: absolute;
+
+    @keyframes jump {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-30px); /* Adjust this value to control the height of the "jump" */
+      }
+      90% {
+        transform: translateY(0);
+      }
+    }
   }
 }
 
@@ -203,6 +255,15 @@ onMounted(() => {
   .message__container {
     background-color: #c3c3c3;
     padding: 6px;
+  }
+}
+
+.message--simmer {
+  padding: 30px 4px 4px 4px;
+
+  .message__container {
+    background-color: #c3c3c3;
+    padding: 10px;
   }
 }
 </style>
