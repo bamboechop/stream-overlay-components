@@ -71,6 +71,8 @@ export async function useObsComposable() {
         return `/programs/${themePath}/ptcgl.icon.png`;
       case 'shapez':
         return `/programs/${themePath}/shapez.icon.png`;
+      case 'Spec Ops: The Line':
+        return `/programs/${themePath}/spec-ops.icon.png`;
       case 'Stray':
         return `/programs/${themePath}/stray.icon.png`;
       case 'Trackmania':

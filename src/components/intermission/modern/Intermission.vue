@@ -45,6 +45,7 @@ const intermissionText = computed(() => {
     case 'Project Zomboid':
     case 'Pokémon Trading Card Game Live':
     case 'shapez':
+    case 'Spec Ops: The Line':
     case 'Stray':
       switch (props.mode) {
         case 'break':
@@ -94,6 +95,8 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'rgba(78, 101, 151, 0.5)';
     case 'shapez':
       return 'rgba(62, 62, 74, 1)';
+    case 'Spec Ops: The Line':
+      return 'rgba(182, 106, 74, 0.75)';
     case 'Stray':
       return 'rgba(41,26,26,0.75)';
     case 'Just Chatting':
@@ -133,6 +136,8 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/ptcgl.jpg';
     case 'shapez':
       return '/modern/game-backgrounds/shapez.jpg';
+    case 'Spec Ops: The Line':
+      return '/modern/game-backgrounds/spec-ops.jpg';
     case 'Stray':
       return '/modern/game-backgrounds/stray.jpg';
     case 'Just Chatting':
