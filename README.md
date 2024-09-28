@@ -6,7 +6,8 @@ Twitch needs a https connection for the callback when it isn't calling back to l
 
 1. Open a terminal
 2. Navigate to a folder where you can temporarily store the created certificate
-3. run `mkcert.exe 192.168.1.144 127.0.0.1 localhost ::1`
+3. If not done before, run `mkcert.exe -install` for certificates to be trusted automatically
+4. run `mkcert.exe 192.168.1.144 127.0.0.1 localhost ::1`
    1. Make sure to include all domains/ips you want the certificate to cover
 4. Rename the created files to `cert.pem` and `key.pem`
 5. Move the files to wherever your start-up batch file is located
