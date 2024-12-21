@@ -59,6 +59,8 @@ export async function useObsComposable() {
         return `/programs/${themePath}/drg-survivor.icon.png`;
       case 'Golf It!':
         return `/programs/${themePath}/golf-it.icon.png`;
+      case 'Horizon Zero Dawn Remastered':
+        return `/programs/${themePath}/horizon-zero-dawn-remastered.icon.png`;
       case 'Minecraft':
         return `/programs/${themePath}/minecraft.icon.png`;
       case 'Mini Metro':
