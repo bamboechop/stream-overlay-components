@@ -66,7 +66,10 @@ export async function useObsComposable() {
         programs.value[obsSceneIdToProgramIdMapping[item.sceneItemId as number]] = item.sceneItemEnabled as boolean;
       }
     }
-    updateProgramVisibility();
+    // wait for 100ms before updating the visibility, otherwise the active window isn't getting highlighted when switching scenes
+    window.setTimeout(() => {
+      updateProgramVisibility();
+    }, 100);
   }
 
   // handle scene switches
