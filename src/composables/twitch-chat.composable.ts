@@ -68,7 +68,7 @@ export async function useTwitchChat(theme?: TTheme) {
         } else {
           // TODO generate a random string and use it as state param to prevent CSRF
           // https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#implicit-grant-flow
-          window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=`;
+          window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=channel:read:ads`;
           return;
         }
       }

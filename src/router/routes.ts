@@ -7,8 +7,14 @@ import ClockView from '@/views/ClockView.vue';
 import PokemonCommunityGameView from '@/views/PokemonCommunityGameView.vue';
 import WebcamView from '@/views/WebcamView.vue';
 import IntermissionView from '@/views/IntermissionView.vue';
+import AdView from '@/views/AdView.vue';
 
 export const routes: RouteRecordRaw[] = [
+  {
+    component: AdView,
+    name: 'Ad Component',
+    path: '/ad',
+  },
   {
     component: ChatView,
     name: 'Chat Component',

@@ -7,11 +7,15 @@ import { actionDummy } from '@data/action.data';
 import { chatDummy } from '@data/chat.data';
 import { raidDummy } from '@data/raid.data';
 import axios from 'axios';
+import { useLocalStorage } from '@vueuse/core';
 import type { TMessage } from '@/common/types/index.type';
 
+const token = useLocalStorage<string>('twitch-token', null);
+
 export const useTwitchStore = defineStore('Twitch Store', () => {
-  const messages = ref<TMessage[]>([]);
+  const adSchedule = ref<{ duration: number; nextTime: Date } | null>(null);
   const category = ref('Media Player');
+  const messages = ref<TMessage[]>([]);
   const viewers = ref(0);
 
   const addDebugMessages = () => {
@@ -44,6 +48,35 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     });
   };
 
+  let adScheduleRetryCount = 0;
+  const getAdSchedule = async () => {
+    const response = await axios.get(`https://api.twitch.tv/helix/channels/ads?broadcaster_id=${import.meta.env.VITE_TWITCH_BROADCASTER_ID}`, {
+      headers: {
+        'Authorization': `Bearer ${token.value}`,
+        'Client-Id': import.meta.env.VITE_TWITCH_CLIENT_ID,
+      },
+    });
+    if (response.status !== 200) {
+      adSchedule.value = null;
+      if (adScheduleRetryCount < 5) {
+        adScheduleRetryCount++;
+        window.setTimeout(async () => {
+          await getAdSchedule();
+        }, 5000); // try again in 5 seconds
+      } else if (adScheduleRetryCount === 5) {
+        // eslint-disable-next-line no-alert
+        window.alert('Ad Schedule fetching failed five times!');
+      }
+      return;
+    }
+    adScheduleRetryCount = 0;
+    const [information] = response.data.data;
+    adSchedule.value = {
+      duration: information.duration,
+      nextTime: new Date(information.next_ad_at * 1000),
+    };
+  };
+
   const getChannelInformation = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`);
     const { data } = response;
@@ -58,12 +91,14 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   };
 
   return {
+    adSchedule,
     category,
     messages,
     viewers,
     addMessage,
     addDebugMessages,
     clearMessages,
+    getAdSchedule,
     getChannelInformation,
     removeMessageByMessageId,
     removeMessagesByUserId,

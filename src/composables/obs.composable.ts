@@ -5,6 +5,7 @@ import type { TProgramId } from '@/common/types/index.type';
 import { useApplicationStore } from '@/stores/application.store';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useProgramInformationComposable } from '@/composables/program-information.composable';
+import { useStreamStatusStore } from '@/stores/stream-status.store';
 
 const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
   4: 'intermission',
@@ -35,8 +36,12 @@ export async function useObsComposable() {
 
   const { iconPath, programInformation } = useProgramInformationComposable();
 
+  const streamStatusStore = useStreamStatusStore();
+  const { live } = storeToRefs(streamStatusStore);
+
   const twitchStore = useTwitchStore();
   const { category } = storeToRefs(twitchStore);
+  const { getAdSchedule } = twitchStore;
 
   const obs = new OBSWebSocket();
   await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
@@ -74,6 +79,23 @@ export async function useObsComposable() {
   obs.on('SceneItemEnableStateChanged', (event) => {
     programs.value[obsSceneIdToProgramIdMapping[event.sceneItemId]] = event.sceneItemEnabled;
     updateProgramVisibility();
+  });
+
+  /**
+   * Handles stream state changes (going live / offline).
+   * @param {object} event - The event object.
+   * @param {boolean} event.outputActive - Indicates if the output is active.
+   * @param {string} event.outputState - The state of the output.
+   * Possible values: OBS_WEBSOCKET_OUTPUT_STARTING, OBS_WEBSOCKET_OUTPUT_STARTED, OBS_WEBSOCKET_OUTPUT_STOPPING, OBS_WEBSOCKET_OUTPUT_STOPPED.
+   */
+  obs.on('StreamStateChanged', async (event) => {
+    live.value = event.outputActive;
+    if (live.value) {
+      // give Twitch some time to detect the stream as live
+      window.setTimeout(async () => {
+        await getAdSchedule();
+      }, 5000);
+    }
   });
 
   async function disconnectWebSocketConnection() {
