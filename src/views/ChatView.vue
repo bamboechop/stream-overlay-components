@@ -24,12 +24,17 @@ import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useApplicationStore } from '@/stores/application.store';
+import { useProgramInformationComposable } from '@/composables/program-information.composable';
 
 const { chatVisibleTimeoutInSeconds, theme } = useSearchParamsComposable();
 
 const { loading } = await useTwitchChat(theme.value);
+
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);
+const { addActiveApplication, removeActiveApplication } = applicationStore;
+
+const { programInformation } = useProgramInformationComposable();
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);
@@ -45,6 +50,7 @@ function resetHideTimeout() {
   hideTimeout.value = window.setTimeout(() => {
     showChat.value = false;
     hideTimeout.value = null;
+    removeActiveApplication(programInformation.value.chat.id);
   }, chatVisibleTimeoutInSeconds * 1000);
 }
 
@@ -52,9 +58,10 @@ if (theme.value === 'modern') {
   watch(() => messages.value.length, (newValue) => {
     showChat.value = newValue > 0;
     if (showChat.value) {
+      addActiveApplication(programInformation.value.chat);
       resetHideTimeout();
     }
-  });
+  }, { immediate: true });
 }
 </script>
 

@@ -42,7 +42,8 @@ export async function useObsComposable() {
 
   function updateProgramVisibility() {
     for (const [id, visible] of Object.entries(programs.value)) {
-      if (visible && !activeApplications.value.find(application => application.id === id)) {
+      // ignore chat, it only gets visible when a message is sent
+      if (id !== 'chat' && visible && !activeApplications.value.find(application => application.id === id)) {
         addActiveApplication(programInformation.value[id as TProgramId]);
       } else if (!visible) {
         removeActiveApplication(id);
