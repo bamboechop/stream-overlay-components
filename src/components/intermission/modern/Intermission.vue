@@ -1,5 +1,7 @@
 <template>
-  <WindowFrame class="intermission-window">
+  <WindowFrame
+    :active
+    class="intermission-window">
     <div
       class="intermission"
       :class="`intermission--${mode}`">
@@ -19,7 +21,7 @@ import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
 
-const props = defineProps<{ mode?: 'end' | 'break' | 'start' }>();
+const props = defineProps<{ active?: boolean; mode?: 'end' | 'break' | 'start' }>();
 
 const store = useTwitchStore();
 const { category } = storeToRefs(store);
