@@ -4,20 +4,28 @@
       <Windows95Theme />
     </template>
     <template v-if="theme === 'modern'">
-      <ModernTheme />
+      <ModernTheme :active />
     </template>
   </section>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import ModernTheme from '@/components/media-player/modern/MediaPlayer.vue';
 import Windows95Theme from '@/components/media-player/windows95/MediaPlayer.vue';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useApplicationStore } from '@/stores/application.store';
 
 const { theme } = useSearchParamsComposable();
 
 useTwitchStreamInfo();
+
+const applicationStore = useApplicationStore();
+const { activeApplications } = storeToRefs(applicationStore);
+
+const active = computed(() => activeApplications.value.find(application => application.id === 'media-player')?.active);
 </script>
 
 <style lang="scss" scoped>

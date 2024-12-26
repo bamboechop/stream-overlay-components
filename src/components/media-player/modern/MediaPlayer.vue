@@ -1,5 +1,6 @@
 <template>
   <WindowFrame
+    :active="active"
     class="media-player-window"
     :title="category">
     <div class="media-player"></div>
@@ -10,6 +11,8 @@
 import { storeToRefs } from 'pinia';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
+
+defineProps<{ active?: boolean }>();
 
 const store = useTwitchStore();
 const { category } = storeToRefs(store);

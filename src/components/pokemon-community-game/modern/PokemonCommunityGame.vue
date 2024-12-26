@@ -1,5 +1,6 @@
 <template>
   <WindowFrame
+    :active
     class="pokemon-community-game-window"
     title="Pokémon Co...">
     <iframe
@@ -11,6 +12,8 @@
 
 <script lang="ts" setup>
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
+
+defineProps<{ active?: boolean }>();
 </script>
 
 <style lang="scss" scoped>

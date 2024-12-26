@@ -16,21 +16,25 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ChatMessages.vue';
 import ModernTheme from '@/components/chat/modern/ChatWindow.vue';
 import Windows95Theme from '@/components/chat/windows95/ChatWindow.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
+import { useApplicationStore } from '@/stores/application.store';
 
-const { active, chatVisibleTimeoutInSeconds, theme } = useSearchParamsComposable();
+const { chatVisibleTimeoutInSeconds, theme } = useSearchParamsComposable();
 
 const { loading } = await useTwitchChat(theme.value);
+const applicationStore = useApplicationStore();
+const { activeApplications } = storeToRefs(applicationStore);
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);
 
+const active = computed(() => activeApplications.value.find(application => application.id === 'chat')?.active ?? false);
 const hideTimeout = ref<number | null>(null);
 const showChat = ref(false);
 
