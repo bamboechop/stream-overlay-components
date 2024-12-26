@@ -39,6 +39,7 @@ export async function useObsComposable() {
   const { category } = storeToRefs(twitchStore);
 
   const obs = new OBSWebSocket();
+  await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
 
   function updateProgramVisibility() {
     for (const [id, visible] of Object.entries(programs.value)) {
@@ -51,8 +52,6 @@ export async function useObsComposable() {
     }
   }
 
-  await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
-
   async function getSceneItems() {
     const { currentProgramSceneUuid: sceneUuid } = await obs.call('GetSceneList');
     const sceneItemList = await obs.call('GetSceneItemList', { sceneUuid });
@@ -64,8 +63,6 @@ export async function useObsComposable() {
     }
     updateProgramVisibility();
   }
-
-  await getSceneItems();
 
   // handle scene switches
   obs.on('CurrentProgramSceneChanged', async () => {
@@ -95,4 +92,6 @@ export async function useObsComposable() {
   }, {
     immediate: true,
   });
+
+  await getSceneItems();
 }
