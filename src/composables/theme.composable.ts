@@ -5,6 +5,7 @@ import type { TTheme } from '@/common/types/index.type';
 export function useSearchParamsComposable() {
   const searchParams = useUrlSearchParams<{
     'active'?: 'true' | 'false';
+    'chat-visible-timeout'?: string;
     'debug'?: 'true' | 'false';
     'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
@@ -25,6 +26,7 @@ export function useSearchParamsComposable() {
 
   return {
     active: searchParams.active === 'true',
+    chatVisibleTimeoutInSeconds: searchParams['chat-visible-timeout'] ? Number.parseInt(searchParams['chat-visible-timeout'], 10) : 10,
     debug: searchParams.debug === 'true',
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,

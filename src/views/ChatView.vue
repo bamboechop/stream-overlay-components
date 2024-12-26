@@ -1,5 +1,7 @@
 <template>
-  <section class="chat-view">
+  <section
+    class="chat-view"
+    :class="{ 'chat-view--show': showChat }">
     <template v-if="theme === 'cities-skylines-ii'">
       <CitiesSkylinesIITheme :loading="loading" />
     </template>
@@ -13,28 +15,55 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
 import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ChatMessages.vue';
 import ModernTheme from '@/components/chat/modern/ChatWindow.vue';
 import Windows95Theme from '@/components/chat/windows95/ChatWindow.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useSearchParamsComposable } from '@/composables/theme.composable';
+import { useTwitchStore } from '@/stores/twitch.store';
 
-const { active, theme } = useSearchParamsComposable();
+const { active, chatVisibleTimeoutInSeconds, theme } = useSearchParamsComposable();
 
 const { loading } = await useTwitchChat(theme.value);
+
+const store = useTwitchStore();
+const { messages } = storeToRefs(store);
+
+const hideTimeout = ref<number | null>(null);
+const showChat = ref(false);
+
+function resetHideTimeout() {
+  if (hideTimeout.value) {
+    clearTimeout(hideTimeout.value);
+  }
+  hideTimeout.value = window.setTimeout(() => {
+    showChat.value = false;
+    hideTimeout.value = null;
+  }, chatVisibleTimeoutInSeconds * 1000);
+}
+
+if (theme.value === 'modern') {
+  watch(() => messages.value.length, (newValue) => {
+    showChat.value = newValue > 0;
+    if (showChat.value) {
+      resetHideTimeout();
+    }
+  });
+}
 </script>
 
 <style lang="scss" scoped>
 :global(html[data-theme="windows-95"]) {
   --background-color: #c3c3c3;
-}
 
-:global(html[data-theme="windows-95"]) {
   color: #000;
   font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-size: 12px;
   line-height: 1.1;
 }
+
 :global(html[data-theme="cities-skylines-ii"]),
 :global(html[data-theme="modern"]) {
   --background-color: transparent;
@@ -43,8 +72,14 @@ const { loading } = await useTwitchChat(theme.value);
 .chat-view {
   height: 100vh;
   margin: 0 auto;
+  opacity: 0;
   text-align: center;
+  transition: opacity 0.5s ease-out;
   width: 100vw;
+}
+
+.chat-view--show {
+  opacity: 1;
 }
 
 :global(html[data-theme="cities-skylines-ii"] .chat-view) {
