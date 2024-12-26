@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useSearchParamsComposable } from '@/composables/theme.composable';
+import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
 import ModernTheme from '@/components/intermission/modern/Intermission.vue';
 

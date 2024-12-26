@@ -21,7 +21,7 @@ import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ChatMess
 import ModernTheme from '@/components/chat/modern/ChatWindow.vue';
 import Windows95Theme from '@/components/chat/windows95/ChatWindow.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
-import { useSearchParamsComposable } from '@/composables/theme.composable';
+import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 
 const { active, chatVisibleTimeoutInSeconds, theme } = useSearchParamsComposable();

@@ -13,7 +13,7 @@
 import ModernTheme from '@/components/media-player/modern/MediaPlayer.vue';
 import Windows95Theme from '@/components/media-player/windows95/MediaPlayer.vue';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
-import { useSearchParamsComposable } from '@/composables/theme.composable';
+import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 
 const { theme } = useSearchParamsComposable();
 

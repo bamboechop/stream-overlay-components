@@ -28,7 +28,7 @@ import type {
 import { getUserIdByUserName, getUserImageByUserId, parsePlan } from '@/common/helpers/twitch-message.helper';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { TTheme } from '@/common/types/index.type';
-import { useSearchParamsComposable } from '@/composables/theme.composable';
+import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 
 export async function useTwitchChat(theme?: TTheme) {
   const broadcaster = {

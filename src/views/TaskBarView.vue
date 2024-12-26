@@ -12,7 +12,7 @@ import { storeToRefs } from 'pinia';
 import ModernTheme from '@/components/task-bar/modern/TaskBar.vue';
 import Windows95Theme from '@/components/task-bar/windows95/TaskBar.vue';
 import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
-import { useSearchParamsComposable } from '@/composables/theme.composable';
+import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useApplicationStore } from '@/stores/application.store';
 import { useObsComposable } from '@/composables/obs.composable';
 
