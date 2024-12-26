@@ -29,7 +29,7 @@ const twitchStore = useTwitchStore();
 const { adSchedule } = storeToRefs(twitchStore);
 const { getAdSchedule } = twitchStore;
 
-const diffInSeconds = ref(0);
+const diffInSeconds = ref(-1);
 const remainingTime = ref('');
 
 let adScheduleFetchInterval = 0;
