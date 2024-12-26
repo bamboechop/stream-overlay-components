@@ -1,10 +1,13 @@
 import { storeToRefs } from 'pinia';
 import { onBeforeUnmount, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import type { IEventStreamData } from '@/components/media-player/media-player.interface';
 import { useTwitchStore } from '@/stores/twitch.store';
 
 export function useTwitchStreamInfo() {
   let eventSource: EventSource | null = null;
+
+  const route = useRoute();
 
   const store = useTwitchStore();
   const { getChannelInformation } = store;
@@ -25,11 +28,15 @@ export function useTwitchStreamInfo() {
   }
 
   onMounted(async () => {
-    eventSourceSetup();
+    if (route.name === 'Coworking Component') {
+      eventSourceSetup();
+    }
     await getChannelInformation();
   });
 
   onBeforeUnmount(() => {
-    eventSource?.close();
+    if (eventSource) {
+      eventSource.close();
+    }
   });
 }
