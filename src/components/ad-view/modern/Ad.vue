@@ -1,7 +1,7 @@
 <template>
   <WindowFrame
     class="ad-window"
-    :class="{ 'ad-window--visible': diffInSeconds < 15 * 60 && diffInSeconds >= 0 }">
+    :class="{ 'ad-window--visible': diffInSeconds < 10 * 60 && diffInSeconds >= 0 }">
     <div class="ad">
       <span class="ad__text">
         <template v-if="diffInSeconds > 0">
@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, ref, watch } from 'vue';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useStreamStatusStore } from '@/stores/stream-status.store';
@@ -46,16 +46,15 @@ function updateRemainingTime() {
     return;
   }
   const now = new Date();
-  diffInSeconds.value = Math.max(0, Math.floor((adSchedule.value.nextTime.getTime() - now.getTime()) / 1000));
+  diffInSeconds.value = Math.max(0, Math.floor((adSchedule.value.nextTime - now.getTime()) / 1000));
   const minutes = Math.floor(diffInSeconds.value / 60);
   const seconds = diffInSeconds.value % 60;
-  const displayMinutes = minutes.toString(10).padStart(2, '0');
   const displaySeconds = minutes > 0 ? seconds.toString(10).padStart(2, '0') : seconds;
 
   if (minutes > 1) {
-    remainingTime.value = `${displayMinutes} Minuten und ${displaySeconds} Sekunden`;
+    remainingTime.value = `${minutes} Minuten und ${displaySeconds} Sekunden`;
   } else if (minutes === 1) {
-    remainingTime.value = `${displayMinutes} Minute und ${displaySeconds} Sekunden`;
+    remainingTime.value = `${minutes} Minute und ${displaySeconds} Sekunden`;
   } else if (seconds > 1) {
     remainingTime.value = `${displaySeconds} Sekunden`;
   } else if (seconds === 1) {
@@ -79,7 +78,7 @@ watch(adSchedule, async (newValue) => {
   clearInterval();
 
   // check if newValue doesn't exist or if nextTime is a date in the past
-  if (!newValue || newValue.nextTime.getTime() < new Date().getTime()) {
+  if (!newValue || newValue.nextTime < new Date().getTime()) {
     return;
   }
 
@@ -91,11 +90,6 @@ watch(live, (newValue) => {
   if (!newValue) {
     clearInterval();
   }
-});
-
-onMounted(() => {
-  updateRemainingTime();
-  window.setInterval(updateRemainingTime, 1000);
 });
 
 onBeforeUnmount(() => {

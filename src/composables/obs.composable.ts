@@ -94,10 +94,10 @@ export async function useObsComposable() {
   obs.on('StreamStateChanged', async (event) => {
     live.value = event.outputActive;
     if (live.value) {
-      // give Twitch some time to detect the stream as live
+      // wait 10 minutes, this allows the pre-roll ad to be played and we receive an accurate value
       window.setTimeout(async () => {
         await getAdSchedule();
-      }, 5000);
+      }, 10 * 60 * 1000);
     }
   });
 

@@ -13,7 +13,7 @@ import type { TMessage } from '@/common/types/index.type';
 const token = useLocalStorage<string>('twitch-token', null);
 
 export const useTwitchStore = defineStore('Twitch Store', () => {
-  const adSchedule = ref<{ duration: number; nextTime: Date } | null>(null);
+  const adSchedule = ref<{ duration: number; nextTime: number } | null>(null);
   const category = ref('Media Player');
   const messages = ref<TMessage[]>([]);
   const viewers = ref(0);
@@ -73,7 +73,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     const [information] = response.data.data;
     adSchedule.value = {
       duration: information.duration,
-      nextTime: new Date(information.next_ad_at * 1000),
+      nextTime: information.next_ad_at * 1000,
     };
   };
 
