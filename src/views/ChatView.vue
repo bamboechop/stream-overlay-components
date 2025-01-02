@@ -58,7 +58,9 @@ if (theme.value === 'modern') {
   watch(() => messages.value.length, (newValue) => {
     showChat.value = newValue > 0;
     if (showChat.value) {
-      addActiveApplication(programInformation.value.chat);
+      if (!activeApplications.value.some(application => application.id === programInformation.value.chat.id)) {
+        addActiveApplication(programInformation.value.chat);
+      }
       resetHideTimeout();
     }
   }, { immediate: true });
