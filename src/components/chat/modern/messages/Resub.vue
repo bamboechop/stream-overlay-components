@@ -78,9 +78,5 @@ onMounted(() => {
   &__info--has-emote {
     margin-top: -1px;
   }
-
-  &__name {
-    margin-top: 3px;
-  }
 }
 </style>
