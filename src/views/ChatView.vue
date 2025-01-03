@@ -26,7 +26,7 @@ import { useTwitchStore } from '@/stores/twitch.store';
 import { useApplicationStore } from '@/stores/application.store';
 import { useProgramInformationComposable } from '@/composables/program-information.composable';
 
-const { chatVisibleTimeoutInSeconds, theme } = useSearchParamsComposable();
+const { chatVisibleTimeoutInSeconds, messageDebug, theme } = useSearchParamsComposable();
 
 const { loading } = await useTwitchChat(theme.value);
 
@@ -41,7 +41,7 @@ const { messages } = storeToRefs(store);
 
 const active = computed(() => activeApplications.value.find(application => application.id === 'chat')?.active ?? false);
 const hideTimeout = ref<number | null>(null);
-const showChat = ref(false);
+const showChat = ref(messageDebug);
 
 function resetHideTimeout() {
   if (hideTimeout.value) {
@@ -61,7 +61,9 @@ if (theme.value === 'modern') {
       if (!activeApplications.value.some(application => application.id === programInformation.value.chat.id)) {
         addActiveApplication(programInformation.value.chat);
       }
-      resetHideTimeout();
+      if (!messageDebug) {
+        resetHideTimeout();
+      }
     }
   }, { immediate: true });
 }
