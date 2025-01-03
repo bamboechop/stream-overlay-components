@@ -49,6 +49,8 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/spec-ops.icon.png`;
       case 'Stray':
         return `/programs/${themePath}/stray.icon.png`;
+      case 'Supermarket Together':
+        return `/programs/${themePath}/supermarket-together.icon.png`;
       case 'Trackmania':
         return `/programs/${themePath}/trackmania.icon.png`;
       case 'UNO':

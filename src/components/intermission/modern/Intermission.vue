@@ -50,6 +50,7 @@ const intermissionText = computed(() => {
     case 'shapez':
     case 'Spec Ops: The Line':
     case 'Stray':
+    case 'Supermarket Together':
       switch (props.mode) {
         case 'break':
           text = '⏰ Kurze Pause, gleich geht es weiter mit';
@@ -104,6 +105,8 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'rgba(182, 106, 74, 0.75)';
     case 'Stray':
       return 'rgba(41,26,26,0.75)';
+    case 'Supermarket Together':
+      return 'rgba(238, 80, 87, 0.5)';
     case 'Just Chatting':
     default:
       return 'rgba(115, 117, 80, 0.35)';
@@ -147,6 +150,8 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/spec-ops.jpg';
     case 'Stray':
       return '/modern/game-backgrounds/stray.jpg';
+    case 'Supermarket Together':
+      return '/modern/game-backgrounds/supermarket-together.jpg';
     case 'Just Chatting':
     default:
       return '/modern/game-backgrounds/default.jpg';
