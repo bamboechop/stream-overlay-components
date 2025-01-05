@@ -8,6 +8,7 @@ import PokemonCommunityGameView from '@/views/PokemonCommunityGameView.vue';
 import WebcamView from '@/views/WebcamView.vue';
 import IntermissionView from '@/views/IntermissionView.vue';
 import AdView from '@/views/AdView.vue';
+import PDFViewer from '@/views/PDFViewer.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -44,6 +45,11 @@ export const routes: RouteRecordRaw[] = [
     component: PokemonCommunityGameView,
     name: 'Pokemon Community Game Component',
     path: '/pcg',
+  },
+  {
+    component: PDFViewer,
+    name: 'PDF Viewer Component',
+    path: '/pdf',
   },
   {
     component: TaskBarView,

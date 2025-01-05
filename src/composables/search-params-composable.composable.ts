@@ -10,6 +10,7 @@ export function useSearchParamsComposable() {
     'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
     'theme'?: TTheme;
+    'url'?: string;
   }>('history');
   const localStorageTheme = useLocalStorage<TTheme>('theme', import.meta.env.VITE_THEME);
 
@@ -32,5 +33,6 @@ export function useSearchParamsComposable() {
     mode: searchParams.mode,
     theme,
     themePath: theme.value.replace('-', ''),
+    url: searchParams.url,
   };
 }

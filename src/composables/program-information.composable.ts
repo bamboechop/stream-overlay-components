@@ -33,6 +33,8 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/golf-it.icon.png`;
       case 'Horizon Zero Dawn Remastered':
         return `/programs/${themePath}/horizon-zero-dawn-remastered.icon.png`;
+      case 'Lego & Brickbuilding':
+        return `/programs/${themePath}/brickbuilding.icon.png`;
       case 'Minecraft':
         return `/programs/${themePath}/minecraft.icon.png`;
       case 'Mini Metro':
@@ -57,6 +59,8 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/uno.icon.png`;
       case 'URBO: Dream One':
         return `/programs/${themePath}/urbo.icon.png`;
+      case 'PDF Viewer':
+        return `/programs/${themePath}/pdf-viewer.icon.png`;
       case 'Just Chatting':
       case 'Media Player':
       default:
@@ -88,6 +92,12 @@ export function useProgramInformationComposable() {
       iconPath: `/programs/${themePath}/pokemon-community-game.icon.png`,
       id: 'pcg',
       text: 'Pokémon Community Game',
+    },
+    'pdf-viewer': {
+      active: false,
+      iconPath: `/programs/${themePath}/pdf-viewer.icon.png`,
+      id: 'pdf-viewer',
+      text: 'PDF Viewer',
     },
     'webcam': {
       active: false,

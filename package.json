@@ -24,7 +24,8 @@
     "tmi-utils": "^1.0.1",
     "tmi.js": "^1.8.5",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue-pdf-embed": "^1.2.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.12.1",

@@ -15,6 +15,7 @@ const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
   40: 'chat',
   41: 'media-player',
   51: 'webcam',
+  69: 'pdf-viewer',
 };
 
 export async function useObsComposable() {
@@ -32,7 +33,12 @@ export async function useObsComposable() {
 
   const applicationStore = useApplicationStore();
   const { activeApplications } = storeToRefs(applicationStore);
-  const { addActiveApplication, removeActiveApplication, removeActiveApplications } = applicationStore;
+  const {
+    addActiveApplication,
+    removeActiveApplication,
+    removeActiveApplications,
+    updateMediaPlayerApplicationIcon,
+  } = applicationStore;
 
   const { iconPath, programInformation } = useProgramInformationComposable();
 
@@ -47,7 +53,7 @@ export async function useObsComposable() {
   await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
 
   function updateProgramVisibility() {
-    for (const [id, visible] of Object.entries(programs.value)) {
+    for (const [id, visible] of Object.entries(programs.value) as [TProgramId, boolean][]) {
       // ignore chat, it only gets visible when a message is sent
       if (id !== 'chat' && visible && !activeApplications.value.find(application => application.id === id)) {
         addActiveApplication(programInformation.value[id as TProgramId]);
@@ -113,6 +119,7 @@ export async function useObsComposable() {
     if (oldCategory && newCategory !== oldCategory) {
       programInformation.value['media-player'].iconPath = iconPath.value;
       programInformation.value['media-player'].text = newCategory;
+      updateMediaPlayerApplicationIcon('media-player');
     }
   }, {
     immediate: true,
