@@ -49,6 +49,7 @@ const intermissionText = computed(() => {
     case 'Pokémon Trading Card Game Live':
     case 'shapez':
     case 'Spec Ops: The Line':
+    case 'Stardew Valley':
     case 'Stray':
     case 'Supermarket Together':
       switch (props.mode) {
@@ -103,6 +104,8 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'rgba(62, 62, 74, 1)';
     case 'Spec Ops: The Line':
       return 'rgba(182, 106, 74, 0.75)';
+    case 'Stardew Valley':
+      return 'rgba(230,171,51,0.7)';
     case 'Stray':
       return 'rgba(41,26,26,0.75)';
     case 'Supermarket Together':
@@ -148,6 +151,8 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/shapez.jpg';
     case 'Spec Ops: The Line':
       return '/modern/game-backgrounds/spec-ops.jpg';
+    case 'Stardew Valley':
+      return '/modern/game-backgrounds/stardew-valley.jpg';
     case 'Stray':
       return '/modern/game-backgrounds/stray.jpg';
     case 'Supermarket Together':
