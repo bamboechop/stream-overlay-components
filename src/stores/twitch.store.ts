@@ -73,12 +73,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     const [information] = response.data.data;
     adSchedule.value = {
       duration: information.duration,
-      /*
-       * add a 65s delay as the date provided by the API isn't the actual ad start
-       * instead it is the moment where the stream manager dashboard shows "Ad starting soon"
-       * based on two streams, the ad starts around 65s after the date provided by the API
-       */
-      nextTime: (information.next_ad_at + 65) * 1000,
+      nextTime: information.next_ad_at * 1000,
     };
   };
 

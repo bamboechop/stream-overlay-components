@@ -53,6 +53,10 @@ function updateRemainingTime() {
   }
   const now = new Date();
   diffInSeconds.value = Math.max(0, Math.floor((adSchedule.value.nextTime - now.getTime()) / 1000));
+  if (diffInSeconds.value === 0) {
+    clearInterval();
+  }
+
   const minutes = Math.floor(diffInSeconds.value / 60);
   const seconds = diffInSeconds.value % 60;
   const displaySeconds = minutes > 0 ? seconds.toString(10).padStart(2, '0') : seconds;
@@ -67,10 +71,6 @@ function updateRemainingTime() {
     remainingTime.value = `${displaySeconds} Sekunde`;
   } else {
     remainingTime.value = 'Werbung beginnt jeden Moment.';
-  }
-
-  if (diffInSeconds.value === 0) {
-    clearInterval();
   }
 }
 
