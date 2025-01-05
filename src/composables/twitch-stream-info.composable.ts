@@ -1,42 +1,39 @@
 import { storeToRefs } from 'pinia';
 import { onBeforeUnmount, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import type { IEventStreamData } from '@/components/media-player/media-player.interface';
 import { useTwitchStore } from '@/stores/twitch.store';
+import { useEventStreamStore } from '@/stores/event-stream.store';
+import type { IEventStreamChannelUpdateData } from '@/common/interfaces/event-stream.interface';
 
 export function useTwitchStreamInfo() {
-  let eventSource: EventSource | null = null;
-
-  const route = useRoute();
+  const eventStreamStore = useEventStreamStore();
+  const { eventSource } = storeToRefs(eventStreamStore);
 
   const store = useTwitchStore();
   const { getChannelInformation } = store;
   const { category } = storeToRefs(store);
 
   function eventSourceSetup() {
-    eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/eventstream`);
+    eventSource.value = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/eventstream`);
 
-    eventSource.addEventListener('channel.update', (event) => {
-      const data = JSON.parse(event.data) as IEventStreamData;
+    eventSource.value.addEventListener('channel.update', (event) => {
+      const data = JSON.parse(event.data) as IEventStreamChannelUpdateData;
       category.value = data.category_name;
     });
 
-    eventSource.onerror = (error) => {
+    eventSource.value.onerror = (error) => {
       console.error(error);
-      eventSource?.close();
+      eventSource.value?.close();
     };
   }
 
   onMounted(async () => {
-    if (route.name === 'Coworking Component') {
-      eventSourceSetup();
-    }
+    eventSourceSetup();
     await getChannelInformation();
   });
 
   onBeforeUnmount(() => {
-    if (eventSource) {
-      eventSource.close();
+    if (eventSource.value) {
+      eventSource.value.close();
     }
   });
 }
