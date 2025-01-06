@@ -20,3 +20,24 @@ export interface IEventStreamChannelUpdateData {
   language: string;
   title: string;
 }
+
+export interface IEventStreamChannelPointsAutomaticRewardRedemptionAddData {
+  broadcaster_user_id: string;
+  broadcaster_user_login: string;
+  broadcaster_user_name: string;
+  id: string;
+  message: {
+    emotes: unknown;
+    text: string;
+  };
+  redeemed_at: string;
+  reward: {
+    cost: number;
+    type: 'celebration';
+    unlocked_emote: unknown;
+  };
+  user_id: string;
+  user_input: null;
+  user_login: string;
+  user_name: string;
+}

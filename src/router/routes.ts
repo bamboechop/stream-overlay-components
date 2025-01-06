@@ -9,6 +9,7 @@ import WebcamView from '@/views/WebcamView.vue';
 import IntermissionView from '@/views/IntermissionView.vue';
 import AdView from '@/views/AdView.vue';
 import PDFViewer from '@/views/PDFViewer.vue';
+import OnScreenCelebrationView from '@/views/OnScreenCelebrationView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -40,6 +41,11 @@ export const routes: RouteRecordRaw[] = [
     component: MediaPlayerView,
     name: 'Media Player Component',
     path: '/media-player',
+  },
+  {
+    component: OnScreenCelebrationView,
+    name: 'On Screen Celebration',
+    path: '/on-screen-celebration',
   },
   {
     component: PokemonCommunityGameView,
