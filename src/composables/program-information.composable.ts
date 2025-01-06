@@ -43,12 +43,12 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/mini-motorways.icon.png`;
       case 'Project Zomboid':
         return `/programs/${themePath}/project-zomboid.icon.png`;
-      case 'Pokémon Trading Card Game Live':
-        return `/programs/${themePath}/ptcgl.icon.png`;
       case 'shapez':
         return `/programs/${themePath}/shapez.icon.png`;
       case 'Spec Ops: The Line':
         return `/programs/${themePath}/spec-ops.icon.png`;
+      case 'Stardew Valley':
+        return `/programs/${themePath}/stardew-valley.icon.png`;
       case 'Stray':
         return `/programs/${themePath}/stray.icon.png`;
       case 'Supermarket Together':
@@ -59,6 +59,8 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/uno.icon.png`;
       case 'URBO: Dream One':
         return `/programs/${themePath}/urbo.icon.png`;
+      case 'Wreckfest':
+        return `/programs/${themePath}/wreckfest.icon.png`;
       case 'PDF Viewer':
         return `/programs/${themePath}/pdf-viewer.icon.png`;
       case 'Just Chatting':

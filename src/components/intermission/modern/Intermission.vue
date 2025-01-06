@@ -45,13 +45,17 @@ const intermissionText = computed(() => {
     case 'Golf It!':
     case 'Horizon Zero Dawn Remastered':
     case 'Minecraft':
+    case 'Mini Metro':
+    case 'Mini Motorways':
     case 'Project Zomboid':
-    case 'Pokémon Trading Card Game Live':
     case 'shapez':
     case 'Spec Ops: The Line':
     case 'Stardew Valley':
     case 'Stray':
     case 'Supermarket Together':
+    case 'UNO':
+    case 'URBO: Dream One':
+    case 'Wreckfest':
       switch (props.mode) {
         case 'break':
           text = '⏰ Kurze Pause, gleich geht es weiter mit';
@@ -96,10 +100,12 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'rgba(132, 64, 25, 0.5)';
     case 'Minecraft':
       return 'rgba(20, 5, 2, 0.5)';
+    case 'Mini Metro':
+      return 'rgba(68, 55, 47, 0.5)';
+    case 'Mini Motorways':
+      return 'rgba(253, 191, 92, 0.5)';
     case 'Project Zomboid':
       return 'rgba(0, 0, 0, 1)';
-    case 'Pokémon Trading Card Game Live':
-      return 'rgba(78, 101, 151, 0.5)';
     case 'shapez':
       return 'rgba(62, 62, 74, 1)';
     case 'Spec Ops: The Line':
@@ -110,6 +116,14 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'rgba(41,26,26,0.75)';
     case 'Supermarket Together':
       return 'rgba(238, 80, 87, 0.5)';
+    case 'Trackmania':
+      return 'rgba(252, 3, 26, 0.5)';
+    case 'UNO':
+      return 'rgba(246, 222, 0, 0.5)';
+    case 'URBO: Dream One':
+      return 'rgba(6, 85, 53, 0.5)';
+    case 'Wreckfest':
+      return 'rgba(251, 216, 11, 0.5)';
     case 'Just Chatting':
     default:
       return 'rgba(115, 117, 80, 0.35)';
@@ -145,8 +159,6 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/mini-motorways.jpg';
     case 'Project Zomboid':
       return '/modern/game-backgrounds/project-zomboid.jpg';
-    case 'Pokémon Trading Card Game Live':
-      return '/modern/game-backgrounds/ptcgl.jpg';
     case 'shapez':
       return '/modern/game-backgrounds/shapez.jpg';
     case 'Spec Ops: The Line':
@@ -157,6 +169,14 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/stray.jpg';
     case 'Supermarket Together':
       return '/modern/game-backgrounds/supermarket-together.jpg';
+    case 'Trackmania':
+      return '/modern/game-backgrounds/trackmania.jpg';
+    case 'UNO':
+      return '/modern/game-backgrounds/uno.jpg';
+    case 'URBO: Dream One':
+      return '/modern/game-backgrounds/urbo-dream-one.jpg';
+    case 'Wreckfest':
+      return '/modern/game-backgrounds/wreckfest.jpg';
     case 'Just Chatting':
     default:
       return '/modern/game-backgrounds/default.jpg';
