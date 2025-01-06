@@ -33,3 +33,6 @@ coverage
 .env*
 !.env.example
 
+# PDFs in here are needed for the build
+public/pdfs/*.pdf
+
