@@ -17,15 +17,12 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { onBeforeUnmount, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useStreamStatusStore } from '@/stores/stream-status.store';
-import { useEventStreamStore } from '@/stores/event-stream.store';
+import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import type { IEventStreamAdBreakBeginData } from '@/common/interfaces/event-stream.interface';
-
-const eventStreamStore = useEventStreamStore();
-const { eventSource } = storeToRefs(eventStreamStore);
 
 const streamStatusStore = useStreamStatusStore();
 const { live } = storeToRefs(streamStatusStore);
@@ -38,7 +35,6 @@ const diffInSeconds = ref(-1);
 const remainingTime = ref('');
 
 let adScheduleFetchInterval = 0;
-let eventSourceChannelAdBreakBeginEventListenerAdded = false;
 
 function clearInterval() {
   if (adScheduleFetchInterval !== 0) {
@@ -84,27 +80,28 @@ watch(adSchedule, async (newValue) => {
 
   updateRemainingTime();
   adScheduleFetchInterval = window.setInterval(updateRemainingTime, 1000);
-
-  if (eventSource.value && !eventSourceChannelAdBreakBeginEventListenerAdded) {
-    eventSourceChannelAdBreakBeginEventListenerAdded = true;
-    eventSource.value.addEventListener('channel.ad_break.begin', (event) => {
-      remainingTime.value = 'Werbung läuft, bis gleich.';
-
-      const data = JSON.parse(event.data) as IEventStreamAdBreakBeginData;
-      window.setTimeout(() => {
-        diffInSeconds.value = -1;
-      }, data.duration_seconds * 1000);
-      window.setTimeout(async () => {
-        await getAdSchedule();
-      }, (data.duration_seconds + 30) * 1000); // 30 second buffer for Twitch to update the ad schedule
-    });
-  }
 });
 
 watch(live, (newValue) => {
   if (!newValue) {
     clearInterval();
   }
+});
+
+const { on } = useEventStreamComposable();
+
+onMounted(async () => {
+  on<IEventStreamAdBreakBeginData>('channel.ad_break.begin', (data) => {
+    remainingTime.value = 'Werbung läuft, bis gleich.';
+
+    window.setTimeout(() => {
+      diffInSeconds.value = -1;
+    }, data.duration_seconds * 1000);
+
+    window.setTimeout(async () => {
+      await getAdSchedule();
+    }, (data.duration_seconds + 30) * 1000); // 30 second buffer for Twitch to update the ad schedule
+  });
 });
 
 onBeforeUnmount(() => {

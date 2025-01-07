@@ -19,14 +19,11 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
-import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
 
 const props = defineProps<{ active?: boolean; mode?: 'end' | 'break' | 'start' }>();
 
 const store = useTwitchStore();
 const { category } = storeToRefs(store);
-
-useTwitchStreamInfo();
 
 const intermissionText = computed(() => {
   if (props.mode === 'end') {

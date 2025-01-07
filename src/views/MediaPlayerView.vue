@@ -14,13 +14,13 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import ModernTheme from '@/components/media-player/modern/MediaPlayer.vue';
 import Windows95Theme from '@/components/media-player/windows95/MediaPlayer.vue';
-import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
+import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useApplicationStore } from '@/stores/application.store';
 
 const { theme } = useSearchParamsComposable();
 
-useTwitchStreamInfo();
+useTwitchStreamInfoComposable();
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

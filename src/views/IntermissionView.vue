@@ -13,13 +13,15 @@
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
-import { useTwitchStreamInfo } from '@/composables/twitch-stream-info.composable';
+import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import ModernTheme from '@/components/intermission/modern/Intermission.vue';
 import { useApplicationStore } from '@/stores/application.store';
+import { useEventStreamComposable } from '@/composables/event-stream.composable';
 
 const { mode, theme } = useSearchParamsComposable();
 
-useTwitchStreamInfo();
+useEventStreamComposable();
+useTwitchStreamInfoComposable();
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

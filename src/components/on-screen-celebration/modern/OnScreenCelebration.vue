@@ -15,9 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
-import { useEventStreamStore } from '@/stores/event-stream.store';
+import { onMounted, ref } from 'vue';
+import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import type { IEventStreamChannelPointsAutomaticRewardRedemptionAddData } from '@/common/interfaces/event-stream.interface';
 
 interface FloatingEmote {
@@ -42,8 +41,6 @@ const EMOTE_FILES = [
   'bamboe1SNOM.png',
 ];
 
-const eventStreamStore = useEventStreamStore();
-const { eventSource } = storeToRefs(eventStreamStore);
 const activeEmotes = ref<FloatingEmote[]>([]);
 const celebrationQueue = ref<(() => Promise<void>)[]>([]);
 const isCelebrating = ref(false);
@@ -123,16 +120,10 @@ function queueCelebration() {
   processQueue();
 }
 
-let eventSourceChannelPointsAutomaticRewardRedemptionAddEventListenerAdded = false;
+const { on } = useEventStreamComposable();
 
-watch(eventSource, (newValue) => {
-  if (!newValue || eventSourceChannelPointsAutomaticRewardRedemptionAddEventListenerAdded) {
-    return;
-  }
-
-  eventSourceChannelPointsAutomaticRewardRedemptionAddEventListenerAdded = true;
-  eventSource.value?.addEventListener('channel.channel_points_automatic_reward_redemption.add', (event) => {
-    const data = JSON.parse(event.data) as IEventStreamChannelPointsAutomaticRewardRedemptionAddData;
+onMounted(() => {
+  on<IEventStreamChannelPointsAutomaticRewardRedemptionAddData>('channel.channel_points_automatic_reward_redemption.add', (data) => {
     if (data.reward.type !== 'celebration') {
       return;
     }
