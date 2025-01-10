@@ -3,6 +3,7 @@ import { useLocalStorage } from '@vueuse/core';
 import axios from 'axios';
 import type {
   AnonSubMysteryGiftUserstate,
+  BanUserstate,
   ChatUserstate,
   DeleteUserstate,
   SubGiftUpgradeUserstate,
@@ -158,6 +159,12 @@ export async function useTwitchChat(theme?: TTheme) {
 
       client.on('anonsubmysterygift', (_channel: string, numbOfSubs: number, methods: SubMethods, userstate: AnonSubMysteryGiftUserstate) => {
         console.info('anonsubmysterygift', { _channel, numbOfSubs, methods, userstate });
+      });
+
+      client.on('ban', async (_channel: string, username: string, reason: string, userstate: BanUserstate) => {
+        if (userstate['target-user-id']) {
+          removeMessagesByUserId(userstate['target-user-id']);
+        }
       });
 
       // test with stesi
