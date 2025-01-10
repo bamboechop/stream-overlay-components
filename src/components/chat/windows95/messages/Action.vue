@@ -44,6 +44,7 @@
 import { onMounted, ref } from 'vue';
 import type { IAction, IBadge } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
+import { BOT_ACCOUNT_USERNAMES } from '@/common/constants/bot-accounts.constant';
 
 const props = defineProps<IAction>();
 
@@ -55,7 +56,7 @@ onMounted(() => {
   messageParts.value = parseMessage(props.emotes, props.text);
 
   if (props.userName) {
-    isMeMessage.value = !(['pokemoncommunitygame'].includes(props.userName.toLowerCase()));
+    isMeMessage.value = !(BOT_ACCOUNT_USERNAMES.includes(props.userName.toLowerCase()));
   }
 
   if (props.userBadges) {

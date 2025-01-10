@@ -25,6 +25,8 @@ import { useSearchParamsComposable } from '@/composables/search-params-composabl
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useApplicationStore } from '@/stores/application.store';
 import { useProgramInformationComposable } from '@/composables/program-information.composable';
+import type { IAction, IChat } from '@/common/interfaces/index.interface';
+import { BOT_ACCOUNT_USERNAMES } from '@/common/constants/bot-accounts.constant';
 
 const { chatVisibleTimeoutInSeconds, messageDebug, theme } = useSearchParamsComposable();
 
@@ -56,13 +58,19 @@ function resetHideTimeout() {
 
 if (theme.value === 'modern') {
   watch(() => messages.value.length, (newValue) => {
-    showChat.value = newValue > 0;
-    if (showChat.value) {
-      if (!activeApplications.value.some(application => application.id === programInformation.value.chat.id)) {
-        addActiveApplication(programInformation.value.chat);
-      }
-      if (!messageDebug) {
-        resetHideTimeout();
+    if (newValue > 0) {
+      const newestMessage = messages.value.at(-1);
+      if (newestMessage && 'userName' in newestMessage) {
+        const userName = newestMessage.userName;
+        if (userName && !BOT_ACCOUNT_USERNAMES.includes(userName)) {
+          showChat.value = true;
+          if (!activeApplications.value.some(application => application.id === programInformation.value.chat.id)) {
+            addActiveApplication(programInformation.value.chat);
+          }
+          if (!messageDebug) {
+            resetHideTimeout();
+          }
+        }
       }
     }
   }, { immediate: true });
