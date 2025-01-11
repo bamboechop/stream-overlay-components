@@ -26,8 +26,8 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     messages.value.push(message);
   };
 
-  const clearMessages = () => {
-    messages.value = [];
+  const clearMessages = (channel: string) => {
+    messages.value = messages.value.filter(message => message.channel !== channel);
   };
 
   const removeMessageByMessageId = (id: string) => {

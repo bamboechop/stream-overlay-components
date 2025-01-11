@@ -56,6 +56,12 @@
             ({{ userName }})
           </template>
         </span>
+        <template v-if="props.channel !== broadcasterInfo.name && props.channelImage">
+          <OtherChannelIndicator
+            :channel="props.channel"
+            :channel-image="props.channelImage"
+            class="message__other-channel-indicator" />
+        </template>
       </div>
       <span class="message__text">
         <template
@@ -82,8 +88,10 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, toRefs } from 'vue';
+import OtherChannelIndicator from '../OtherChannelIndicator.vue';
 import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
+import { broadcasterInfo } from '@/composables/twitch-chat.composable';
 
 const props = defineProps<IChat>();
 const { animationId, msgId } = toRefs(props);
@@ -164,6 +172,10 @@ onMounted(() => {
 
   &__info--has-emote {
     margin-top: -1px;
+  }
+
+  &__other-channel-indicator {
+    margin-left: auto;
   }
 }
 

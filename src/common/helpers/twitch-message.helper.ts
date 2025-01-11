@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { Badges, SubMethod } from 'tmi.js';
 import { getEmoteAsUrl, parseEmotesInMessage } from 'tmi-utils';
+import { STREAM_TOGETHER_COLORS } from '../constants/stream-together-colors.constant';
 
 export async function getUserIdByUserName(username: string): Promise<string | undefined> {
   return (await axios.get(`https://api.twitch.tv/helix/users?login=${username}`))?.data?.data?.[0]?.id;
@@ -55,3 +56,13 @@ export function parsePlan(plan?: SubMethod): number | 'Prime' | undefined {
   }
   return Number.parseInt(plan.substring(0, 1), 10);
 }
+
+export function parseChannelName(channel: string): string {
+  return channel.replace('#', '');
+}
+
+export function getStreamTogetherColor(channelName: string, streamTogetherChannels: string[]): string {
+  const index = streamTogetherChannels.indexOf(channelName);
+  return index >= 0 ? STREAM_TOGETHER_COLORS[index % STREAM_TOGETHER_COLORS.length] : STREAM_TOGETHER_COLORS[0];
+}
+

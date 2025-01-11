@@ -26,6 +26,7 @@ export interface IBadge {
 
 export interface IAction {
   availableBadges: Record<string, IBadge[]>;
+  channel: string;
   color?: string;
   displayName?: string;
   emotes?: { [emoteid: string]: string[] };
@@ -44,6 +45,8 @@ export interface IAction {
 export interface IChat {
   animationId?: 'rainbow-eclipse' | 'simmer';
   availableBadges: Record<string, IBadge[]>;
+  channel: string;
+  channelImage?: string;
   color?: string;
   displayName?: string;
   emotes?: { [emoteid: string]: string[] };
@@ -61,6 +64,8 @@ export interface IChat {
 }
 
 export interface IRaid {
+  channel: string;
+  id?: string;
   msgType: 'raid';
   show: boolean;
   timestamp: number;
@@ -71,6 +76,7 @@ export interface IRaid {
 }
 
 export interface IResub {
+  channel: string;
   color?: string;
   cumulativeMonths?: number;
   displayName?: string;
@@ -97,6 +103,7 @@ interface ISubGiftUser {
 };
 
 export interface ISubGift {
+  channel: string;
   id?: string;
   msgId?: 'subgift';
   msgType: 'subgift';
@@ -109,6 +116,7 @@ export interface ISubGift {
 }
 
 export interface ISubscription {
+  channel: string;
   color?: string;
   displayName?: string;
   emotes?: { [emoteid: string]: string[] };

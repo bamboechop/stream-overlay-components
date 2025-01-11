@@ -1,5 +1,8 @@
 <template>
   <div class="chat-messages">
+    <template v-if="streamTogetherChannels.length > 0">
+      <StreamTogetherInfoBox />
+    </template>
     <ul class="chat-messages__list">
       <template
         v-for="message of messages"
@@ -29,6 +32,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
+import StreamTogetherInfoBox from './StreamTogetherInfoBox.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
 import ActionMessage from '@/components/chat/modern/messages/Action.vue';
 import ChatMessage from '@/components/chat/modern/messages/Message.vue';
@@ -36,6 +40,9 @@ import RaidMessage from '@/components/chat/modern/messages/Raid.vue';
 import ResubMessage from '@/components/chat/modern/messages/Resub.vue';
 import SubGiftMessage from '@/components/chat/modern/messages/SubGift.vue';
 import SubscriptionMessage from '@/components/chat/modern/messages/Subscription.vue';
+import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+
+const { streamTogetherChannels } = useSearchParamsComposable();
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);

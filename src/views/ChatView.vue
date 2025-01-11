@@ -25,7 +25,6 @@ import { useSearchParamsComposable } from '@/composables/search-params-composabl
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useApplicationStore } from '@/stores/application.store';
 import { useProgramInformationComposable } from '@/composables/program-information.composable';
-import type { IAction, IChat } from '@/common/interfaces/index.interface';
 import { BOT_ACCOUNT_USERNAMES } from '@/common/constants/bot-accounts.constant';
 
 const { chatVisibleTimeoutInSeconds, messageDebug, theme } = useSearchParamsComposable();

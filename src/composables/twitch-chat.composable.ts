@@ -26,18 +26,20 @@ import type {
   ISubscription,
   ITwitchBadgeResponse,
 } from '@/common/interfaces/index.interface';
-import { getUserIdByUserName, getUserImageByUserId, parsePlan } from '@/common/helpers/twitch-message.helper';
+import { getUserIdByUserName, getUserImageByUserId, parseChannelName, parsePlan } from '@/common/helpers/twitch-message.helper';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { TTheme } from '@/common/types/index.type';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 
-export async function useTwitchChat(theme?: TTheme) {
-  const broadcaster = {
-    id: import.meta.env.VITE_TWITCH_BROADCASTER_ID,
-    name: import.meta.env.VITE_TWITCH_BROADCASTER_NAME,
-  };
+export const broadcasterInfo = {
+  id: import.meta.env.VITE_TWITCH_BROADCASTER_ID,
+  name: import.meta.env.VITE_TWITCH_BROADCASTER_NAME,
+};
 
-  const { debug, messageDebug } = useSearchParamsComposable();
+export const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
+
+export async function useTwitchChat(theme?: TTheme) {
+  const { debug, messageDebug, streamTogetherChannels } = useSearchParamsComposable();
 
   const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
@@ -79,25 +81,61 @@ export async function useTwitchChat(theme?: TTheme) {
         'Client-ID': clientId,
       };
 
-      const [chatBadgesResponse, globalChatBadgesResponse] = await Promise.all([
-        axios.get<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${broadcaster.id}`),
+      const badgePromises = [
+        axios.get<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${broadcasterInfo.id}`),
         axios.get<ITwitchBadgeResponse>('https://api.twitch.tv/helix/chat/badges/global'),
-      ]);
+      ];
 
+      if (streamTogetherChannels.length > 0) {
+        const channelIds: { [channel: string]: string } = {};
+        for (const channel of streamTogetherChannels) {
+          const channelId = await getUserIdByUserName(channel);
+          if (channelId) {
+            channelIds[channel] = channelId;
+            badgePromises.push(axios.get<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${channelId}`));
+          }
+        }
+        streamTogetherChannelIds.value = channelIds;
+      }
+
+      const [chatBadgesResponse, globalChatBadgesResponse, ...channelChatBadgesResponses] = await Promise.all(badgePromises);
       const availableBadges: Record<string, { description: string; id: string; imageUrl: string; title: string }[]> = {};
-      for (const set of [...globalChatBadgesResponse.data.data, ...chatBadgesResponse.data.data]) {
-        availableBadges[set.set_id] = [];
-        for (const version of set.versions) {
-          availableBadges[set.set_id].push({
+
+      // Process global badges
+      for (const set of globalChatBadgesResponse.data.data) {
+        availableBadges[set.set_id] = set.versions.map(version => ({
+          description: version.description,
+          id: version.id,
+          imageUrl: version.image_url_1x,
+          title: version.title,
+        }));
+      }
+
+      // Process broadcaster badges - these override global badges
+      for (const set of chatBadgesResponse.data.data) {
+        availableBadges[set.set_id] = set.versions.map(version => ({
+          description: version.description,
+          id: version.id,
+          imageUrl: version.image_url_1x,
+          title: version.title,
+        }));
+      }
+
+      // Process other channels' badges with channel prefix to keep them distinct
+      for (let i = 0; i < channelChatBadgesResponses.length; i++) {
+        const channelId = streamTogetherChannels[i];
+        for (const set of channelChatBadgesResponses[i].data.data) {
+          const key = `${channelId}_${set.set_id}`;
+          availableBadges[key] = set.versions.map(version => ({
             description: version.description,
             id: version.id,
             imageUrl: version.image_url_1x,
             title: version.title,
-          });
+          }));
         }
       }
 
-      const channels = [broadcaster.name];
+      const channels = [broadcasterInfo.name, ...streamTogetherChannels];
       if (debug) {
         channels.push(import.meta.env.VITE_TWITCH_DEBUG_CHANNEL);
       }
@@ -114,8 +152,9 @@ export async function useTwitchChat(theme?: TTheme) {
 
       await client.connect();
 
-      client.on('action', async (_channel: string, userstate: ChatUserstate, message: string, self: boolean) => {
-        if (self) {
+      client.on('action', async (channel: string, userstate: ChatUserstate, message: string, self: boolean) => {
+        const parsedChannel = parseChannelName(channel);
+        if (self || parsedChannel !== broadcasterInfo.name) {
           return;
         }
         const {
@@ -140,6 +179,7 @@ export async function useTwitchChat(theme?: TTheme) {
 
         addMessage({
           availableBadges,
+          channel: parsedChannel,
           color,
           displayName,
           emotes,
@@ -172,7 +212,7 @@ export async function useTwitchChat(theme?: TTheme) {
         console.info('cheer', { _channel, userstate, message });
       });
 
-      client.on('chat', async (_channel: string, userstate: ChatUserstate, message: string, self: boolean) => {
+      client.on('chat', async (channel: string, userstate: ChatUserstate, message: string, self: boolean) => {
         if (self) {
           return;
         }
@@ -198,9 +238,17 @@ export async function useTwitchChat(theme?: TTheme) {
           userImage = await getUserImageByUserId(userId);
         }
 
+        const parsedChannel = parseChannelName(channel);
+        let channelImage;
+        if (parsedChannel !== broadcasterInfo.name && streamTogetherChannelIds.value[parsedChannel]) {
+          channelImage = await getUserImageByUserId(streamTogetherChannelIds.value[parsedChannel]);
+        }
+
         addMessage({
           animationId,
           availableBadges,
+          channel: parsedChannel,
+          channelImage,
           color,
           displayName,
           emotes,
@@ -218,8 +266,8 @@ export async function useTwitchChat(theme?: TTheme) {
         } as IChat);
       });
 
-      client.on('clearchat', (_channel: string) => {
-        clearMessages();
+      client.on('clearchat', (channel: string) => {
+        clearMessages(parseChannelName(channel));
       });
 
       client.on('disconnected', (reason: string) => {
@@ -239,7 +287,12 @@ export async function useTwitchChat(theme?: TTheme) {
         }
       });
 
-      client.on('raided', async (_channel: string, username: string, viewers: number) => {
+      client.on('raided', async (channel: string, username: string, viewers: number) => {
+        const parsedChannel = parseChannelName(channel);
+        if (parsedChannel !== broadcasterInfo.name) {
+          return;
+        }
+
         const userId = await getUserIdByUserName(username);
         if (theme === 'cities-skylines-ii') {
           if (userId) {
@@ -247,10 +300,14 @@ export async function useTwitchChat(theme?: TTheme) {
           }
         }
 
+        const timestamp = Date.now();
+
         addMessage({
+          channel: parsedChannel,
+          id: timestamp.toString(),
           msgType: 'raid',
           show: true,
-          timestamp: Date.now(),
+          timestamp,
           userId,
           userImage,
           userName: username,
@@ -258,7 +315,12 @@ export async function useTwitchChat(theme?: TTheme) {
         } as IRaid);
       });
 
-      client.on('resub', async (_channel: string, _username: string, months: number, message: string, userstate: SubUserstate, _methods: SubMethods) => {
+      client.on('resub', async (channel: string, _username: string, months: number, message: string, userstate: SubUserstate, _methods: SubMethods) => {
+        const parsedChannel = parseChannelName(channel);
+        if (parsedChannel !== broadcasterInfo.name) {
+          return;
+        }
+
         const {
           color,
           'display-name': displayName,
@@ -281,6 +343,7 @@ export async function useTwitchChat(theme?: TTheme) {
         }
 
         addMessage({
+          channel: parsedChannel,
           color,
           cumulativeMonths: Number.parseInt(subCumulativeMonthsString as string, 10),
           displayName,
@@ -300,7 +363,12 @@ export async function useTwitchChat(theme?: TTheme) {
         } as IResub);
       });
 
-      client.on('subgift', async (_channel: string, _username: string, _streakMonths: number, _recipient: string, _methods: SubMethods, userstate: SubGiftUserstate) => {
+      client.on('subgift', async (channel: string, _username: string, _streakMonths: number, _recipient: string, _methods: SubMethods, userstate: SubGiftUserstate) => {
+        const parsedChannel = parseChannelName(channel);
+        if (parsedChannel !== broadcasterInfo.name) {
+          return;
+        }
+
         const {
           'display-name': senderDisplayName,
           id,
@@ -327,6 +395,7 @@ export async function useTwitchChat(theme?: TTheme) {
         }
 
         addMessage({
+          channel: parsedChannel,
           id,
           msgId,
           msgType: 'subgift',
@@ -356,7 +425,12 @@ export async function useTwitchChat(theme?: TTheme) {
          */
       });
 
-      client.on('subscription', async (_channel: string, _username: string, _methods: SubMethods, _message: string, userstate: SubUserstate) => {
+      client.on('subscription', async (channel: string, _username: string, _methods: SubMethods, _message: string, userstate: SubUserstate) => {
+        const parsedChannel = parseChannelName(channel);
+        if (parsedChannel !== broadcasterInfo.name) {
+          return;
+        }
+
         const {
           color,
           'display-name': displayName,
@@ -379,6 +453,7 @@ export async function useTwitchChat(theme?: TTheme) {
         }
 
         addMessage({
+          channel: parsedChannel,
           color,
           displayName,
           emotes,
@@ -422,9 +497,9 @@ export async function useTwitchChat(theme?: TTheme) {
     }
 
     window.setInterval(async () => {
-      await updateViewerCount(broadcaster.name);
+      await updateViewerCount(broadcasterInfo.name);
     }, 1000 * 60);
-    await updateViewerCount(broadcaster.name);
+    await updateViewerCount(broadcasterInfo.name);
   });
 
   return {
