@@ -31,6 +31,8 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/drg-survivor.icon.png`;
       case 'Golf It!':
         return `/programs/${themePath}/golf-it.icon.png`;
+      case 'Horizon Forbidden West':
+        return `/programs/${themePath}/horizon-forbidden-west.icon.png`;
       case 'Horizon Zero Dawn Remastered':
         return `/programs/${themePath}/horizon-zero-dawn-remastered.icon.png`;
       case 'Lego & Brickbuilding':

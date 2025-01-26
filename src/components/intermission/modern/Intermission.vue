@@ -40,6 +40,7 @@ const intermissionText = computed(() => {
     case 'Dorfromantik':
     case 'Deep Rock Galactic: Survivor':
     case 'Golf It!':
+    case 'Horizon Forbidden West':
     case 'Horizon Zero Dawn Remastered':
     case 'Minecraft':
     case 'Mini Metro':
@@ -93,6 +94,8 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'transparent';
     case 'Golf It!':
       return 'rgba(135, 80, 5, 0.5)';
+    case 'Horizon Forbidden West':
+      return 'rgba(132, 64, 25, 0.5)';
     case 'Horizon Zero Dawn Remastered':
       return 'rgba(132, 64, 25, 0.5)';
     case 'Minecraft':
@@ -146,6 +149,8 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/drg-survivor.jpg';
     case 'Golf It!':
       return '/modern/game-backgrounds/golf-it.jpg';
+    case 'Horizon Forbidden West':
+      return '/modern/game-backgrounds/horizon-forbidden-west.jpg';
     case 'Horizon Zero Dawn Remastered':
       return '/modern/game-backgrounds/horizon-zero-dawn-remastered.jpg';
     case 'Minecraft':
