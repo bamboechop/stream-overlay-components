@@ -86,7 +86,11 @@ export async function useObsComposable() {
 
   // handle source visibility changes
   obs.on('SceneItemEnableStateChanged', (event) => {
-    programs.value[obsSceneIdToProgramIdMapping[event.sceneItemId]] = event.sceneItemEnabled;
+    const { sceneItemId, sceneUuid } = event;
+    if (sceneUuid === '01619e4f-63e9-468a-9d17-b0ce9bf9489f' && sceneItemId !== 41) {
+      return; // ignore changes within the media player group, we only care about updates to the whole group
+    }
+    programs.value[obsSceneIdToProgramIdMapping[sceneItemId]] = event.sceneItemEnabled;
     updateProgramVisibility();
   });
 
