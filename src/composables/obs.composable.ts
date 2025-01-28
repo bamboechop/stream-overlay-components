@@ -18,6 +18,12 @@ const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
   69: 'pdf-viewer',
 };
 
+const obsIgnoredSceneUuids = [
+  'c608d42c-550d-45ff-9b43-5078abf9990a', // Emote Wall Intermission
+  '75e16e93-91d5-4061-96ca-5a25fcfa995c', // Alerts Group
+  '1007f2aa-02fa-48dd-9828-a7b0095154ce', // OS Elements
+];
+
 export async function useObsComposable() {
   /*
    * needs to be before any async call otherwise Vue will show a warning in the console
@@ -87,6 +93,9 @@ export async function useObsComposable() {
   // handle source visibility changes
   obs.on('SceneItemEnableStateChanged', (event) => {
     const { sceneItemId, sceneUuid } = event;
+    if (obsIgnoredSceneUuids.includes(sceneUuid)) {
+      return;
+    }
     if (sceneUuid === '01619e4f-63e9-468a-9d17-b0ce9bf9489f' && sceneItemId !== 41) {
       return; // ignore changes within the media player group, we only care about updates to the whole group
     }
