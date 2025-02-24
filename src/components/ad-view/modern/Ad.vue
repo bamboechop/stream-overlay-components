@@ -1,7 +1,8 @@
 <template>
   <WindowFrame
     class="ad-window"
-    :class="{ 'ad-window--visible': diffInSeconds < 10 * 60 && diffInSeconds >= 0 }">
+    :class="{ 'ad-window--visible': diffInSeconds < 10 * 60 && diffInSeconds >= 0 }"
+    :style="adProgress !== null ? { '--duration': `${duration}s` } : {}">
     <div class="ad">
       <span class="ad__text">
         <template v-if="diffInSeconds > 0">
@@ -33,10 +34,12 @@ const { getAdSchedule } = twitchStore;
 
 const diffInSeconds = ref(-1);
 const remainingTime = ref('');
+const adProgress = ref<number | null>(null);
+const duration = ref<number>(0);
 
 let adScheduleFetchInterval = 0;
 
-function clearInterval() {
+function clearAdScheduleInterval() {
   if (adScheduleFetchInterval !== 0) {
     window.clearInterval(adScheduleFetchInterval);
     adScheduleFetchInterval = 0;
@@ -50,7 +53,7 @@ function updateRemainingTime() {
   const now = new Date();
   diffInSeconds.value = Math.max(0, Math.floor((adSchedule.value.nextTime - now.getTime()) / 1000));
   if (diffInSeconds.value === 0) {
-    clearInterval();
+    clearAdScheduleInterval();
   }
 
   const minutes = Math.floor(diffInSeconds.value / 60);
@@ -70,8 +73,9 @@ function updateRemainingTime() {
   }
 }
 
-watch(adSchedule, async (newValue) => {
-  clearInterval();
+watch(() => adSchedule.value, (newValue) => {
+  clearAdScheduleInterval();
+  adProgress.value = null;
 
   // check if newValue doesn't exist or if nextTime is a date in the past
   if (!newValue || newValue.nextTime < new Date().getTime()) {
@@ -84,7 +88,7 @@ watch(adSchedule, async (newValue) => {
 
 watch(live, (newValue) => {
   if (!newValue) {
-    clearInterval();
+    clearAdScheduleInterval();
   }
 });
 
@@ -92,26 +96,40 @@ const { on } = useEventStreamComposable();
 
 onMounted(async () => {
   on<IEventStreamAdBreakBeginData>('channel.ad_break.begin', (data) => {
-    clearInterval();
+    clearAdScheduleInterval();
     remainingTime.value = 'Werbung läuft, bis gleich.';
+
+    // Initialize progress bar
+    adProgress.value = 100;
+    duration.value = data.duration_seconds;
 
     window.setTimeout(() => {
       diffInSeconds.value = -1;
+      adProgress.value = null;
     }, data.duration_seconds * 1000);
 
     window.setTimeout(async () => {
       await getAdSchedule();
-    }, (data.duration_seconds + 30) * 1000); // 30 second buffer for Twitch to update the ad schedule
+    }, (data.duration_seconds + 30) * 1000);
   });
 });
 
 onBeforeUnmount(() => {
-  clearInterval();
+  clearAdScheduleInterval();
 });
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/modern.variables';
+
+@keyframes decreaseWidth {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
 
 .ad {
   align-items: center;
@@ -140,6 +158,28 @@ onBeforeUnmount(() => {
   right: 0;
   transition: bottom .5s ease-in-out;
   width: max-content;
+
+  &::before {
+    animation: none;
+    background-color: #040079;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform-origin: left;
+    width: 100%;
+    z-index: -1;
+  }
+
+  &[style*="--duration"] {
+    &::before {
+      animation: decreaseWidth var(--duration) linear forwards;
+      will-change: transform;
+    }
+  }
 }
 
 .ad-window--visible {
