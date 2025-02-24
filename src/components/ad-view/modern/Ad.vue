@@ -96,6 +96,7 @@ const { on } = useEventStreamComposable();
 
 onMounted(async () => {
   on<IEventStreamAdBreakBeginData>('channel.ad_break.begin', (data) => {
+    diffInSeconds.value = 0;
     clearAdScheduleInterval();
     remainingTime.value = 'Werbung läuft, bis gleich.';
 
