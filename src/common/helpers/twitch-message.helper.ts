@@ -65,4 +65,3 @@ export function getStreamTogetherColor(channelName: string, streamTogetherChanne
   const index = streamTogetherChannels.indexOf(channelName);
   return index >= 0 ? STREAM_TOGETHER_COLORS[index % STREAM_TOGETHER_COLORS.length] : STREAM_TOGETHER_COLORS[0];
 }
-

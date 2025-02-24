@@ -10,7 +10,8 @@
         <div class="stream-together-info-box__channel">
           <OtherChannelIndicator
             :channel="channel"
-            :channel-image="channelImages[channel]" />
+            :channel-image="channelImages[channel]"
+            :stream-together-channels="streamTogetherChannels" />
           {{ channel }}
         </div>
       </template>
@@ -19,13 +20,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import OtherChannelIndicator from './OtherChannelIndicator.vue';
 import { getUserImageByUserId } from '@/common/helpers/twitch-message.helper';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { streamTogetherChannelIds } from '@/composables/twitch-chat.composable';
+import { useTwitchStore } from '@/stores/twitch.store';
 
-const { streamTogetherChannels } = useSearchParamsComposable();
+const { streamTogetherChannels: streamTogetherChannelsFromSearchParams } = useSearchParamsComposable();
+
+const twitchStore = useTwitchStore();
+const { streamTogetherChannels: streamTogetherChannelsFromStore } = storeToRefs(twitchStore);
+
+const streamTogetherChannels = computed(() => streamTogetherChannelsFromSearchParams.length > 0 ? streamTogetherChannelsFromSearchParams : streamTogetherChannelsFromStore.value);
 
 const channelImages = ref<{ [username: string]: string }>({});
 
@@ -33,11 +41,11 @@ watch(streamTogetherChannelIds, async (newValue) => {
   if (Object.keys(newValue).length === 0) {
     return;
   }
-  const channelImagePromises = streamTogetherChannels.map(channel => getUserImageByUserId(newValue[channel]));
+  const channelImagePromises = streamTogetherChannels.value.map(channel => getUserImageByUserId(newValue[channel]));
 
   const resolvedPromises = await Promise.all(channelImagePromises);
   for (let i = 0; i < resolvedPromises.length; i++) {
-    channelImages.value[streamTogetherChannels[i]] = resolvedPromises[i];
+    channelImages.value[streamTogetherChannels.value[i]] = resolvedPromises[i];
   }
 }, { deep: true, immediate: true });
 </script>

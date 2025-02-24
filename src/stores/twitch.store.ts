@@ -17,6 +17,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   const category = ref('Media Player');
   const messages = ref<TMessage[]>([]);
   const viewers = ref(0);
+  const streamTogetherChannels = ref<string[]>([]);
 
   const addDebugMessages = () => {
     messages.value.push(resubDummy, subscriptionDummy, subgiftDummy, actionDummy, ...chatDummy, raidDummy);
@@ -82,6 +83,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     const { data } = response;
     if (data) {
       category.value = data.game_name;
+      streamTogetherChannels.value = (data.title?.match(/@\w+/g) || []).map((username: string) => username.substring(1));
     }
   };
 
@@ -94,6 +96,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     adSchedule,
     category,
     messages,
+    streamTogetherChannels,
     viewers,
     addMessage,
     addDebugMessages,

@@ -44,6 +44,13 @@ const active = computed(() => activeApplications.value.find(application => appli
 const hideTimeout = ref<number | null>(null);
 const showChat = ref(messageDebug);
 
+const { getChannelInformation } = store;
+try {
+  await getChannelInformation();
+} catch (err) {
+  console.error('Failed to get channel information:', err);
+}
+
 function resetHideTimeout() {
   if (hideTimeout.value) {
     clearTimeout(hideTimeout.value);

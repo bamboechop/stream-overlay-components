@@ -8,20 +8,18 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { getStreamTogetherColor } from '@/common/helpers/twitch-message.helper';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { broadcasterInfo } from '@/composables/twitch-chat.composable';
 
 const props = defineProps<{
   channel: string;
   channelImage: string;
+  streamTogetherChannels: string[];
 }>();
-
-const { streamTogetherChannels } = useSearchParamsComposable();
 
 const channelBorderColor = ref<string>('');
 
 if (props.channel !== broadcasterInfo.name) {
-  channelBorderColor.value = getStreamTogetherColor(props.channel, streamTogetherChannels);
+  channelBorderColor.value = getStreamTogetherColor(props.channel, props.streamTogetherChannels);
 }
 </script>
 

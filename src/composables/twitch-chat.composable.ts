@@ -39,7 +39,7 @@ export const broadcasterInfo = {
 export const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
 
 export async function useTwitchChat(theme?: TTheme) {
-  const { debug, messageDebug, streamTogetherChannels } = useSearchParamsComposable();
+  const { debug, messageDebug, streamTogetherChannels: streamTogetherChannelsFromSearchParams } = useSearchParamsComposable();
 
   const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
@@ -49,7 +49,7 @@ export async function useTwitchChat(theme?: TTheme) {
   let userImage = 'https://picsum.photos/40';
 
   const store = useTwitchStore();
-  const { viewers } = storeToRefs(store);
+  const { streamTogetherChannels: streamTogetherChannelsFromStore, viewers } = storeToRefs(store);
   const {
     addMessage,
     addDebugMessages,
@@ -86,6 +86,7 @@ export async function useTwitchChat(theme?: TTheme) {
         axios.get<ITwitchBadgeResponse>('https://api.twitch.tv/helix/chat/badges/global'),
       ];
 
+      const streamTogetherChannels = streamTogetherChannelsFromSearchParams.length > 0 ? streamTogetherChannelsFromSearchParams : streamTogetherChannelsFromStore.value;
       if (streamTogetherChannels.length > 0) {
         const channelIds: { [channel: string]: string } = {};
         for (const channel of streamTogetherChannels) {

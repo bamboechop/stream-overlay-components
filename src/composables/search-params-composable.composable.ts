@@ -32,7 +32,9 @@ export function useSearchParamsComposable() {
     debug: searchParams.debug === 'true',
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,
-    streamTogetherChannels: searchParams['stream-together-channels']?.split(',') ?? [],
+    streamTogetherChannels: searchParams['stream-together-channels'] && searchParams['stream-together-channels'].length > 0
+      ? searchParams['stream-together-channels'].split(',')
+      : [],
     theme,
     themePath: theme.value.replace('-', ''),
     url: searchParams.url,
