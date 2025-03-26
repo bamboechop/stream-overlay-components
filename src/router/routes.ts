@@ -10,6 +10,7 @@ import IntermissionView from '@/views/IntermissionView.vue';
 import AdView from '@/views/AdView.vue';
 import PDFViewer from '@/views/PDFViewer.vue';
 import OnScreenCelebrationView from '@/views/OnScreenCelebrationView.vue';
+import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -66,5 +67,10 @@ export const routes: RouteRecordRaw[] = [
     component: WebcamView,
     name: 'Webcam Component',
     path: '/webcam',
+  },
+  {
+    component: GigantifiedEmoteView,
+    name: 'Gigantified Emote',
+    path: '/gigantified-emote',
   },
 ];

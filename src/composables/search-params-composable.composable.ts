@@ -7,6 +7,7 @@ export function useSearchParamsComposable() {
     'active'?: 'true' | 'false';
     'chat-visible-timeout'?: string;
     'debug'?: 'true' | 'false';
+    'gigantified-emote-volume'?: string;
     'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
     'stream-together-channels'?: string;
@@ -14,6 +15,22 @@ export function useSearchParamsComposable() {
     'url'?: string;
   }>('history');
   const localStorageTheme = useLocalStorage<TTheme>('theme', import.meta.env.VITE_THEME);
+
+  const gigantifiedEmoteVolume = computed(() => {
+    const param = searchParams['gigantified-emote-volume'];
+    if (!param) {
+      return 1;
+    }
+    const value = Number.parseFloat(param);
+    if (Number.isNaN(value)) {
+      return 1;
+    }
+    // If the value is already a decimal (less than 1), use it directly
+    // Otherwise, treat it as a percentage and divide by 100
+    const normalizedValue = value <= 1 ? value : value / 100;
+    // make sure volume value is between 0 and 1
+    return Math.min(Math.max(normalizedValue, 0), 1);
+  });
 
   const theme = computed(() => {
     if (searchParams.theme) {
@@ -30,6 +47,7 @@ export function useSearchParamsComposable() {
     active: searchParams.active === 'true',
     chatVisibleTimeoutInSeconds: searchParams['chat-visible-timeout'] ? Number.parseInt(searchParams['chat-visible-timeout'], 10) : 10,
     debug: searchParams.debug === 'true',
+    gigantifiedEmoteVolume,
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,
     streamTogetherChannels: searchParams['stream-together-channels'] && searchParams['stream-together-channels'].length > 0
