@@ -53,7 +53,6 @@ function onAnimationEnd() {
 
 onMounted(() => {
   volume.value = gigantifiedEmoteVolume.value;
-  console.log('gigantifiedEmoteVolume', gigantifiedEmoteVolume.value);
 });
 
 watch([isAnimating, playing], ([isAnimating, isPlaying]) => {
