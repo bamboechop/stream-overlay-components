@@ -25,7 +25,7 @@ export function useSearchParamsComposable() {
     if (Number.isNaN(value)) {
       return 1;
     }
-    // If the value is already a decimal (less than 1), use it directly
+    // If the value is already a decimal (less than or exactly 1), use it directly
     // Otherwise, treat it as a percentage and divide by 100
     const normalizedValue = value <= 1 ? value : value / 100;
     // make sure volume value is between 0 and 1
