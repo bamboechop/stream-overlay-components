@@ -18,11 +18,10 @@ const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
   69: 'pdf-viewer',
 };
 
-const obsIgnoredSceneUuids = [
-  'f373973c-304b-4d71-850f-61ef7160bc0e', // Gigantified Emote
-  'c608d42c-550d-45ff-9b43-5078abf9990a', // Emote Wall Intermission
-  '75e16e93-91d5-4061-96ca-5a25fcfa995c', // Alerts Group
-  '1007f2aa-02fa-48dd-9828-a7b0095154ce', // OS Elements
+const obsAllowedSceneItemIds = [
+  41, // Media Player
+  51, // Webcam
+  69, // PDF Viewer
 ];
 
 export async function useObsComposable() {
@@ -93,12 +92,9 @@ export async function useObsComposable() {
 
   // handle source visibility changes
   obs.on('SceneItemEnableStateChanged', (event) => {
-    const { sceneItemId, sceneUuid } = event;
-    if (obsIgnoredSceneUuids.includes(sceneUuid)) {
+    const { sceneItemId } = event;
+    if (!obsAllowedSceneItemIds.includes(sceneItemId)) {
       return;
-    }
-    if (sceneUuid === '01619e4f-63e9-468a-9d17-b0ce9bf9489f' && sceneItemId !== 41) {
-      return; // ignore changes within the media player group, we only care about updates to the whole group
     }
     programs.value[obsSceneIdToProgramIdMapping[sceneItemId]] = event.sceneItemEnabled;
     updateProgramVisibility();
