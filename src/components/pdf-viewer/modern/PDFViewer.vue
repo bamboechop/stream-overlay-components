@@ -1,5 +1,6 @@
 <template>
   <WindowFrame
+    :active="active"
     class="pdf-viewer-window"
     title="PDF Viewer">
     <div
@@ -18,6 +19,8 @@
 import PdfEmbed from 'vue-pdf-embed';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+
+defineProps<{ active?: boolean }>();
 
 const { url } = useSearchParamsComposable();
 

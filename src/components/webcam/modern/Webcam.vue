@@ -16,16 +16,18 @@ defineProps<{ active?: boolean }>();
 <style lang="scss" scoped>
 @use 'sass:math';
 
-@import '@/assets/variables';
+@import '@/assets/modern.variables';
 
 .webcam {
   aspect-ratio: 16/9;
   background-color: $chroma-key-color;
   border-radius: 4px;
+  border-top-right-radius: 2px;
   width: 100%;
 }
 
 .webcam-window {
+  border-top-right-radius: calc($window-frame-border-radius - $window-frame-padding);
   max-width: 1920px;
 }
 </style>

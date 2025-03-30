@@ -26,6 +26,7 @@ const { category } = storeToRefs(store);
   background-color: $chroma-key-color;
   border-radius: $window-frame-border-radius - $window-frame-padding;
   color: #fff;
+  max-height: calc(100vh - 38px);
 }
 
 .media-player-window {

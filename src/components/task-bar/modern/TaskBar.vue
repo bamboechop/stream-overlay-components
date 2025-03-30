@@ -64,9 +64,9 @@ defineProps<{ programs: IProgram[] }>();
     &::after {
       background-color: rgba(84, 97, 0, 0.75);
       border-radius: $window-frame-border-radius;
-      bottom: -7px;
+      bottom: -6px;
       content: '';
-      height: 4px;
+      height: 3px;
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
@@ -85,7 +85,7 @@ defineProps<{ programs: IProgram[] }>();
 }
 
 .task-bar-window {
-  border-bottom-left-radius: 0;
+  border-bottom-left-radius: calc($window-frame-border-radius - $window-frame-padding);
   border-bottom-right-radius: 0;
   border-top-left-radius: 0;
   height: 64px;
