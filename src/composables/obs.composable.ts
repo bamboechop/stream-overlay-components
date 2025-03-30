@@ -11,7 +11,6 @@ const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
   4: 'intermission',
   5: 'intermission',
   6: 'intermission',
-  13: 'pcg',
   40: 'chat',
   41: 'media-player',
   51: 'webcam',
