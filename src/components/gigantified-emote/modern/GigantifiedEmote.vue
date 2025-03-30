@@ -88,7 +88,7 @@ watch(messages, () => {
   filter: drop-shadow(0 75px 20px rgba(0, 0, 0, 0.75));
 
   &.animate-slide-through {
-    animation: slide-up 1.801s ease-in-out forwards;
+    animation: slide-up 2.201s ease-in-out forwards;
   }
 
   &.animate-lurk {
