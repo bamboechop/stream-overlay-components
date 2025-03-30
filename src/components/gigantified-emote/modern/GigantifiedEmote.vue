@@ -5,6 +5,7 @@
       :class="{
         'animate-slide-through': isAnimating && !isLurkEmote,
         'animate-lurk': isAnimating && isLurkEmote,
+        'gigantified-emote--lurk': isLurkEmote,
       }"
       :src="gigantifiedEmoteQueue[0].url"
       :alt="gigantifiedEmoteQueue[0].emote"
@@ -30,7 +31,7 @@ const { messages } = storeToRefs(store);
 
 const { gigantifiedEmoteVolume } = useSearchParamsComposable();
 
-const gigantifiedEmoteQueue = ref<{ emote: string; url: string }[]>([]);
+const gigantifiedEmoteQueue = ref<{ emote: string; messageId: string; url: string }[]>([]);
 const isAnimating = ref(false);
 const audioPlayer = ref<HTMLAudioElement>();
 
@@ -72,7 +73,9 @@ watch(messages, () => {
         const fileEnding = emote === 'bamboe1Lurk' ? 'gif' : 'png';
         url = `/emotes/${emote}.${fileEnding}`;
       }
-      gigantifiedEmoteQueue.value.push({ emote, url });
+      if (!gigantifiedEmoteQueue.value.find(item => item.messageId === newestMessage.msgId)) {
+        gigantifiedEmoteQueue.value.push({ emote, messageId: newestMessage.msgId, url });
+      }
     }
   }
 }, { deep: true, immediate: true });
@@ -94,6 +97,11 @@ watch(messages, () => {
   &.animate-lurk {
     animation: lurk-animation 3.6s ease-in-out forwards;
   }
+}
+
+.gigantified-emote--lurk {
+  margin: 0 auto;
+  max-width: 1920px;
 }
 
 @keyframes slide-up {
