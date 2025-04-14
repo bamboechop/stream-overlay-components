@@ -43,6 +43,8 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/mini-metro.icon.png`;
       case 'Mini Motorways':
         return `/programs/${themePath}/mini-motorways.icon.png`;
+      case 'Need for Speed: Underground 2':
+        return `/programs/${themePath}/need-for-speed-underground-2.icon.png`;
       case 'Project Zomboid':
         return `/programs/${themePath}/project-zomboid.icon.png`;
       case 'shapez':

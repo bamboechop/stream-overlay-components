@@ -42,6 +42,7 @@ const intermissionText = computed(() => {
     case 'Golf It!':
     case 'Horizon Forbidden West':
     case 'Horizon Zero Dawn Remastered':
+    case 'Need for Speed: Underground 2':
     case 'Minecraft':
     case 'Mini Metro':
     case 'Mini Motorways':
@@ -104,6 +105,8 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'rgba(68, 55, 47, 0.5)';
     case 'Mini Motorways':
       return 'rgba(253, 191, 92, 0.5)';
+    case 'Need for Speed: Underground 2':
+      return 'rgba(9, 103, 53, 0.75)';
     case 'Project Zomboid':
       return 'rgba(0, 0, 0, 1)';
     case 'shapez':
@@ -159,6 +162,8 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/mini-metro.jpg';
     case 'Mini Motorways':
       return '/modern/game-backgrounds/mini-motorways.jpg';
+    case 'Need for Speed: Underground 2':
+      return '/modern/game-backgrounds/need-for-speed-underground-2.jpg';
     case 'Project Zomboid':
       return '/modern/game-backgrounds/project-zomboid.jpg';
     case 'shapez':
