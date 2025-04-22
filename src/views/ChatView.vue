@@ -79,7 +79,7 @@ if (theme.value === 'modern') {
         }
       }
     }
-  }, { immediate: true });
+  });
 }
 </script>
 
