@@ -1,52 +1,105 @@
-import { onBeforeUnmount, onMounted } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import type { IEventStreamAdBreakBeginData, IEventStreamChannelPointsAutomaticRewardRedemptionAddData, IEventStreamChannelUpdateData } from '@/common/interfaces/event-stream.interface';
 
 const eventBus = new EventTarget();
 let eventSource: EventSource | null = null;
-const addedEventListeners = new Set<string>();
+const eventListeners = new Map<string, (event: MessageEvent) => void>();
 let isSetupComplete = false;
+let reconnectTimeoutId: ReturnType<typeof setTimeout> | null = null;
+const isConnecting = ref(false);
+const reconnectDelay = 5000;
+const maxReconnectAttempts = 5;
+let reconnectAttempts = 0;
 
 export function useEventStreamComposable() {
+  function removeAllEventSourceListeners() {
+    if (!eventSource) {
+      return;
+    }
+    eventListeners.forEach((handler, eventName) => {
+      eventSource?.removeEventListener(eventName, handler);
+    });
+    eventListeners.clear();
+  }
+
   function addEventSourceListener(eventName: string, handler: (event: MessageEvent) => void) {
-    if (!eventSource || addedEventListeners.has(eventName)) {
+    if (!eventSource || eventListeners.has(eventName)) {
       return;
     }
     eventSource.addEventListener(eventName, handler);
-    addedEventListeners.add(eventName);
+    eventListeners.set(eventName, handler);
   }
 
-  function eventSourceSetup() {
-    if (eventSource) {
+  function scheduleReconnect() {
+    if (reconnectTimeoutId) {
+      clearTimeout(reconnectTimeoutId);
+    }
+    isConnecting.value = false;
+
+    if (reconnectAttempts >= maxReconnectAttempts) {
+      // eslint-disable-next-line no-alert
+      window.alert('Connection to the event stream failed five times!');
+      reconnectAttempts = 0;
       return;
     }
 
-    eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/eventstream`);
-
-    // Set up core event listeners
-    addEventSourceListener('channel.update', (event) => {
-      const detail = JSON.parse(event.data) as IEventStreamChannelUpdateData;
-      eventBus.dispatchEvent(new CustomEvent('channel.update', { detail }));
-    });
-
-    addEventSourceListener('channel.ad_break.begin', (event) => {
-      const detail = JSON.parse(event.data) as IEventStreamAdBreakBeginData;
-      eventBus.dispatchEvent(new CustomEvent('channel.ad_break.begin', { detail }));
-    });
-
-    addEventSourceListener('channel.channel_points_automatic_reward_redemption.add', (event) => {
-      const detail = JSON.parse(event.data) as IEventStreamChannelPointsAutomaticRewardRedemptionAddData;
-      eventBus.dispatchEvent(new CustomEvent('channel.channel_points_automatic_reward_redemption.add', { detail }));
-    });
-
-    eventSource.onerror = (error) => {
-      console.error(error);
-      console.error('EventSource failed.');
-      eventSource?.close();
-      addedEventListeners.clear();
-    };
+    reconnectTimeoutId = setTimeout(() => {
+      reconnectTimeoutId = null;
+      eventSourceSetup();
+    }, reconnectDelay);
   }
 
-  // Only set up the lifecycle hooks once
+  function eventSourceSetup() {
+    if ((eventSource && eventSource.readyState !== EventSource.CLOSED) || isConnecting.value || reconnectTimeoutId) {
+      return;
+    }
+
+    isConnecting.value = true;
+
+    removeAllEventSourceListeners();
+    eventSource?.close();
+
+    try {
+      eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/eventstream`);
+      isConnecting.value = false;
+
+      addEventSourceListener('channel.update', (event) => {
+        const detail = JSON.parse(event.data) as IEventStreamChannelUpdateData;
+        eventBus.dispatchEvent(new CustomEvent('channel.update', { detail }));
+      });
+
+      addEventSourceListener('channel.ad_break.begin', (event) => {
+        const detail = JSON.parse(event.data) as IEventStreamAdBreakBeginData;
+        eventBus.dispatchEvent(new CustomEvent('channel.ad_break.begin', { detail }));
+      });
+
+      addEventSourceListener('channel.channel_points_automatic_reward_redemption.add', (event) => {
+        const detail = JSON.parse(event.data) as IEventStreamChannelPointsAutomaticRewardRedemptionAddData;
+        eventBus.dispatchEvent(new CustomEvent('channel.channel_points_automatic_reward_redemption.add', { detail }));
+      });
+
+      eventSource.onopen = () => {
+        isConnecting.value = false;
+        reconnectAttempts = 0;
+      };
+
+      eventSource.onerror = (error) => {
+        console.error('EventSource error:', error);
+        removeAllEventSourceListeners();
+        eventSource?.close();
+        eventSource = null;
+        reconnectAttempts++;
+        scheduleReconnect();
+      };
+    } catch (error) {
+      console.error('Failed to create EventSource:', error);
+      eventSource = null;
+      isConnecting.value = false;
+      reconnectAttempts++;
+      scheduleReconnect();
+    }
+  }
+
   if (!isSetupComplete) {
     isSetupComplete = true;
 
@@ -55,9 +108,16 @@ export function useEventStreamComposable() {
     });
 
     onBeforeUnmount(() => {
+      if (reconnectTimeoutId) {
+        clearTimeout(reconnectTimeoutId);
+        reconnectTimeoutId = null;
+      }
+      removeAllEventSourceListeners();
       eventSource?.close();
-      addedEventListeners.clear();
+      eventSource = null;
       isSetupComplete = false;
+      isConnecting.value = false;
+      reconnectAttempts = 0;
     });
   }
 
@@ -70,5 +130,6 @@ export function useEventStreamComposable() {
     off: (event: string, callback: EventListener) => {
       eventBus.removeEventListener(event, callback);
     },
+    isConnecting,
   };
 }
