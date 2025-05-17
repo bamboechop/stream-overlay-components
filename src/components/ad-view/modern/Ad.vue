@@ -17,7 +17,7 @@
     <WindowFrame
       class="ad-window"
       :class="{ 'ad-window--visible': diffInSeconds < 10 * 60 && diffInSeconds >= 0 }"
-      :style="adProgress !== null ? { '--duration': `${duration}s` } : {}">
+      :style="duration > 0 ? { '--duration': `${duration}s` } : {}">
       <div class="ad">
         <template v-if="diffInSeconds > 0">
           <span class="ad__text">
@@ -53,7 +53,6 @@ const { getAdSchedule } = twitchStore;
 
 const diffInSeconds = ref(-1);
 const remainingTime = ref('');
-const adProgress = ref<number | null>(null);
 const duration = ref<number>(0);
 
 let adScheduleFetchInterval = 0;
@@ -65,12 +64,55 @@ function clearAdScheduleInterval() {
   }
 }
 
+function startAdBreak(durationSeconds: number) {
+  clearAdScheduleInterval();
+  diffInSeconds.value = 0;
+  remainingTime.value = 'Werbung läuft, bis gleich.';
+
+  // Set duration and let CSS handle the animation
+  duration.value = durationSeconds;
+
+  // Clean up after the duration
+  window.setTimeout(() => {
+    diffInSeconds.value = -1;
+    duration.value = 0;
+  }, durationSeconds * 1000);
+
+  window.setTimeout(async () => {
+    await getAdSchedule();
+  }, (durationSeconds + 30) * 1000);
+}
+
+watch(() => adSchedule.value, (newValue) => {
+  clearAdScheduleInterval();
+  duration.value = 0;
+
+  // check if newValue doesn't exist or if nextTime is a date in the past
+  if (!newValue || newValue.nextTime < new Date().getTime()) {
+    return;
+  }
+
+  updateRemainingTime();
+  adScheduleFetchInterval = window.setInterval(updateRemainingTime, 1000);
+});
+
+watch(live, (newValue) => {
+  if (!newValue) {
+    clearAdScheduleInterval();
+  }
+});
+
+const { on } = useEventStreamComposable();
+
 function updateRemainingTime() {
   if (!adSchedule.value) {
     return;
   }
+
   const now = new Date();
+
   diffInSeconds.value = Math.max(0, Math.floor((adSchedule.value.nextTime - now.getTime()) / 1000));
+
   if (diffInSeconds.value === 0) {
     clearAdScheduleInterval();
     if (debug) {
@@ -99,46 +141,6 @@ function updateRemainingTime() {
   }
 }
 
-watch(() => adSchedule.value, (newValue) => {
-  clearAdScheduleInterval();
-  adProgress.value = null;
-
-  // check if newValue doesn't exist or if nextTime is a date in the past
-  if (!newValue || newValue.nextTime < new Date().getTime()) {
-    return;
-  }
-
-  updateRemainingTime();
-  adScheduleFetchInterval = window.setInterval(updateRemainingTime, 1000);
-});
-
-watch(live, (newValue) => {
-  if (!newValue) {
-    clearAdScheduleInterval();
-  }
-});
-
-const { on } = useEventStreamComposable();
-
-function startAdBreak(durationSeconds: number) {
-  diffInSeconds.value = 0;
-  clearAdScheduleInterval();
-  remainingTime.value = 'Werbung läuft, bis gleich.';
-
-  // Initialize progress bar
-  adProgress.value = 100;
-  duration.value = durationSeconds;
-
-  window.setTimeout(() => {
-    diffInSeconds.value = -1;
-    adProgress.value = null;
-  }, durationSeconds * 1000);
-
-  window.setTimeout(async () => {
-    await getAdSchedule();
-  }, (durationSeconds + 30) * 1000);
-}
-
 onMounted(async () => {
   on<IEventStreamAdBreakBeginData>('channel.ad_break.begin', (data) => {
     startAdBreak(data.duration_seconds);
@@ -151,7 +153,6 @@ onBeforeUnmount(() => {
 
 function triggerDebugCountdown() {
   clearAdScheduleInterval();
-  adProgress.value = null;
 
   // Set next ad time to 1 minute from now
   const nextTime = new Date();
@@ -222,7 +223,7 @@ function triggerDebugAd() {
   position: fixed;
   right: 0;
   transition: bottom .5s ease-in-out;
-  width: max-content;
+  width: 100%;
 
   &::before {
     animation: none;
