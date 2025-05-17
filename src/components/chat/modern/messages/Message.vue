@@ -56,11 +56,12 @@
             ({{ userName }})
           </template>
         </span>
-        <template v-if="props.channel !== broadcasterInfo.name && props.channelImage">
+        <template v-if="isOtherChannel">
           <OtherChannelIndicator
             :channel="props.channel"
             :channel-image="props.channelImage"
-            class="message__other-channel-indicator" />
+            class="message__other-channel-indicator"
+            :stream-together-channels="streamTogetherChannels" />
         </template>
       </div>
       <span class="message__text">
@@ -87,14 +88,26 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref, toRefs } from 'vue';
+import { storeToRefs } from 'pinia';
 import OtherChannelIndicator from '../OtherChannelIndicator.vue';
 import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 import { broadcasterInfo } from '@/composables/twitch-chat.composable';
+import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useTwitchStore } from '@/stores/twitch.store';
 
 const props = defineProps<IChat>();
 const { animationId, msgId } = toRefs(props);
+
+const { streamTogetherChannels: streamTogetherChannelsFromSearchParams } = useSearchParamsComposable();
+
+const twitchStore = useTwitchStore();
+const { streamTogetherChannels: streamTogetherChannelsFromStore } = storeToRefs(twitchStore);
+
+const streamTogetherChannels = computed(() => streamTogetherChannelsFromSearchParams.length > 0 ? streamTogetherChannelsFromSearchParams : streamTogetherChannelsFromStore.value);
+
+const isOtherChannel = computed(() => props.channel !== broadcasterInfo.name && props.channelImage);
 
 const isGigantifiedEmoteMessage = msgId.value === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
@@ -175,7 +188,7 @@ onMounted(() => {
   }
 
   &__other-channel-indicator {
-    margin-left: auto;
+    margin: 3px 0 0 auto; // 3px to offset the negative margin of the message__info
   }
 }
 
