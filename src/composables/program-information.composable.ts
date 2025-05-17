@@ -35,6 +35,8 @@ export function useProgramInformationComposable() {
         return `/programs/${themePath}/horizon-forbidden-west.icon.png`;
       case 'Horizon Zero Dawn Remastered':
         return `/programs/${themePath}/horizon-zero-dawn-remastered.icon.png`;
+      case 'It Takes Two':
+        return `/programs/${themePath}/it-takes-two.icon.png`;
       case 'Lego & Brickbuilding':
         return `/programs/${themePath}/brickbuilding.icon.png`;
       case 'Minecraft':

@@ -40,6 +40,7 @@ const intermissionText = computed(() => {
     case 'Dorfromantik':
     case 'Deep Rock Galactic: Survivor':
     case 'Golf It!':
+    case 'It Takes Two':
     case 'Horizon Forbidden West':
     case 'Horizon Zero Dawn Remastered':
     case 'Need for Speed: Underground 2':
@@ -95,6 +96,8 @@ const startingSoonTextBackgroundColor = computed(() => {
       return 'transparent';
     case 'Golf It!':
       return 'rgba(135, 80, 5, 0.5)';
+    case 'It Takes Two':
+      return 'rgba(219, 0, 1, 0.5)';
     case 'Horizon Forbidden West':
       return 'rgba(132, 64, 25, 0.5)';
     case 'Horizon Zero Dawn Remastered':
@@ -150,6 +153,8 @@ const startingSoonImage = computed(() => {
       return '/modern/game-backgrounds/dorfromantik.jpg';
     case 'Deep Rock Galactic: Survivor':
       return '/modern/game-backgrounds/drg-survivor.jpg';
+    case 'It Takes Two':
+      return '/modern/game-backgrounds/it-takes-two.jpg';
     case 'Golf It!':
       return '/modern/game-backgrounds/golf-it.jpg';
     case 'Horizon Forbidden West':
