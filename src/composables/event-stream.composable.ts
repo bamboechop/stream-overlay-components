@@ -79,12 +79,37 @@ export function useEventStreamComposable() {
       });
 
       eventSource.onopen = () => {
+        console.info('[EventStream] Connection established');
         isConnecting.value = false;
         reconnectAttempts = 0;
       };
 
-      eventSource.onerror = (error) => {
-        console.error('EventSource error:', error);
+      eventSource.onerror = (error: Event) => {
+        console.error('[EventStream] Error:', {
+          type: error.type,
+          eventPhase: error.eventPhase,
+          target: error.target instanceof EventSource
+            ? {
+                url: error.target.url,
+                readyState: error.target.readyState,
+                withCredentials: error.target.withCredentials,
+              }
+            : null,
+          currentTarget: error.currentTarget instanceof EventSource
+            ? {
+                url: error.currentTarget.url,
+                readyState: error.currentTarget.readyState,
+                withCredentials: error.currentTarget.withCredentials,
+              }
+            : null,
+          bubbles: error.bubbles,
+          cancelable: error.cancelable,
+          defaultPrevented: error.defaultPrevented,
+          timeStamp: error.timeStamp,
+          readyState: eventSource?.readyState,
+          reconnectAttempts,
+          timestamp: new Date().toISOString(),
+        });
         removeAllEventSourceListeners();
         eventSource?.close();
         eventSource = null;
