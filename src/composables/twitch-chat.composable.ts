@@ -214,7 +214,8 @@ export async function useTwitchChat(theme?: TTheme) {
       });
 
       client.on('chat', async (channel: string, userstate: ChatUserstate, message: string, self: boolean) => {
-        if (self || userstate['source-room-id'] !== userstate['room-id']) { // room ids are different in stream together shared chats - only continue when the source and target room ids are the same
+        // room ids are different in stream together shared chats - only continue when the source and target room ids are the same
+        if (self || (userstate['source-room-id'] && userstate['source-room-id'] !== userstate['room-id'])) {
           return;
         }
 
