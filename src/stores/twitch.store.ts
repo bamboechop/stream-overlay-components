@@ -107,4 +107,8 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     removeMessagesByUserId,
     updateViewerCount,
   };
+}, {
+  share: {
+    enable: false,
+  },
 });

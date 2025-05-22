@@ -7,4 +7,8 @@ export const useStreamStatusStore = defineStore('Stream Status', () => {
   return {
     live,
   };
+}, {
+  share: {
+    enable: false,
+  },
 });

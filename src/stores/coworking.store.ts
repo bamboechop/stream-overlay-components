@@ -38,4 +38,8 @@ export const useCoworkingStore = defineStore('Coworking', () => {
     updateNote,
     viewerNotes,
   };
+}, {
+  share: {
+    enable: false,
+  },
 });

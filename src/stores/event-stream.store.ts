@@ -7,4 +7,8 @@ export const useEventStreamStore = defineStore('Event Stream Store', () => {
   return {
     eventSource,
   };
+}, {
+  share: {
+    enable: false,
+  },
 });
