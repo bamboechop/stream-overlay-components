@@ -89,6 +89,10 @@ async function calculateMessageHeights() {
   const newHeights: number[] = [];
 
   messageRefs.value.forEach((messageRef, index) => {
+    if (!messageRef?.$el) {
+      // can trigger when a message is deleted on Twitch
+      return;
+    }
     newHeights[index] = messageRef.$el.getBoundingClientRect().height;
   });
 
