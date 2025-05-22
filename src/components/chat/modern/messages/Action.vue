@@ -1,7 +1,10 @@
 <template>
   <li
     class="action"
-    :class="{ 'action--me': isMeMessage }">
+    :class="[
+      { 'action--me': isMeMessage },
+      { 'action--mounted': mounted },
+    ]">
     <div
       class="action__info"
       :class="{ 'action__info--has-emote': messageParts.find(part => part.type === 'emote') }">
@@ -48,13 +51,18 @@ import type { IAction, IBadge } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 import { BOT_ACCOUNT_USERNAMES } from '@/common/constants/bot-accounts.constant';
 
-const props = defineProps<IAction>();
+const props = defineProps<IAction & { messageIndex?: number; messageOffset?: number }>();
 
 const isMeMessage = ref(false);
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<IBadge[]>([]);
+const mounted = ref(false);
 
 onMounted(() => {
+  window.setTimeout(() => {
+    mounted.value = true;
+  }, 0);
+
   messageParts.value = parseMessage(props.emotes, props.text);
 
   if (props.userName) {
@@ -73,9 +81,15 @@ onMounted(() => {
 @import '@/assets/modern.variables';
 
 .action {
+  bottom: 0;
   display: flex;
   flex-direction: column;
+  left: 0;
+  position: absolute;
+  right: 0;
   text-align: left;
+  transform: translateY(100%);
+  transition: transform 400ms ease;
 
   &__badge {
     height: $badge-size;
@@ -99,6 +113,10 @@ onMounted(() => {
   &__info--has-emote {
     margin-top: -1px;
   }
+}
+
+.action--mounted {
+  transform: translateY(calc(v-bind(messageOffset) * -1px));
 }
 
 .action--me {

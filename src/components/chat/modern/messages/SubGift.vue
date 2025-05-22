@@ -1,5 +1,7 @@
 <template>
-  <li class="sub-gift">
+  <li
+    class="sub-gift"
+    :class="{ 'sub-gift--mounted': mounted }">
     <div class="sub-gift__info">
       <span class="sub-gift__name">
         <strong :style="{ color: '#ff7512' }">{{ sender.displayName }}</strong>
@@ -22,9 +24,18 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue';
 import type { ISubGift } from '@/common/interfaces/index.interface';
 
-defineProps<ISubGift>();
+defineProps<ISubGift & { messageIndex?: number; messageOffset?: number }>();
+
+const mounted = ref(false);
+
+onMounted(() => {
+  window.setTimeout(() => {
+    mounted.value = true;
+  }, 0);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -34,10 +45,16 @@ defineProps<ISubGift>();
   background-color: rgba(255, 117, 18, 0.075);
   border: 2px solid #ff7512;
   border-radius: $window-frame-border-radius;
+  bottom: 0;
   display: flex;
   flex-direction: column;
+  left: 0;
   padding: $window-frame-padding $window-frame-padding * 2;
+  position: absolute;
+  right: 0;
   text-align: left;
+  transform: translateY(100%);
+  transition: transform 400ms ease;
   width: 100%;
 
   &__emote {
@@ -53,5 +70,9 @@ defineProps<ISubGift>();
     gap: 4px;
     text-align: left;
   }
+}
+
+.sub-gift--mounted {
+  transform: translateY(calc(v-bind(messageOffset) * -1px));
 }
 </style>

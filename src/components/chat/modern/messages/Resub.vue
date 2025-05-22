@@ -1,5 +1,7 @@
 <template>
-  <li class="resub">
+  <li
+    class="resub"
+    :class="{ 'resub--mounted': mounted }">
     <div
       class="resub__info"
       :class="{ 'resub__info--has-emote': messageParts.find(part => part.type === 'emote') }">
@@ -34,11 +36,16 @@ import { onMounted, ref } from 'vue';
 import type { IResub } from '@/common/interfaces/index.interface';
 import { parseMessage } from '@/common/helpers/twitch-message.helper';
 
-const props = defineProps<IResub>();
+const props = defineProps<IResub & { messageIndex?: number; messageOffset?: number }>();
 
 const messageParts = ref<Record<string, string | undefined>[]>([]);
+const mounted = ref(false);
 
 onMounted(() => {
+  window.setTimeout(() => {
+    mounted.value = true;
+  }, 0);
+
   messageParts.value = parseMessage(props.emotes, props.text);
 });
 </script>
@@ -50,10 +57,16 @@ onMounted(() => {
   background-color: rgba(255, 172, 18, 0.05);
   border: 2px solid #ffac12;
   border-radius: $window-frame-border-radius;
+  bottom: 0;
   display: flex;
   flex-direction: column;
+  left: 0;
   padding: $window-frame-padding $window-frame-padding * 2;
+  position: absolute;
+  right: 0;
   text-align: left;
+  transform: translateY(100%);
+  transition: transform 400ms ease;
   width: 100%;
 
   &__badge {
@@ -78,5 +91,9 @@ onMounted(() => {
   &__info--has-emote {
     margin-top: -1px;
   }
+}
+
+.resub--mounted {
+  transform: translateY(calc(v-bind(messageOffset) * -1px));
 }
 </style>

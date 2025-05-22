@@ -4,6 +4,7 @@
     :class="[
       { 'message--highlighted': msgId === 'highlighted-message' },
       { [`message--${animationId}`]: animationId },
+      { 'message--mounted': mounted },
     ]">
     <template v-if="animationId">
       <div
@@ -56,7 +57,7 @@
             ({{ userName }})
           </template>
         </span>
-        <template v-if="isOtherChannel">
+        <template v-if="isOtherChannel && props.channelImage">
           <OtherChannelIndicator
             :channel="props.channel"
             :channel-image="props.channelImage"
@@ -97,7 +98,7 @@ import { broadcasterInfo } from '@/composables/twitch-chat.composable';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 
-const props = defineProps<IChat>();
+const props = defineProps<IChat & { messageIndex?: number; messageOffset?: number }>();
 const { animationId, msgId } = toRefs(props);
 
 const { streamTogetherChannels: streamTogetherChannelsFromSearchParams } = useSearchParamsComposable();
@@ -134,7 +135,13 @@ const offsets = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() 
 const rotations = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 20 - 10).toFixed(2)))); // Random rotation between -10 and 10 degrees
 const sizes = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 0.75 + 0.25).toFixed(2)))); // Random size between 0.25 and 1.0
 
+const mounted = ref(false);
+
 onMounted(() => {
+  window.setTimeout(() => {
+    mounted.value = true;
+  }, 0);
+
   messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
 
   if (props.userBadges) {
@@ -147,7 +154,12 @@ onMounted(() => {
 @import '@/assets/modern.variables';
 
 .message {
-  position: relative;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: translateY(100%);
+  transition: transform 400ms ease;
   width: 100%;
 
   &__badge {
@@ -190,6 +202,10 @@ onMounted(() => {
   &__other-channel-indicator {
     margin: 3px 0 0 auto; // 3px to offset the negative margin of the message__info
   }
+}
+
+.message--mounted {
+  transform: translateY(calc(v-bind(messageOffset) * -1px));
 }
 
 .message__rainbow-eclipse {
