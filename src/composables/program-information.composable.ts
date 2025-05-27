@@ -16,7 +16,7 @@ export function useProgramInformationComposable() {
     if (theme.value !== 'modern') {
       return `/programs/${themePath}/player.icon.png`;
     }
-    const { iconPath } = GAME_METADATA[category.value] ?? null;
+    const { iconPath } = GAME_METADATA[category.value] ?? { iconPath: null };
 
     if (!iconPath) {
       return `/programs/${themePath}/player.icon.png`;
