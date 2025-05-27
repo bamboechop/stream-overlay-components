@@ -4,6 +4,7 @@ import type { TProgramId } from '@/common/types/index.type';
 import type { IProgram } from '@/components/task-bar/task-bar.interface';
 import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
+import { GAME_METADATA } from '@/common/constants/game-metadata.constant';
 
 export function useProgramInformationComposable() {
   const { theme, themePath } = useSearchParamsComposable();
@@ -15,65 +16,13 @@ export function useProgramInformationComposable() {
     if (theme.value !== 'modern') {
       return `/programs/${themePath}/player.icon.png`;
     }
+    const { iconPath } = GAME_METADATA[category.value] ?? null;
 
-    switch (category.value) {
-      case 'Bloons TD 6':
-        return `/programs/${themePath}/bloons-td-6.icon.png`;
-      case 'Brotato':
-        return `/programs/${themePath}/brotato.icon.png`;
-      case 'Cities: Skylines II':
-        return `/programs/${themePath}/cities-skylines-ii.icon.png`;
-      case 'Cult of the Lamb':
-        return `/programs/${themePath}/cult-of-the-lamb.icon.png`;
-      case 'Dorfromantik':
-        return `/programs/${themePath}/dorfromantik.icon.png`;
-      case 'Deep Rock Galactic: Survivor':
-        return `/programs/${themePath}/drg-survivor.icon.png`;
-      case 'Golf It!':
-        return `/programs/${themePath}/golf-it.icon.png`;
-      case 'Horizon Forbidden West':
-        return `/programs/${themePath}/horizon-forbidden-west.icon.png`;
-      case 'Horizon Zero Dawn Remastered':
-        return `/programs/${themePath}/horizon-zero-dawn-remastered.icon.png`;
-      case 'It Takes Two':
-        return `/programs/${themePath}/it-takes-two.icon.png`;
-      case 'Lego & Brickbuilding':
-        return `/programs/${themePath}/brickbuilding.icon.png`;
-      case 'Minecraft':
-        return `/programs/${themePath}/minecraft.icon.png`;
-      case 'Mini Metro':
-        return `/programs/${themePath}/mini-metro.icon.png`;
-      case 'Mini Motorways':
-        return `/programs/${themePath}/mini-motorways.icon.png`;
-      case 'Need for Speed: Underground 2':
-        return `/programs/${themePath}/need-for-speed-underground-2.icon.png`;
-      case 'Project Zomboid':
-        return `/programs/${themePath}/project-zomboid.icon.png`;
-      case 'shapez':
-        return `/programs/${themePath}/shapez.icon.png`;
-      case 'Spec Ops: The Line':
-        return `/programs/${themePath}/spec-ops.icon.png`;
-      case 'Stardew Valley':
-        return `/programs/${themePath}/stardew-valley.icon.png`;
-      case 'Stray':
-        return `/programs/${themePath}/stray.icon.png`;
-      case 'Supermarket Together':
-        return `/programs/${themePath}/supermarket-together.icon.png`;
-      case 'Trackmania':
-        return `/programs/${themePath}/trackmania.icon.png`;
-      case 'UNO':
-        return `/programs/${themePath}/uno.icon.png`;
-      case 'URBO: Dream One':
-        return `/programs/${themePath}/urbo.icon.png`;
-      case 'Wreckfest':
-        return `/programs/${themePath}/wreckfest.icon.png`;
-      case 'PDF Viewer':
-        return `/programs/${themePath}/pdf-viewer.icon.png`;
-      case 'Just Chatting':
-      case 'Media Player':
-      default:
-        return `/programs/${themePath}/player.icon.png`;
+    if (!iconPath) {
+      return `/programs/${themePath}/player.icon.png`;
     }
+
+    return iconPath.replace('{themePath}', themePath);
   });
 
   const programInformation = ref<Record<TProgramId, IProgram>>({

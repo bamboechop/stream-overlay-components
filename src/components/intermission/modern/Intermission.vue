@@ -19,6 +19,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
+import { GAME_METADATA } from '@/common/constants/game-metadata.constant';
 
 const props = defineProps<{ active?: boolean; mode?: 'end' | 'break' | 'start' }>();
 
@@ -30,169 +31,32 @@ const intermissionText = computed(() => {
     return 'Danke fürs Zuschauen, bis zum nächsten Mal 👋';
   }
 
-  let text: string = '';
+  const { intermissionTextMode } = GAME_METADATA[category.value] ?? 'default';
 
-  switch (category.value) {
-    case 'Bloons TD 6':
-    case 'Brotato':
-    case 'Cities: Skylines II':
-    case 'Cult of the Lamb':
-    case 'Dorfromantik':
-    case 'Deep Rock Galactic: Survivor':
-    case 'Golf It!':
-    case 'It Takes Two':
-    case 'Horizon Forbidden West':
-    case 'Horizon Zero Dawn Remastered':
-    case 'Need for Speed: Underground 2':
-    case 'Minecraft':
-    case 'Mini Metro':
-    case 'Mini Motorways':
-    case 'Project Zomboid':
-    case 'shapez':
-    case 'Spec Ops: The Line':
-    case 'Stardew Valley':
-    case 'Stray':
-    case 'Supermarket Together':
-    case 'UNO':
-    case 'URBO: Dream One':
-    case 'Wreckfest':
-      switch (props.mode) {
-        case 'break':
-          text = '⏰ Kurze Pause, gleich geht es weiter mit';
-          break;
-        case 'start':
-          text = '🥳 Gleich gehts los mit';
-          break;
+  switch (props.mode) {
+    case 'break':
+      if (intermissionTextMode === 'chatting') {
+        return '⏰ Kurze Pause, gleich geht es weiter';
       }
-      break;
-    case 'Just Chatting':
+      return '⏰ Kurze Pause, gleich geht es weiter mit';
+    case 'start':
     default:
-      switch (props.mode) {
-        case 'break':
-          text = '⏰ Kurze Pause, gleich geht es weiter';
-          break;
-        case 'start':
-          text = '🥳 Gleich gehts los';
-          break;
+      if (intermissionTextMode === 'chatting') {
+        return '🥳 Gleich gehts los';
       }
+      return '🥳 Gleich gehts los mit';
   }
-
-  return text;
 });
 
 const startingSoonTextBackgroundColor = computed(() => {
-  switch (category.value) {
-    case 'Bloons TD 6':
-      return 'rgba(1, 229, 255, 0.5)';
-    case 'Brotato':
-      return 'transparent';
-    case 'Cities: Skylines II':
-      return 'rgba(30, 71, 159, 0.5)';
-    case 'Cult of the Lamb':
-      return 'rgba(239, 17, 30, 0.35)';
-    case 'Dorfromantik':
-      return 'rgba(130, 186, 209, 0.75)';
-    case 'Deep Rock Galactic: Survivor':
-      return 'transparent';
-    case 'Golf It!':
-      return 'rgba(135, 80, 5, 0.5)';
-    case 'It Takes Two':
-      return 'rgba(219, 0, 1, 0.5)';
-    case 'Horizon Forbidden West':
-      return 'rgba(132, 64, 25, 0.5)';
-    case 'Horizon Zero Dawn Remastered':
-      return 'rgba(132, 64, 25, 0.5)';
-    case 'Minecraft':
-      return 'rgba(20, 5, 2, 0.5)';
-    case 'Mini Metro':
-      return 'rgba(68, 55, 47, 0.5)';
-    case 'Mini Motorways':
-      return 'rgba(253, 191, 92, 0.5)';
-    case 'Need for Speed: Underground 2':
-      return 'rgba(9, 103, 53, 0.75)';
-    case 'Project Zomboid':
-      return 'rgba(0, 0, 0, 1)';
-    case 'shapez':
-      return 'rgba(62, 62, 74, 1)';
-    case 'Spec Ops: The Line':
-      return 'rgba(182, 106, 74, 0.75)';
-    case 'Stardew Valley':
-      return 'rgba(230,171,51,0.7)';
-    case 'Stray':
-      return 'rgba(41,26,26,0.75)';
-    case 'Supermarket Together':
-      return 'rgba(238, 80, 87, 0.5)';
-    case 'Trackmania':
-      return 'rgba(252, 3, 26, 0.5)';
-    case 'UNO':
-      return 'rgba(246, 222, 0, 0.5)';
-    case 'URBO: Dream One':
-      return 'rgba(6, 85, 53, 0.5)';
-    case 'Wreckfest':
-      return 'rgba(251, 216, 11, 0.5)';
-    case 'Just Chatting':
-    default:
-      return 'rgba(115, 117, 80, 0.35)';
-  }
+  return GAME_METADATA[category.value]?.color ?? 'rgba(115, 117, 80, 0.35)';
 });
 const startingSoonImage = computed(() => {
   if (props.mode === 'end') {
     return '/bamboechop.png';
   }
 
-  switch (category.value) {
-    case 'Bloons TD 6':
-      return '/modern/game-backgrounds/bloons-td-6.jpg';
-    case 'Brotato':
-      return '/modern/game-backgrounds/brotato.jpg';
-    case 'Cities: Skylines II':
-      return '/modern/game-backgrounds/cities-skylines-ii.jpg';
-    case 'Cult of the Lamb':
-      return '/modern/game-backgrounds/cult-of-the-lamb.jpg';
-    case 'Dorfromantik':
-      return '/modern/game-backgrounds/dorfromantik.jpg';
-    case 'Deep Rock Galactic: Survivor':
-      return '/modern/game-backgrounds/drg-survivor.jpg';
-    case 'It Takes Two':
-      return '/modern/game-backgrounds/it-takes-two.jpg';
-    case 'Golf It!':
-      return '/modern/game-backgrounds/golf-it.jpg';
-    case 'Horizon Forbidden West':
-      return '/modern/game-backgrounds/horizon-forbidden-west.jpg';
-    case 'Horizon Zero Dawn Remastered':
-      return '/modern/game-backgrounds/horizon-zero-dawn-remastered.jpg';
-    case 'Minecraft':
-      return '/modern/game-backgrounds/minecraft.jpg';
-    case 'Mini Metro':
-      return '/modern/game-backgrounds/mini-metro.jpg';
-    case 'Mini Motorways':
-      return '/modern/game-backgrounds/mini-motorways.jpg';
-    case 'Need for Speed: Underground 2':
-      return '/modern/game-backgrounds/need-for-speed-underground-2.jpg';
-    case 'Project Zomboid':
-      return '/modern/game-backgrounds/project-zomboid.jpg';
-    case 'shapez':
-      return '/modern/game-backgrounds/shapez.jpg';
-    case 'Spec Ops: The Line':
-      return '/modern/game-backgrounds/spec-ops.jpg';
-    case 'Stardew Valley':
-      return '/modern/game-backgrounds/stardew-valley.jpg';
-    case 'Stray':
-      return '/modern/game-backgrounds/stray.jpg';
-    case 'Supermarket Together':
-      return '/modern/game-backgrounds/supermarket-together.jpg';
-    case 'Trackmania':
-      return '/modern/game-backgrounds/trackmania.jpg';
-    case 'UNO':
-      return '/modern/game-backgrounds/uno.jpg';
-    case 'URBO: Dream One':
-      return '/modern/game-backgrounds/urbo-dream-one.jpg';
-    case 'Wreckfest':
-      return '/modern/game-backgrounds/wreckfest.jpg';
-    case 'Just Chatting':
-    default:
-      return '/modern/game-backgrounds/default.jpg';
-  }
+  return GAME_METADATA[category.value]?.backgroundImagePath ?? '/modern/game-backgrounds/default.jpg';
 });
 </script>
 
@@ -261,12 +125,6 @@ const startingSoonImage = computed(() => {
   }
 }
 
-.intermission--break {
-  .intermission__text {
-    bottom: 0;
-  }
-}
-
 .intermission--break,
 .intermission--start {
   .intermission__text {
@@ -277,13 +135,8 @@ const startingSoonImage = computed(() => {
     padding: 32px 24px;
     text-align: center;
     text-shadow: 0 0 10px #000;
-    width: 100%;
-  }
-}
-
-.intermission--start {
-  .intermission__text {
     top: 0;
+    width: 100%;
   }
 }
 
