@@ -99,6 +99,8 @@ watch(() => adSchedule.value, (newValue) => {
 watch(live, (newValue) => {
   if (!newValue) {
     clearAdScheduleInterval();
+    diffInSeconds.value = -1;
+    duration.value = 0;
   }
 });
 
