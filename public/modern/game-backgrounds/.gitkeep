@@ -1,0 +1,2 @@
+Filename: <gamename>.jpg
+Add the file to game-metadata.constant.ts backgroundImagePath of the game

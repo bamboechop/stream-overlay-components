@@ -1,0 +1,2 @@
+Filename: <gamename>.icon.png
+Add the file to game-metadata.constant.ts iconPath of the game

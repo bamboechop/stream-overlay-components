@@ -36,3 +36,8 @@ coverage
 # PDFs in here are needed for the build
 public/pdfs/*.pdf
 
+public/programs/modern/*
+!public/programs/modern/.gitkeep
+
+public/modern/game-backgrounds/*
+!public/modern/game-backgrounds/.gitkeep
