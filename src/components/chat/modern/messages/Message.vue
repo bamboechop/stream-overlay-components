@@ -34,6 +34,16 @@
             </div>
           </template>
         </template>
+        <template v-if="animationId === 'cosmic-abyss'">
+          <video
+            autoplay
+            class="cosmic-abyss__video"
+            loop
+            muted
+            playsinline
+            preload="auto"
+            src="/cosmic-abyss-tall.mp4"></video>
+        </template>
       </div>
     </template>
     <div class="message__container">
@@ -182,6 +192,7 @@ onMounted(async () => {
 .message {
   bottom: 0;
   left: 0;
+  overflow: hidden;
   position: absolute;
   right: 0;
   transform: translateY(100%);
@@ -265,6 +276,16 @@ onMounted(async () => {
   }
 }
 
+.cosmic-abyss {
+  &__video {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
 .simmer {
   background: linear-gradient(90deg, #00ccad, #cc00b1);
   border-radius: 8px 8px 12px 12px;
@@ -309,6 +330,16 @@ onMounted(async () => {
   border-radius: $window-frame-border-radius;
   padding: $window-frame-padding $window-frame-padding * 2;
   width: 100%;
+}
+
+.message--cosmic-abyss {
+  border-radius: 8px;
+  padding: 18px 10px;
+
+  .message__container {
+    background-color: rgba(14, 14, 16, 0.95);
+    padding: 10px;
+  }
 }
 
 .message--rainbow-eclipse {

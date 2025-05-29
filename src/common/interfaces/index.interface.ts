@@ -43,7 +43,7 @@ export interface IAction {
 }
 
 export interface IChat {
-  animationId?: 'rainbow-eclipse' | 'simmer';
+  animationId?: 'cosmic-abyss' | 'rainbow-eclipse' | 'simmer';
   availableBadges: Record<string, IBadge[]>;
   channel: string;
   channelImage?: string;
