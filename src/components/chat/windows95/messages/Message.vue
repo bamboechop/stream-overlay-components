@@ -32,6 +32,16 @@
             </div>
           </template>
         </template>
+        <template v-if="animationId === 'cosmic-abyss'">
+          <video
+            autoplay
+            class="cosmic-abyss__video"
+            loop
+            muted
+            playsinline
+            preload="auto"
+            src="/cosmic-abyss-tall.mp4"></video>
+        </template>
       </div>
     </template>
     <div class="message__container">
@@ -124,6 +134,7 @@ onMounted(() => {
 @import '@/assets/windows95.variables';
 
 .message {
+  overflow: hidden;
   position: relative;
   width: 100%;
 
@@ -198,8 +209,18 @@ onMounted(() => {
   }
 }
 
+.cosmic-abyss {
+  &__video {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
 .simmer {
-  background: linear-gradient(90deg, #00ccad, #cc00b1);
+  background: linear-gradient(90deg, #3866dd, #ff4c5b);
   bottom: 0;
   left: 0;
   overflow: hidden;
@@ -246,6 +267,15 @@ onMounted(() => {
     right: 0;
     top: -9px;
     width: $highlight-element-size;
+  }
+}
+
+.message--cosmic-abyss {
+  padding: 18px 10px;
+
+  .message__container {
+    background-color: #c3c3c3;
+    padding: 6px;
   }
 }
 
