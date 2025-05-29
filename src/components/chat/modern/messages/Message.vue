@@ -247,13 +247,13 @@ onMounted(async () => {
 
 .message__rainbow-eclipse {
   border-radius: 12px;
-  bottom: 0;
+  bottom: 6px;
   filter: blur(4px);
-  left: 0;
+  left: 6px;
   overflow: hidden;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 6px;
+  top: 6px;
 
   &::before {
     animation: rotate 4s linear infinite;
@@ -343,7 +343,7 @@ onMounted(async () => {
 }
 
 .message--rainbow-eclipse {
-  padding: 4px;
+  padding: 12px;
 
   .message__container {
     background-color: rgba(14, 14, 16, 0.95);
