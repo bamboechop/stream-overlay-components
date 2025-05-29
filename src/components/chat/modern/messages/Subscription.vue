@@ -10,9 +10,9 @@
         </template>
         hat soeben ein Stufe {{ plan }} Abonnement abgeschlossen! Dankeschön!
         <img
-          alt="bamboe1LOVE"
+          alt="bamboe1Love"
           class="subscription__emote"
-          src="/bamboe1LOVE.png" />
+          src="/emotes/bamboe1Love.png" />
       </span>
     </div>
   </li>

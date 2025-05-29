@@ -16,9 +16,9 @@
       <main class="raid__text">
         raidet uns mit {{ viewerCount }} Zusehern! Vielen Dank, wie war dein Stream?
         <img
-          alt="bamboe1LOVE"
+          alt="bamboe1Love"
           class="raid__emote"
-          src="/bamboe1LOVE.png" />
+          src="/emotes/bamboe1Love.png" />
       </main>
       <MessageInteraction :viewer-count="viewerCount" />
     </div>

@@ -15,9 +15,9 @@
         </template>
         ein Stufe {{ plan }} Abonnement geschenkt! Vielen Dank!
         <img
-          alt="bamboe1LOVE"
+          alt="bamboe1Love"
           class="sub-gift__emote"
-          src="/bamboe1LOVE.png" />
+          src="/emotes/bamboe1Love.png" />
       </span>
     </div>
   </li>

@@ -8,9 +8,9 @@
     <span class="raid__text">
       Vielen Dank, wie war dein Stream?
       <img
-        alt="bamboe1LOVE"
+        alt="bamboe1Love"
         class="raid__emote"
-        src="/bamboe1LOVE.png" />
+        src="/emotes/bamboe1Love.png" />
     </span>
   </li>
 </template>

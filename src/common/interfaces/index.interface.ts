@@ -133,7 +133,7 @@ export interface ISubscription {
 }
 
 export interface IMessage {
-  animationId?: 'rainbow-eclipse' | 'simmer';
+  animationId?: 'cosmic-abyss' | 'rainbow-eclipse' | 'simmer';
   availableBadges: Record<string, IBadge[]>;
   color?: string;
   displayName?: string;
