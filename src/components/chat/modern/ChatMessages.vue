@@ -12,42 +12,48 @@
             :ref="(el) => messageRefs[messages.length - (index + 1)] = el as ComponentPublicInstance<typeof ActionMessage>"
             v-bind="message"
             :message-index="messages.length - (index + 1)"
-            :message-offset="getMessageOffset(messages.length - (index + 1))" />
+            :message-offset="getMessageOffset(messages.length - (index + 1))"
+            @images-loaded="calculateMessageHeights" />
         </template>
         <template v-if="message.msgType === 'chat'">
           <ChatMessage
             :ref="(el) => messageRefs[messages.length - (index + 1)] = el as ComponentPublicInstance<typeof ChatMessage>"
             v-bind="message"
             :message-index="messages.length - (index + 1)"
-            :message-offset="getMessageOffset(messages.length - (index + 1))" />
+            :message-offset="getMessageOffset(messages.length - (index + 1))"
+            @images-loaded="calculateMessageHeights" />
         </template>
         <template v-if="message.msgType === 'raid'">
           <RaidMessage
             :ref="(el) => messageRefs[messages.length - (index + 1)] = el as ComponentPublicInstance<typeof RaidMessage>"
             v-bind="message"
             :message-index="messages.length - (index + 1)"
-            :message-offset="getMessageOffset(messages.length - (index + 1))" />
+            :message-offset="getMessageOffset(messages.length - (index + 1))"
+            @images-loaded="calculateMessageHeights" />
         </template>
         <template v-if="message.msgType === 'resub'">
           <ResubMessage
             :ref="(el) => messageRefs[messages.length - (index + 1)] = el as ComponentPublicInstance<typeof ResubMessage>"
             v-bind="message"
             :message-index="messages.length - (index + 1)"
-            :message-offset="getMessageOffset(messages.length - (index + 1))" />
+            :message-offset="getMessageOffset(messages.length - (index + 1))"
+            @images-loaded="calculateMessageHeights" />
         </template>
         <template v-if="message.msgType === 'subgift'">
           <SubGiftMessage
             :ref="(el) => messageRefs[messages.length - (index + 1)] = el as ComponentPublicInstance<typeof SubGiftMessage>"
             v-bind="message"
             :message-index="messages.length - (index + 1)"
-            :message-offset="getMessageOffset(messages.length - (index + 1))" />
+            :message-offset="getMessageOffset(messages.length - (index + 1))"
+            @images-loaded="calculateMessageHeights" />
         </template>
         <template v-if="message.msgType === 'subscription'">
           <SubscriptionMessage
             :ref="(el) => messageRefs[messages.length - (index + 1)] = el as ComponentPublicInstance<typeof SubscriptionMessage>"
             v-bind="message"
             :message-index="messages.length - (index + 1)"
-            :message-offset="getMessageOffset(messages.length - (index + 1))" />
+            :message-offset="getMessageOffset(messages.length - (index + 1))"
+            @images-loaded="calculateMessageHeights" />
         </template>
       </template>
     </ul>

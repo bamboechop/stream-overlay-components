@@ -1,5 +1,6 @@
 <template>
   <li
+    ref="messageElement"
     class="message"
     :class="[
       { 'message--highlighted': msgId === 'highlighted-message' },
@@ -89,7 +90,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { computed, defineEmits, nextTick, onMounted, ref, toRefs } from 'vue';
 import { storeToRefs } from 'pinia';
 import OtherChannelIndicator from '../OtherChannelIndicator.vue';
 import type { IChat } from '@/common/interfaces/index.interface';
@@ -99,6 +100,10 @@ import { useSearchParamsComposable } from '@/composables/search-params-composabl
 import { useTwitchStore } from '@/stores/twitch.store';
 
 const props = defineProps<IChat & { messageIndex?: number; messageOffset?: number }>();
+const emits = defineEmits<{
+  (e: 'imagesLoaded'): void;
+}>();
+
 const { animationId, msgId } = toRefs(props);
 
 const { streamTogetherChannels: streamTogetherChannelsFromSearchParams } = useSearchParamsComposable();
@@ -136,17 +141,38 @@ const rotations = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random(
 const sizes = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 0.75 + 0.25).toFixed(2)))); // Random size between 0.25 and 1.0
 
 const mounted = ref(false);
+const messageElement = ref<HTMLElement | null>(null);
 
-onMounted(() => {
-  window.setTimeout(() => {
-    mounted.value = true;
-  }, 0);
-
+onMounted(async () => {
   messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
-
   if (props.userBadges) {
     userBadges.value = parseUserBadges(props.userBadges, props.availableBadges);
   }
+  await nextTick();
+  const images = Array.from((messageElement.value as HTMLElement).querySelectorAll<HTMLImageElement>('.message__emote'));
+  if (images.length === 0) {
+    mounted.value = true;
+    emits('imagesLoaded');
+    return;
+  }
+  let loaded = 0;
+  images.forEach((img) => {
+    if (img.complete) {
+      loaded++;
+      if (loaded === images.length) {
+        mounted.value = true;
+        emits('imagesLoaded');
+      }
+    } else {
+      img.addEventListener('load', () => {
+        loaded++;
+        if (loaded === images.length) {
+          mounted.value = true;
+          emits('imagesLoaded');
+        }
+      });
+    }
+  });
 });
 </script>
 
