@@ -130,18 +130,18 @@ const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
 
 const emotes = [
-  '/bamboe1ANGRY.png',
-  '/bamboe1LOVE.png',
-  '/bamboe1SAD.png',
-  '/bamboe1SMILE.png',
-  '/bamboe1ANGRY.png',
-  '/bamboe1LOVE.png',
-  '/bamboe1SAD.png',
-  '/bamboe1SMILE.png',
-  '/bamboe1ANGRY.png',
-  '/bamboe1LOVE.png',
-  '/bamboe1SAD.png',
-  '/bamboe1SMILE.png',
+  '/emotes/bamboe1Butter.png',
+  '/emotes/bamboe1Cool.png',
+  '/emotes/bamboe1Cozy.png',
+  '/emotes/bamboe1Dead.png',
+  '/emotes/bamboe1Derp.png',
+  '/emotes/bamboe1KEKW.png',
+  '/emotes/bamboe1Love.png',
+  '/emotes/bamboe1Lurk.gif',
+  '/emotes/bamboe1Rage.png',
+  '/emotes/bamboe1Sad.png',
+  '/emotes/bamboe1Scared.png',
+  '/emotes/bamboe1Sexy.png',
 ];
 
 const durations = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 0.75 + 0.5).toFixed(2)))); // Random duration between 0.5 and 1.25 seconds
@@ -287,7 +287,7 @@ onMounted(async () => {
 }
 
 .simmer {
-  background: linear-gradient(90deg, #00ccad, #cc00b1);
+  background: linear-gradient(90deg, #3866dd, #ff4c5b);
   border-radius: 8px 8px 12px 12px;
   bottom: 0;
   left: 0;
