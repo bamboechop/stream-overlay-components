@@ -7,10 +7,10 @@
       :class="{ 'resub__info--has-emote': messageParts.find(part => part.type === 'emote') }">
       <span class="resub__name">
         <strong :style="{ color }">{{ displayName }}</strong>
-        <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+        <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
           ({{ userName }})
         </template>
-        ist seit {{ months }} Monaten mit einem Stufe {{ plan }} Abonnement dabei!
+        ist seit {{ cumulativeMonths ? cumulativeMonths : months }} Monaten mit einem Stufe {{ plan }} Abonnement dabei!
       </span>
     </div>
     <span class="resub__text">
@@ -90,6 +90,10 @@ onMounted(() => {
 
   &__info--has-emote {
     margin-top: -1px;
+  }
+
+  &__text {
+    font-style: italic;
   }
 }
 

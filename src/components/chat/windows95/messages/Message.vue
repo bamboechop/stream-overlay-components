@@ -50,7 +50,7 @@
         </div>
         <span class="message__name">
           {{ displayName }}
-          <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+          <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
             ({{ userName }})
           </template>
         </span>

@@ -5,7 +5,7 @@
     <div class="subscription__info">
       <span class="subscription__name">
         <strong :style="{ color }">{{ displayName }}</strong>
-        <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+        <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
           ({{ userName }})
         </template>
         hat soeben ein Stufe {{ plan }} Abonnement abgeschlossen! Dankeschön!

@@ -17,7 +17,7 @@
         <div class="sub-gift__names">
           <span class="sub-gift__name">
             {{ sender.displayName }}
-            <template v-if="sender.displayName?.toLowerCase() !== sender.userName?.toLowerCase()">
+            <template v-if="sender.userName && sender.displayName?.toLowerCase() !== sender.userName.toLowerCase()">
               <span class="sub-gift__name sub-gift__name--readable">({{ sender.userName }})</span>
             </template>
           </span>
@@ -28,7 +28,7 @@
         hat gerade
         <span class="sub-gift__name">
           {{ recipient.displayName }}
-          <template v-if="recipient.displayName?.toLowerCase() !== recipient.userName?.toLowerCase()">
+          <template v-if="recipient.userName && recipient.displayName?.toLowerCase() !== recipient.userName.toLowerCase()">
             <span class="sub-gift__name sub-gift__name--readable">({{ recipient.userName }})</span>
           </template>
         </span>

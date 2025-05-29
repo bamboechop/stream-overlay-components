@@ -10,7 +10,7 @@
       <header class="subscription__header">
         <span class="subscription__name">
           {{ displayName }}
-          <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+          <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
             <span class="subscription__name subscription__name--readable">({{ userName }})</span>
           </template>
         </span>

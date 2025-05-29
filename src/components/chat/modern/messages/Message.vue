@@ -53,7 +53,7 @@
           class="message__name"
           :style="{ color }">
           <strong>{{ displayName }}</strong>
-          <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+          <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
             ({{ userName }})
           </template>
         </span>

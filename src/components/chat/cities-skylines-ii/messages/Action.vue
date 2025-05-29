@@ -20,7 +20,7 @@
       <header class="action__header">
         <span class="action__name">
           {{ displayName }}
-          <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+          <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
             <span class="action__name action__name--readable">({{ userName }})</span>
           </template>
         </span>

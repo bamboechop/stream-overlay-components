@@ -1,7 +1,7 @@
 <template>
   <li class="subscription">
     <span class="subscription__name">{{ displayName }}</span>
-    <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+    <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
       ({{ userName }})
     </template>
     hat soeben ein Stufe {{ plan }} Abonnement abgeschlossen! Dankeschön!

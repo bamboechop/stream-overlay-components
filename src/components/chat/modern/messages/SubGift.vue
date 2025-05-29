@@ -5,12 +5,12 @@
     <div class="sub-gift__info">
       <span class="sub-gift__name">
         <strong :style="{ color: '#ff7512' }">{{ sender.displayName }}</strong>
-        <template v-if="sender.displayName?.toLowerCase() !== sender.userName?.toLowerCase()">
+        <template v-if="sender.userName && sender.displayName?.toLowerCase() !== sender.userName.toLowerCase()">
           ({{ sender.userName }})
         </template>
         hat gerade
         <strong :style="{ color: '#ffdf12' }">{{ recipient.displayName }}</strong>
-        <template v-if="recipient.displayName?.toLowerCase() !== recipient.userName?.toLowerCase()">
+        <template v-if="recipient.userName && recipient.displayName?.toLowerCase() !== recipient.userName.toLowerCase()">
           ({{ recipient.userName }})
         </template>
         ein Stufe {{ plan }} Abonnement geschenkt! Vielen Dank!

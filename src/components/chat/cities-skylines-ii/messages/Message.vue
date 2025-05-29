@@ -53,7 +53,7 @@
         <header class="message__header">
           <span class="message__name">
             {{ displayName }}
-            <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+            <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
               <span class="message__name message__name--readable">({{ userName }})</span>
             </template>
           </span>

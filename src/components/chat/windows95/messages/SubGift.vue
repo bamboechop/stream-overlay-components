@@ -1,12 +1,12 @@
 <template>
   <li class="sub-gift">
     <span class="sub-gift__name">{{ sender.displayName }}</span>
-    <template v-if="sender.displayName?.toLowerCase() !== sender.userName?.toLowerCase()">
+    <template v-if="sender.userName && sender.displayName?.toLowerCase() !== sender.userName.toLowerCase()">
       ({{ sender.userName }})
     </template>
     hat gerade
     <span class="sub-gift__name">{{ recipient.displayName }}</span>
-    <template v-if="recipient.displayName?.toLowerCase() !== recipient.userName?.toLowerCase()">
+    <template v-if="recipient.userName && recipient.displayName?.toLowerCase() !== recipient.userName.toLowerCase()">
       ({{ recipient.userName }})
     </template>
     ein Stufe {{ plan }} Abonnement geschenkt! Vielen Dank!

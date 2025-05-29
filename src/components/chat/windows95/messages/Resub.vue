@@ -2,7 +2,7 @@
   <li class="resub">
     <header class="resub__header">
       <span class="resub__name">{{ displayName }}</span>
-      <template v-if="displayName?.toLowerCase() !== userName?.toLowerCase()">
+      <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
         ({{ userName }})
       </template>
       ist seit {{ months }} Monaten mit einem Stufe {{ plan }} Abonnement dabei!
