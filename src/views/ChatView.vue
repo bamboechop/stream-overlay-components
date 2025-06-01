@@ -9,9 +9,7 @@
       <Windows95Theme :active="active" />
     </template>
     <template v-if="theme === 'modern'">
-      <ModernTheme
-        :active="active"
-        :connected="connected" /><!-- TODO finish connected implementation -->
+      <ModernTheme :active="active" />
     </template>
   </section>
 </template>
@@ -33,7 +31,7 @@ import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.
 
 const { chatVisibleTimeoutInSeconds, messageDebug, theme } = useSearchParamsComposable();
 
-const { initChat, initTwitch, connected, loading } = useTwitchChat(theme.value);
+const { initChat, initTwitch, loading } = useTwitchChat(theme.value);
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

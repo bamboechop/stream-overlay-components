@@ -40,8 +40,6 @@ export const broadcasterInfo = {
 let client: Client | null = null;
 let viewerCountInterval: number | null = null;
 
-const connected = ref(false);
-
 export function useTwitchChat(theme?: TTheme) {
   const { debug, messageDebug } = useSearchParamsComposable();
 
@@ -262,14 +260,6 @@ export function useTwitchChat(theme?: TTheme) {
 
     client.on('clearchat', (channel: string) => {
       clearMessages(parseChannelName(channel));
-    });
-
-    client.on('connected', () => {
-      connected.value = true;
-    });
-
-    client.on('disconnected', () => {
-      connected.value = false;
     });
 
     client.on('giftpaidupgrade', (_channel: string, username: string, sender: string, userstate: SubGiftUpgradeUserstate) => {
@@ -524,7 +514,6 @@ export function useTwitchChat(theme?: TTheme) {
   }
 
   return {
-    connected,
     loading,
     initChat,
     initTwitch,
