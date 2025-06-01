@@ -9,10 +9,10 @@
         :key="channel">
         <div class="stream-together-info-box__channel">
           <OtherChannelIndicator
-            :channel="channel.name"
-            :channel-image="channelImages[channel.name]"
+            :channel="channel"
+            :channel-image="channelImages[channel]"
             :stream-together-channels="streamTogetherChannels" />
-          {{ channel.name }}
+          {{ channel }}
         </div>
       </template>
     </div>
@@ -27,21 +27,20 @@ import { getUserImageByUserId } from '@/common/helpers/twitch-message.helper';
 import { useTwitchStore } from '@/stores/twitch.store';
 
 const twitchStore = useTwitchStore();
-const { streamTogetherChannels } = storeToRefs(twitchStore);
+const { streamTogetherChannels, streamTogetherChannelIds } = storeToRefs(twitchStore);
 
 const channelImages = ref<{ [username: string]: string }>({});
 
-watch(streamTogetherChannels, async (newValue) => {
+watch(() => streamTogetherChannelIds.value, async (newValue) => {
   if (Object.keys(newValue).length === 0) {
     return;
   }
-  const channelImagePromises = streamTogetherChannels.value
-    .map(channel => channel.id ? getUserImageByUserId(channel.id) : undefined)
-    .filter((promise): promise is Promise<string> => promise !== undefined);
+  channelImages.value = {};
+  const channelImagePromises = streamTogetherChannels.value.map(channel => newValue[channel] && getUserImageByUserId(newValue[channel])).filter(Boolean);
 
   const resolvedPromises = await Promise.all(channelImagePromises);
   for (let i = 0; i < resolvedPromises.length; i++) {
-    channelImages.value[streamTogetherChannels.value[i].name] = resolvedPromises[i];
+    channelImages.value[streamTogetherChannels.value[i]] = resolvedPromises[i];
   }
 }, { deep: true, immediate: true });
 </script>

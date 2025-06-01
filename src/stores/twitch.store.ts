@@ -9,8 +9,10 @@ import { raidDummy } from '@data/raid.data';
 import axios from 'axios';
 import { useLocalStorage } from '@vueuse/core';
 import type { TMessage } from '@/common/types/index.type';
+import { getUserIdByUserName } from '@/common/helpers/twitch-message.helper';
 
-const streamTogetherChannels = ref<{ id: string | null; name: string }[]>([]);
+const streamTogetherChannels = ref<string[]>([]);
+const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
 const token = useLocalStorage<string>('twitch-token', null);
 
 export const useTwitchStore = defineStore('Twitch Store', () => {
@@ -78,11 +80,19 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     };
   };
 
-  const processStreamTogetherChannels = (title: string) => {
-    streamTogetherChannels.value = (title?.match(/@\w+/g) || []).map((username: string) => ({ id: null, name: username.substring(1) }));
+  const processStreamTogetherChannels = async (title: string) => {
+    streamTogetherChannels.value = (title?.match(/@\w+/g) || []).map((username: string) => username.substring(1));
+    streamTogetherChannelIds.value = {};
+    for (const channel of streamTogetherChannels.value) {
+      const channelId = await getUserIdByUserName(channel);
+      if (channelId) {
+        streamTogetherChannelIds.value[channel] = channelId;
+      }
+    }
   };
 
   const getChannelInformation = async () => {
+    console.log('getChannelInformation called');
     const response = await axios.get(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`);
     const { data } = response;
     if (data) {
@@ -101,6 +111,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     category,
     messages,
     streamTogetherChannels,
+    streamTogetherChannelIds,
     viewers,
     addMessage,
     addDebugMessages,
