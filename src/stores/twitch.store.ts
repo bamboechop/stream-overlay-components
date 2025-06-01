@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useLocalStorage } from '@vueuse/core';
 import type { TMessage } from '@/common/types/index.type';
 
+const streamTogetherChannels = ref<{ id: string | null; name: string }[]>([]);
 const token = useLocalStorage<string>('twitch-token', null);
 
 export const useTwitchStore = defineStore('Twitch Store', () => {
@@ -17,7 +18,6 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   const category = ref('Media Player');
   const messages = ref<TMessage[]>([]);
   const viewers = ref(0);
-  const streamTogetherChannels = ref<string[]>([]);
 
   const addDebugMessages = () => {
     messages.value.push(resubDummy, subscriptionDummy, subgiftDummy, actionDummy, ...chatDummy, raidDummy);
@@ -78,12 +78,16 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     };
   };
 
+  const processStreamTogetherChannels = (title: string) => {
+    streamTogetherChannels.value = (title?.match(/@\w+/g) || []).map((username: string) => ({ id: null, name: username.substring(1) }));
+  };
+
   const getChannelInformation = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`);
     const { data } = response;
     if (data) {
       category.value = data.game_name;
-      streamTogetherChannels.value = (data.title?.match(/@\w+/g) || []).map((username: string) => username.substring(1));
+      processStreamTogetherChannels(data.title);
     }
   };
 
@@ -103,6 +107,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     clearMessages,
     getAdSchedule,
     getChannelInformation,
+    processStreamTogetherChannels,
     removeMessageByMessageId,
     removeMessagesByUserId,
     updateViewerCount,

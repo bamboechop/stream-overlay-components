@@ -7,7 +7,7 @@ import type { IEventStreamChannelUpdateData } from '@/common/interfaces/event-st
 export function useTwitchStreamInfoComposable() {
   const twitchStore = useTwitchStore();
   const { category } = storeToRefs(twitchStore);
-  const { getChannelInformation } = twitchStore;
+  const { getChannelInformation, processStreamTogetherChannels } = twitchStore;
   const { on } = useEventStreamComposable();
 
   onMounted(async () => {
@@ -16,6 +16,7 @@ export function useTwitchStreamInfoComposable() {
 
       on<IEventStreamChannelUpdateData>('channel.update', (data) => {
         category.value = data.category_name;
+        processStreamTogetherChannels(data.title);
       });
     } catch (err) {
       console.error('Failed to get channel information:', err);

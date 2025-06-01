@@ -13,7 +13,7 @@ import { broadcasterInfo } from '@/composables/twitch-chat.composable';
 const props = defineProps<{
   channel: string;
   channelImage: string;
-  streamTogetherChannels: string[];
+  streamTogetherChannels: { name: string }[];
 }>();
 
 const channelBorderColor = ref<string>('');

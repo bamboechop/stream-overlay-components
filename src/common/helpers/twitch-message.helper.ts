@@ -61,7 +61,7 @@ export function parseChannelName(channel: string): string {
   return channel.replace('#', '');
 }
 
-export function getStreamTogetherColor(channelName: string, streamTogetherChannels: string[]): string {
-  const index = streamTogetherChannels.indexOf(channelName);
+export function getStreamTogetherColor(channelName: string, streamTogetherChannels: { name: string }[]): string {
+  const index = streamTogetherChannels.findIndex(channel => channel.name === channelName);
   return index >= 0 ? STREAM_TOGETHER_COLORS[index % STREAM_TOGETHER_COLORS.length] : STREAM_TOGETHER_COLORS[0];
 }

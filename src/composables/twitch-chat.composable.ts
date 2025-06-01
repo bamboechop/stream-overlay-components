@@ -36,8 +36,6 @@ export const broadcasterInfo = {
   name: import.meta.env.VITE_TWITCH_BROADCASTER_NAME,
 };
 
-export const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
-
 export async function useTwitchChat(theme?: TTheme) {
   const { debug, messageDebug } = useSearchParamsComposable();
 
@@ -87,15 +85,13 @@ export async function useTwitchChat(theme?: TTheme) {
       ];
 
       if (streamTogetherChannels.value.length > 0) {
-        const channelIds: { [channel: string]: string } = {};
         for (const channel of streamTogetherChannels.value) {
-          const channelId = await getUserIdByUserName(channel);
+          const channelId = await getUserIdByUserName(channel.name);
           if (channelId) {
-            channelIds[channel] = channelId;
+            channel.id = channelId;
             badgePromises.push(axios.get<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${channelId}`));
           }
         }
-        streamTogetherChannelIds.value = channelIds;
       }
 
       const [chatBadgesResponse, globalChatBadgesResponse, ...channelChatBadgesResponses] = await Promise.all(badgePromises);
@@ -123,9 +119,9 @@ export async function useTwitchChat(theme?: TTheme) {
 
       // Process other channels' badges with channel prefix to keep them distinct
       for (let i = 0; i < channelChatBadgesResponses.length; i++) {
-        const channelId = streamTogetherChannels.value[i];
+        const channel = streamTogetherChannels.value[i];
         for (const set of channelChatBadgesResponses[i].data.data) {
-          const key = `${channelId}_${set.set_id}`;
+          const key = `${channel.name}_${set.set_id}`;
           availableBadges[key] = set.versions.map(version => ({
             description: version.description,
             id: version.id,
@@ -135,7 +131,8 @@ export async function useTwitchChat(theme?: TTheme) {
         }
       }
 
-      const channels = [broadcasterInfo.name, ...streamTogetherChannels.value];
+      // TODO check if we even need to connect to the stream together channels
+      const channels = [broadcasterInfo.name, ...(streamTogetherChannels.value.map(channel => channel.name))];
       if (debug) {
         channels.push(import.meta.env.VITE_TWITCH_DEBUG_CHANNEL);
       }
@@ -241,8 +238,9 @@ export async function useTwitchChat(theme?: TTheme) {
 
         const parsedChannel = parseChannelName(channel);
         let channelImage;
-        if (parsedChannel !== broadcasterInfo.name && streamTogetherChannelIds.value[parsedChannel]) {
-          channelImage = await getUserImageByUserId(streamTogetherChannelIds.value[parsedChannel]);
+        const { id: channelId } = streamTogetherChannels.value.find(channel => channel.name === parsedChannel) ?? { id: null };
+        if (parsedChannel !== broadcasterInfo.name && channelId) {
+          channelImage = await getUserImageByUserId(channelId);
         }
 
         addMessage({
