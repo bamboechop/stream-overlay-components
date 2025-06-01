@@ -10,7 +10,6 @@ export function useSearchParamsComposable() {
     'gigantified-emote-volume'?: string;
     'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
-    'stream-together-channels'?: string;
     'theme'?: TTheme;
     'url'?: string;
   }>('history');
@@ -50,9 +49,6 @@ export function useSearchParamsComposable() {
     gigantifiedEmoteVolume,
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,
-    streamTogetherChannels: searchParams['stream-together-channels'] && searchParams['stream-together-channels'].length > 0
-      ? searchParams['stream-together-channels'].split(',')
-      : [],
     theme,
     themePath: theme.value.replace('-', ''),
     url: searchParams.url,

@@ -106,7 +106,6 @@ import OtherChannelIndicator from '../OtherChannelIndicator.vue';
 import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 import { broadcasterInfo } from '@/composables/twitch-chat.composable';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 
 const props = defineProps<IChat & { messageIndex?: number; messageOffset?: number }>();
@@ -116,12 +115,8 @@ const emits = defineEmits<{
 
 const { animationId, msgId } = toRefs(props);
 
-const { streamTogetherChannels: streamTogetherChannelsFromSearchParams } = useSearchParamsComposable();
-
 const twitchStore = useTwitchStore();
-const { streamTogetherChannels: streamTogetherChannelsFromStore } = storeToRefs(twitchStore);
-
-const streamTogetherChannels = computed(() => streamTogetherChannelsFromSearchParams.length > 0 ? streamTogetherChannelsFromSearchParams : streamTogetherChannelsFromStore.value);
+const { streamTogetherChannels } = storeToRefs(twitchStore);
 
 const isOtherChannel = computed(() => props.channel !== broadcasterInfo.name && props.channelImage);
 

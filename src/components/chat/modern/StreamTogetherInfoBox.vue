@@ -20,20 +20,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import OtherChannelIndicator from './OtherChannelIndicator.vue';
 import { getUserImageByUserId } from '@/common/helpers/twitch-message.helper';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { streamTogetherChannelIds } from '@/composables/twitch-chat.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 
-const { streamTogetherChannels: streamTogetherChannelsFromSearchParams } = useSearchParamsComposable();
-
 const twitchStore = useTwitchStore();
-const { streamTogetherChannels: streamTogetherChannelsFromStore } = storeToRefs(twitchStore);
-
-const streamTogetherChannels = computed(() => streamTogetherChannelsFromSearchParams.length > 0 ? streamTogetherChannelsFromSearchParams : streamTogetherChannelsFromStore.value);
+const { streamTogetherChannels } = storeToRefs(twitchStore);
 
 const channelImages = ref<{ [username: string]: string }>({});
 
