@@ -27,7 +27,7 @@ import type {
   ISubscription,
   ITwitchBadgeResponse,
 } from '@/common/interfaces/index.interface';
-import { getUserIdByUserName, getUserImageByUserId, parseChannelName, parsePlan } from '@/common/helpers/twitch-message.helper';
+import { getUserIdByUserName, getUserImageByUserId, getUserNameByUserId, parseChannelName, parsePlan } from '@/common/helpers/twitch-message.helper';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { TTheme } from '@/common/types/index.type';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
@@ -116,8 +116,7 @@ export function useTwitchChat(theme?: TTheme) {
   }
 
   async function setUpTwitchChatClient(availableBadges: Record<string, { description: string; id: string; imageUrl: string; title: string }[]>): Promise<void> {
-    // TODO check if we even need to connect to the stream together channels
-    const channels = [broadcasterInfo.name, ...streamTogetherChannels.value];
+    const channels = [broadcasterInfo.name];
     if (debug) {
       channels.push(import.meta.env.VITE_TWITCH_DEBUG_CHANNEL);
     }
@@ -200,10 +199,11 @@ export function useTwitchChat(theme?: TTheme) {
     });
 
     client.on('chat', async (channel: string, userstate: ChatUserstate, message: string, self: boolean) => {
-      // room ids are different in stream together shared chats - only continue when the source and target room ids are the same
-      if (self || (userstate['source-room-id'] && userstate['source-room-id'] !== userstate['room-id'])) {
+      if (self) {
         return;
       }
+
+      let channelToUse = channel;
 
       const {
         'animation-id': animationId,
@@ -226,7 +226,13 @@ export function useTwitchChat(theme?: TTheme) {
         userImage = await getUserImageByUserId(userId);
       }
 
-      const parsedChannel = parseChannelName(channel);
+      // stream together shared chats have different room ids for the source and target
+      // if the source room id is different from the target room id, we need to use the source user name
+      if (userstate['source-room-id'] && userstate['source-room-id'] !== userstate['room-id']) {
+        channelToUse = await getUserNameByUserId(userstate['source-room-id']) ?? channel;
+      }
+
+      const parsedChannel = parseChannelName(channelToUse);
       let channelImage;
       if (parsedChannel !== broadcasterInfo.name && streamTogetherChannelIds.value[parsedChannel]) {
         channelImage = await getUserImageByUserId(streamTogetherChannelIds.value[parsedChannel]);
