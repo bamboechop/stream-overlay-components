@@ -7,6 +7,10 @@ export async function getUserIdByUserName(username: string): Promise<string | un
   return (await axios.get(`https://api.twitch.tv/helix/users?login=${username}`))?.data?.data?.[0]?.id;
 }
 
+export async function getUserNameByUserId(userId: string): Promise<string | undefined> {
+  return (await axios.get(`https://api.twitch.tv/helix/users?id=${userId}`))?.data?.data?.[0]?.display_name;
+}
+
 // TODO set date of store and reload image after a certain time
 export async function getUserImageByUserId(userId: string): Promise<string> {
   const cachedImages: string | { [userId: string]: string } | null = window.sessionStorage.getItem('user-avatars');

@@ -1,5 +1,5 @@
 <template>
-  <template v-if="Object.keys(channelImages).length > 0">
+  <template v-if="streamTogetherChannels.length > 0 && Object.keys(channelImages).length > 0">
     <div class="stream-together-info-box">
       <p class="stream-together-info-box__heading">
         Ich streame gemeinsam mit
@@ -24,19 +24,19 @@ import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import OtherChannelIndicator from './OtherChannelIndicator.vue';
 import { getUserImageByUserId } from '@/common/helpers/twitch-message.helper';
-import { streamTogetherChannelIds } from '@/composables/twitch-chat.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 
 const twitchStore = useTwitchStore();
-const { streamTogetherChannels } = storeToRefs(twitchStore);
+const { streamTogetherChannels, streamTogetherChannelIds } = storeToRefs(twitchStore);
 
 const channelImages = ref<{ [username: string]: string }>({});
 
-watch(streamTogetherChannelIds, async (newValue) => {
+watch(() => streamTogetherChannelIds.value, async (newValue) => {
   if (Object.keys(newValue).length === 0) {
     return;
   }
-  const channelImagePromises = streamTogetherChannels.value.map(channel => getUserImageByUserId(newValue[channel]));
+  channelImages.value = {};
+  const channelImagePromises = streamTogetherChannels.value.map(channel => newValue[channel] && getUserImageByUserId(newValue[channel])).filter(Boolean);
 
   const resolvedPromises = await Promise.all(channelImagePromises);
   for (let i = 0; i < resolvedPromises.length; i++) {

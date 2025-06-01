@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ChatMessages.vue';
 import ModernTheme from '@/components/chat/modern/ChatWindow.vue';
 import Windows95Theme from '@/components/chat/windows95/ChatWindow.vue';
@@ -26,16 +26,21 @@ import { useTwitchStore } from '@/stores/twitch.store';
 import { useApplicationStore } from '@/stores/application.store';
 import { useProgramInformationComposable } from '@/composables/program-information.composable';
 import { BOT_ACCOUNT_USERNAMES } from '@/common/constants/bot-accounts.constant';
+import { useEventStreamComposable } from '@/composables/event-stream.composable';
+import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 
 const { chatVisibleTimeoutInSeconds, messageDebug, theme } = useSearchParamsComposable();
 
-const { loading } = await useTwitchChat(theme.value);
+const { initChat, initTwitch, loading } = useTwitchChat(theme.value);
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);
 const { addActiveApplication, removeActiveApplication } = applicationStore;
 
 const { programInformation } = useProgramInformationComposable();
+
+useEventStreamComposable();
+useTwitchStreamInfoComposable();
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);
@@ -44,12 +49,10 @@ const active = computed(() => activeApplications.value.find(application => appli
 const hideTimeout = ref<number | null>(null);
 const showChat = ref(messageDebug);
 
-const { getChannelInformation } = store;
-try {
-  await getChannelInformation();
-} catch (err) {
-  console.error('Failed to get channel information:', err);
-}
+onMounted(async () => {
+  await initTwitch();
+  await initChat();
+});
 
 function resetHideTimeout() {
   if (hideTimeout.value) {
