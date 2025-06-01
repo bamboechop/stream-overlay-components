@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 
 const { theme } = useSearchParamsComposable();
 

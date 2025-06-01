@@ -24,7 +24,7 @@ import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import OtherChannelIndicator from './OtherChannelIndicator.vue';
 import { getUserImageByUserId } from '@/common/helpers/twitch-message.helper';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { streamTogetherChannelIds } from '@/composables/twitch-chat.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 

@@ -24,7 +24,7 @@ import { useMediaControls } from '@vueuse/core';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage } from '@/common/helpers/twitch-message.helper';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);

@@ -12,7 +12,7 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import ModernTheme from '@/components/webcam/modern/Webcam.vue';
 import Windows95Theme from '@/components/webcam/windows-95/Webcam.vue';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useApplicationStore } from '@/stores/application.store';
 
 const { theme } = useSearchParamsComposable();

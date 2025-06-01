@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import ModernTheme from '@/components/intermission/modern/Intermission.vue';
 import { useApplicationStore } from '@/stores/application.store';

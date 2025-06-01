@@ -29,7 +29,7 @@ import type {
 import { getUserIdByUserName, getUserImageByUserId, parseChannelName, parsePlan } from '@/common/helpers/twitch-message.helper';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { TTheme } from '@/common/types/index.type';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 
 export const broadcasterInfo = {
   id: import.meta.env.VITE_TWITCH_BROADCASTER_ID,

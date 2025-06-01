@@ -39,7 +39,7 @@ import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useStreamStatusStore } from '@/stores/stream-status.store';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import type { IEventStreamAdBreakBeginData } from '@/common/interfaces/event-stream.interface';
 
 const { debug } = useSearchParamsComposable();

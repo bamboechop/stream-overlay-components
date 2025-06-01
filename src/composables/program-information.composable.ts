@@ -2,7 +2,7 @@ import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import type { TProgramId } from '@/common/types/index.type';
 import type { IProgram } from '@/components/task-bar/task-bar.interface';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { GAME_METADATA } from '@/common/constants/game-metadata.constant';
 

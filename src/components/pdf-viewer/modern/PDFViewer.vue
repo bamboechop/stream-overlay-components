@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import PdfEmbed from 'vue-pdf-embed';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
-import { useSearchParamsComposable } from '@/composables/search-params-composable.composable';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
 
 defineProps<{ active?: boolean }>();
 
