@@ -47,4 +47,10 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/mirrors-edge.icon.png',
     intermissionTextMode: 'default',
   },
+  'Trackmania': {
+    backgroundImagePath: '/modern/game-backgrounds/trackmania.jpg',
+    color: 'rgba(252, 3, 26, 0.5)',
+    iconPath: '/programs/{themePath}/trackmania.icon.png',
+    intermissionTextMode: 'default',
+  },
 } as const;
