@@ -94,7 +94,6 @@ async function triggerCelebration(): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, spawnInterval));
     const emote = emotes[i];
     activeEmotes.value.push(emote);
-    console.log({ src: emote.src });
 
     // Remove the emote after animation
     setTimeout(() => {
