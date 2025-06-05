@@ -23,10 +23,10 @@ import { useTwitchChat } from '@/composables/twitch-chat.composable';
 
 let eventSource: EventSource | null = null;
 
+const { initChat, initTwitch } = useTwitchChat();
+
 const store = useCoworkingStore();
 const { removeNotesFromUser, setNotes, updateNote } = store;
-
-await useTwitchChat();
 
 function eventSourceSetup() {
   eventSource = new EventSource(`${import.meta.env.VITE_BAMBBOT_API_URL}/coworking/eventstream`);
@@ -49,6 +49,9 @@ function eventSourceSetup() {
 
 onMounted(async () => {
   try {
+    await initTwitch();
+    await initChat();
+
     eventSourceSetup();
 
     const notes: Note[] = await (await window.fetch(`${import.meta.env.VITE_DIGITAL_DOPPLER_BASE_URL}/api/open-notes`)).json();

@@ -5,11 +5,17 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue';
 import ModernTheme from '@/components/gigantified-emote/modern/GigantifiedEmote.vue';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 
 const { theme } = useSearchParamsComposable();
 
-await useTwitchChat();
+const { initChat, initTwitch } = useTwitchChat(theme.value);
+
+onMounted(async () => {
+  await initTwitch();
+  await initChat();
+});
 </script>
