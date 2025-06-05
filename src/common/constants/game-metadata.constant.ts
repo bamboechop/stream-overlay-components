@@ -35,6 +35,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
   'Just Chatting': {
     intermissionTextMode: 'chatting',
   },
+  'Mario Kart World': {
+    backgroundImagePath: '/modern/game-backgrounds/mario-kart-world.jpg',
+    color: 'rgba(228, 0, 15, 0.35)',
+    iconPath: '/programs/{themePath}/mario-kart-world.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Need for Speed: Most Wanted': {
     backgroundImagePath: '/modern/game-backgrounds/need-for-speed-most-wanted.jpg',
     color: 'rgba(4, 60, 73, 0.75)',
