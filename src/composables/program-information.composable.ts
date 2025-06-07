@@ -56,6 +56,12 @@ export function useProgramInformationComposable() {
       id: 'pdf-viewer',
       text: 'PDF Viewer',
     },
+    'schedule': {
+      active: false,
+      iconPath: `/programs/${themePath}/schedule.icon.png`,
+      id: 'schedule',
+      text: 'Streamplan',
+    },
     'webcam': {
       active: false,
       iconPath: `/programs/${themePath}/webcam.icon.png`,

@@ -11,6 +11,7 @@ const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
   4: 'intermission',
   5: 'intermission',
   6: 'intermission',
+  12: 'schedule',
   40: 'chat',
   41: 'media-player',
   51: 'webcam',
@@ -18,6 +19,7 @@ const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
 };
 
 const obsAllowedSceneItemIds = [
+  12, // Schedule
   41, // Media Player
   51, // Webcam
   69, // PDF Viewer

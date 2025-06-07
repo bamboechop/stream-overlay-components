@@ -11,6 +11,7 @@ import AdView from '@/views/AdView.vue';
 import PDFViewer from '@/views/PDFViewer.vue';
 import OnScreenCelebrationView from '@/views/OnScreenCelebrationView.vue';
 import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
+import ScheduleView from '@/views/ScheduleView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -57,6 +58,11 @@ export const routes: RouteRecordRaw[] = [
     component: PDFViewer,
     name: 'PDF Viewer Component',
     path: '/pdf',
+  },
+  {
+    component: ScheduleView,
+    name: 'Schedule Component',
+    path: '/schedule',
   },
   {
     component: TaskBarView,
