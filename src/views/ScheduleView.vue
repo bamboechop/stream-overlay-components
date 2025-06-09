@@ -18,8 +18,14 @@ const { theme } = useSearchParamsComposable();
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);
 
-const active = computed(() => activeApplications.value.find((application) => {
-  console.log(application);
-  return application.id === 'schedule';
-})?.active);
+const active = computed(() => activeApplications.value.find(application => application.id === 'schedule')?.active);
 </script>
+
+<style scoped lang="scss">
+  .schedule-view {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+  }
+</style>
