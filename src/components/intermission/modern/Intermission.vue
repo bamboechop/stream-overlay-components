@@ -116,8 +116,7 @@ const startingSoonImage = computed(() => {
     color: #fff;
     display: block;
     font-size: 60px;
-    padding: 32px 24px;
-    text-align: center;
+    padding: 32px 24px 32px 256px;
     text-shadow: 0 0 10px #000;
     top: 50%;
     transform: translateY(-50%);
