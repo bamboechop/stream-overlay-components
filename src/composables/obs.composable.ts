@@ -7,15 +7,29 @@ import { useTwitchStore } from '@/stores/twitch.store';
 import { useProgramInformationComposable } from '@/composables/program-information.composable';
 import { useStreamStatusStore } from '@/stores/stream-status.store';
 
-const obsSceneIdToProgramIdMapping: { [sceneId: number]: TProgramId } = {
-  4: 'intermission',
-  5: 'intermission',
-  6: 'intermission',
-  12: 'schedule',
-  40: 'chat',
-  41: 'media-player',
-  51: 'webcam',
-  69: 'pdf-viewer',
+interface ISceneItemMapping {
+  programId: TProgramId;
+  sourceName?: string;
+}
+
+interface ISceneMapping {
+  [sceneItemId: number]: ISceneItemMapping;
+}
+
+const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
+  // Default mapping for all scenes
+  '*': {
+    4: { programId: 'intermission' },
+    5: { programId: 'intermission' },
+    40: { programId: 'chat' },
+    41: { programId: 'media-player' },
+    51: { programId: 'webcam' },
+    69: { programId: 'pdf-viewer' },
+  },
+  '7bb22505-8353-471d-9e9a-de3cbdc4e1aa': { // "Ende" scene
+    6: { programId: 'intermission' },
+    12: { programId: 'schedule', sourceName: 'Schedule' },
+  },
 };
 
 const obsAllowedSceneItemIds = [
@@ -74,11 +88,20 @@ export async function useObsComposable() {
     const { currentProgramSceneUuid: sceneUuid } = await obs.call('GetSceneList');
     const sceneItemList = await obs.call('GetSceneItemList', { sceneUuid });
     programs.value = {};
+
+    // Get the scene-specific mapping or fall back to the default mapping
+    const sceneMapping = obsSceneMappings[sceneUuid] || obsSceneMappings['*'];
+
     for (const item of sceneItemList.sceneItems) {
-      if (item.sourceName && obsSceneIdToProgramIdMapping[item.sceneItemId as number]) {
-        programs.value[obsSceneIdToProgramIdMapping[item.sceneItemId as number]] = item.sceneItemEnabled as boolean;
+      const mapping = sceneMapping[item.sceneItemId as number];
+      if (mapping) {
+        // If sourceName is specified in the mapping, verify it matches
+        if (!mapping.sourceName || mapping.sourceName === item.sourceName) {
+          programs.value[mapping.programId] = item.sceneItemEnabled as boolean;
+        }
       }
     }
+
     // wait for 100ms before updating the visibility, otherwise the active window isn't getting highlighted when switching scenes
     window.setTimeout(() => {
       updateProgramVisibility();
@@ -92,13 +115,18 @@ export async function useObsComposable() {
   });
 
   // handle source visibility changes
-  obs.on('SceneItemEnableStateChanged', (event) => {
+  obs.on('SceneItemEnableStateChanged', async (event) => {
     const { sceneItemId } = event;
     if (!obsAllowedSceneItemIds.includes(sceneItemId)) {
       return;
     }
-    programs.value[obsSceneIdToProgramIdMapping[sceneItemId]] = event.sceneItemEnabled;
-    updateProgramVisibility();
+    const { currentProgramSceneUuid: sceneUuid } = await obs.call('GetSceneList');
+    const sceneMapping = obsSceneMappings[sceneUuid] || obsSceneMappings['*'];
+    const mapping = sceneMapping[sceneItemId];
+    if (mapping) {
+      programs.value[mapping.programId] = event.sceneItemEnabled;
+      updateProgramVisibility();
+    }
   });
 
   /**
