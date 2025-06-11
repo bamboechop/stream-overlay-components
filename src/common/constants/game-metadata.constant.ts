@@ -53,6 +53,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/mirrors-edge.icon.png',
     intermissionTextMode: 'default',
   },
+  'Pokémon Sword/Shield': {
+    backgroundImagePath: '/modern/game-backgrounds/pokemon-sword.jpg',
+    color: 'rgba(255, 255, 255, 0.5)',
+    iconPath: '/programs/{themePath}/pokemon-sword.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Trackmania': {
     backgroundImagePath: '/modern/game-backgrounds/trackmania.jpg',
     color: 'rgba(252, 3, 26, 0.5)',
