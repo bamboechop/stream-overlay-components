@@ -47,12 +47,6 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/need-for-speed-most-wanted.icon.png',
     intermissionTextMode: 'default',
   },
-  'Mirror\'s Edge': {
-    backgroundImagePath: '/modern/game-backgrounds/mirrors-edge.jpg',
-    color: 'rgba(242, 0, 0, 0.5)',
-    iconPath: '/programs/{themePath}/mirrors-edge.icon.png',
-    intermissionTextMode: 'default',
-  },
   'Pokémon Sword/Shield': {
     backgroundImagePath: '/modern/game-backgrounds/pokemon-sword.jpg',
     color: 'rgba(255, 255, 255, 0.5)',
