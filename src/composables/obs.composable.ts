@@ -19,7 +19,7 @@ interface ISceneMapping {
 const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
   // Default mapping for all scenes
   '*': {
-    4: { programId: 'intermission' },
+    4: { programId: 'start' },
     5: { programId: 'intermission' },
     40: { programId: 'chat' },
     41: { programId: 'media-player' },
@@ -27,7 +27,7 @@ const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
     69: { programId: 'pdf-viewer' },
   },
   '7bb22505-8353-471d-9e9a-de3cbdc4e1aa': { // "Ende" scene
-    6: { programId: 'intermission' },
+    6: { programId: 'end' },
     12: { programId: 'schedule', sourceName: 'Schedule' },
   },
 };

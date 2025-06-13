@@ -26,5 +26,7 @@ useTwitchStreamInfoComposable();
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);
 
-const active = computed(() => activeApplications.value.find(application => application.id === 'intermission')?.active);
+const modes = ['start', 'end', 'intermission'];
+
+const active = computed(() => activeApplications.value.find(application => modes.includes(application.id))?.active);
 </script>

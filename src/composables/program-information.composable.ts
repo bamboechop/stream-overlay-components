@@ -32,6 +32,12 @@ export function useProgramInformationComposable() {
       id: 'chat',
       text: 'Chat',
     },
+    'end': {
+      active: false,
+      iconPath: `/programs/${themePath}/end.icon.png`,
+      id: 'end',
+      text: 'Ende',
+    },
     'intermission': {
       active: false,
       iconPath: `/programs/${themePath}/intermission.icon.png`,
@@ -61,6 +67,12 @@ export function useProgramInformationComposable() {
       iconPath: `/programs/${themePath}/schedule.icon.png`,
       id: 'schedule',
       text: 'Streamplan',
+    },
+    'start': {
+      active: false,
+      iconPath: `/programs/${themePath}/start.icon.png`,
+      id: 'start',
+      text: 'Start',
     },
     'webcam': {
       active: false,
