@@ -31,6 +31,7 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
   },
   'Lego & Brickbuilding': {
     iconPath: '/programs/{themePath}/brickbuilding.icon.png',
+    intermissionTextMode: 'chatting',
   },
   'Just Chatting': {
     intermissionTextMode: 'chatting',
