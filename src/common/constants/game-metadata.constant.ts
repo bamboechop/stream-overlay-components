@@ -30,6 +30,8 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     intermissionTextMode: 'default',
   },
   'Lego & Brickbuilding': {
+    backgroundImagePath: '/modern/game-backgrounds/lego-and-brickbuilding.jpg',
+    color: 'rgba(170, 204, 0, 0.35)',
     iconPath: '/programs/{themePath}/brickbuilding.icon.png',
     intermissionTextMode: 'chatting',
   },
