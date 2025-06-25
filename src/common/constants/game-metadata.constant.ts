@@ -44,6 +44,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/mario-kart-world.icon.png',
     intermissionTextMode: 'default',
   },
+  'Need for Speed: Carbon': {
+    backgroundImagePath: '/modern/game-backgrounds/need-for-speed-carbon.jpg',
+    color: 'rgba(97, 28, 33, 0.5)',
+    iconPath: '/programs/{themePath}/need-for-speed-carbon.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Need for Speed: Most Wanted': {
     backgroundImagePath: '/modern/game-backgrounds/need-for-speed-most-wanted.jpg',
     color: 'rgba(4, 60, 73, 0.75)',
