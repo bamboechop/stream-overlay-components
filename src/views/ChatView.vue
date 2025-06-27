@@ -24,7 +24,6 @@ import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useApplicationStore } from '@/stores/application.store';
-import { useProgramInformationComposable } from '@/composables/program-information.composable';
 import { BOT_ACCOUNT_USERNAMES } from '@/common/constants/bot-accounts.constant';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
@@ -35,9 +34,7 @@ const { initChat, initTwitch, loading } = useTwitchChat(theme.value);
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);
-const { addActiveApplication, removeActiveApplication } = applicationStore;
-
-const { programInformation } = useProgramInformationComposable();
+const { setApplicationActive } = applicationStore;
 
 useEventStreamComposable();
 useTwitchStreamInfoComposable();
@@ -52,6 +49,11 @@ const showChat = ref(messageDebug);
 onMounted(async () => {
   await initTwitch();
   await initChat();
+
+  // Set initial active state based on messageDebug
+  if (messageDebug) {
+    setApplicationActive('chat', true);
+  }
 });
 
 function resetHideTimeout() {
@@ -61,7 +63,7 @@ function resetHideTimeout() {
   hideTimeout.value = window.setTimeout(() => {
     showChat.value = false;
     hideTimeout.value = null;
-    removeActiveApplication(programInformation.value.chat.id);
+    setApplicationActive('chat', false);
   }, chatVisibleTimeoutInSeconds * 1000);
 }
 
@@ -73,9 +75,7 @@ if (theme.value === 'modern') {
         const userName = newestMessage.userName;
         if (userName && !BOT_ACCOUNT_USERNAMES.includes(userName)) {
           showChat.value = true;
-          if (!activeApplications.value.some(application => application.id === programInformation.value.chat.id)) {
-            addActiveApplication(programInformation.value.chat);
-          }
+          setApplicationActive('chat', true);
           if (!messageDebug) {
             resetHideTimeout();
           }

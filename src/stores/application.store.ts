@@ -8,6 +8,7 @@ export const useApplicationStore = defineStore('Application Store', () => {
   const { iconPath } = useProgramInformationComposable();
 
   const activeApplications = ref<IProgram[]>([]);
+  const previousActiveProgramId = ref<TProgramId | null>(null);
 
   const updateActiveApplication = () => {
     activeApplications.value = activeApplications.value.map((application, index) => {
@@ -37,6 +38,45 @@ export const useApplicationStore = defineStore('Application Store', () => {
 
   const removeActiveApplications = () => {
     activeApplications.value = [];
+    previousActiveProgramId.value = null;
+  };
+
+  const setApplicationActive = (id: TProgramId, active: boolean) => {
+    const application = activeApplications.value.find(app => app.id === id);
+    if (application) {
+      if (active) {
+        // Store the currently active program before changing it
+        const currentlyActive = activeApplications.value.find(app => app.active);
+        if (currentlyActive && currentlyActive.id !== id) {
+          previousActiveProgramId.value = currentlyActive.id;
+        }
+
+        // Deactivate all other applications first
+        activeApplications.value.forEach((app) => {
+          app.active = false;
+        });
+        // Then activate the target application
+        application.active = true;
+      } else {
+        application.active = false;
+
+        // If we're deactivating and have a previous active program, restore it
+        if (previousActiveProgramId.value) {
+          const previousActive = activeApplications.value.find(app => app.id === previousActiveProgramId.value);
+          if (previousActive) {
+            previousActive.active = true;
+            previousActiveProgramId.value = null;
+          }
+        }
+      }
+    }
+  };
+
+  const ensureApplicationExists = (application: IProgram) => {
+    const existingApplication = activeApplications.value.find(app => app.id === application.id);
+    if (!existingApplication) {
+      activeApplications.value.push(application);
+    }
   };
 
   const updateMediaPlayerApplicationIcon = (id: TProgramId) => {
@@ -51,6 +91,8 @@ export const useApplicationStore = defineStore('Application Store', () => {
     addActiveApplication,
     removeActiveApplication,
     removeActiveApplications,
+    setApplicationActive,
+    ensureApplicationExists,
     updateMediaPlayerApplicationIcon,
   };
 });

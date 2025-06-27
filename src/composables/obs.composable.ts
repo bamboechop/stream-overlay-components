@@ -19,12 +19,18 @@ interface ISceneMapping {
 const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
   // Default mapping for all scenes
   '*': {
-    4: { programId: 'start' },
-    5: { programId: 'intermission' },
     40: { programId: 'chat' },
     41: { programId: 'media-player' },
     51: { programId: 'webcam' },
     69: { programId: 'pdf-viewer' },
+  },
+  '3cdbaeca-19a3-419e-b665-097a3298f557': { /// "Gleich gehts los" scene
+    4: { programId: 'start' },
+    15: { programId: 'chat' },
+  },
+  '55c662f0-2b05-4278-8ac3-f7bf9e8159d4': { // "Kurze Pause" scene
+    5: { programId: 'intermission' },
+    13: { programId: 'chat' },
   },
   '7bb22505-8353-471d-9e9a-de3cbdc4e1aa': { // "Ende" scene
     6: { programId: 'end' },
@@ -34,6 +40,9 @@ const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
 
 const obsAllowedSceneItemIds = [
   12, // Schedule
+  13, // Chat "Kurze Pause"
+  15, // Chat "Gleich gehts los"
+  40, // Chat default scene
   41, // Media Player
   51, // Webcam
   69, // PDF Viewer
@@ -59,6 +68,7 @@ export async function useObsComposable() {
     removeActiveApplication,
     removeActiveApplications,
     updateMediaPlayerApplicationIcon,
+    ensureApplicationExists,
   } = applicationStore;
 
   const { iconPath, programInformation } = useProgramInformationComposable();
@@ -75,11 +85,29 @@ export async function useObsComposable() {
 
   function updateProgramVisibility() {
     for (const [id, visible] of Object.entries(programs.value) as [TProgramId, boolean][]) {
-      // ignore chat, it only gets visible when a message is sent
-      if (id !== 'chat' && visible && !activeApplications.value.find(application => application.id === id)) {
-        addActiveApplication(programInformation.value[id as TProgramId]);
+      if (visible && !activeApplications.value.find(application => application.id === id)) {
+        if (id === 'chat') {
+          // For chat, ensure it exists but don't make it active
+          ensureApplicationExists(programInformation.value[id as TProgramId]);
+        } else {
+          addActiveApplication(programInformation.value[id as TProgramId]);
+        }
       } else if (!visible) {
+        // Check if the program being hidden is currently active
+        const currentlyActive = activeApplications.value.find(app => app.active);
+        const isHidingActiveProgram = currentlyActive && currentlyActive.id === id;
+
         removeActiveApplication(id);
+
+        // If we're hiding the active program, set the last non-chat program as active
+        if (isHidingActiveProgram && activeApplications.value.length > 0) {
+          // Find the last non-chat program in the array
+          const lastNonChatProgram = activeApplications.value.filter(application => application.id !== 'chat').pop();
+
+          if (lastNonChatProgram) {
+            lastNonChatProgram.active = true;
+          }
+        }
       }
     }
   }
