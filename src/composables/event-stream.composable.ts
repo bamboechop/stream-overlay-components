@@ -1,5 +1,12 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import type { IEventStreamAdBreakBeginData, IEventStreamChannelPointsAutomaticRewardRedemptionAddData, IEventStreamChannelUpdateData } from '@/common/interfaces/event-stream.interface';
+import type {
+  IEventStreamAdBreakBeginData,
+  IEventStreamChannelPointsAutomaticRewardRedemptionAddData,
+  IEventStreamChannelUpdateData,
+  TwitchEventSubNotificationChannelPollBeginEventDto,
+  TwitchEventSubNotificationChannelPollEndEventDto,
+  TwitchEventSubNotificationChannelPollProgressEventDto,
+} from '@/common/interfaces/event-stream.interface';
 
 const eventBus = new EventTarget();
 let eventSource: EventSource | null = null;
@@ -76,6 +83,21 @@ export function useEventStreamComposable() {
       addEventSourceListener('channel.channel_points_automatic_reward_redemption.add', (event) => {
         const detail = JSON.parse(event.data) as IEventStreamChannelPointsAutomaticRewardRedemptionAddData;
         eventBus.dispatchEvent(new CustomEvent('channel.channel_points_automatic_reward_redemption.add', { detail }));
+      });
+
+      addEventSourceListener('channel.poll.begin', (event) => {
+        const detail = JSON.parse(event.data) as TwitchEventSubNotificationChannelPollBeginEventDto;
+        eventBus.dispatchEvent(new CustomEvent('channel.poll.begin', { detail }));
+      });
+
+      addEventSourceListener('channel.poll.progress', (event) => {
+        const detail = JSON.parse(event.data) as TwitchEventSubNotificationChannelPollProgressEventDto;
+        eventBus.dispatchEvent(new CustomEvent('channel.poll.progress', { detail }));
+      });
+
+      addEventSourceListener('channel.poll.end', (event) => {
+        const detail = JSON.parse(event.data) as TwitchEventSubNotificationChannelPollEndEventDto;
+        eventBus.dispatchEvent(new CustomEvent('channel.poll.end', { detail }));
       });
 
       eventSource.onopen = () => {

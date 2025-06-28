@@ -12,6 +12,7 @@ import PDFViewer from '@/views/PDFViewer.vue';
 import OnScreenCelebrationView from '@/views/OnScreenCelebrationView.vue';
 import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
 import ScheduleView from '@/views/ScheduleView.vue';
+import PollView from '@/views/PollView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -53,6 +54,11 @@ export const routes: RouteRecordRaw[] = [
     component: PokemonCommunityGameView,
     name: 'Pokemon Community Game Component',
     path: '/pcg',
+  },
+  {
+    component: PollView,
+    name: 'Poll Component',
+    path: '/poll',
   },
   {
     component: PDFViewer,
