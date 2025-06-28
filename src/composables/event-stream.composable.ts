@@ -97,6 +97,9 @@ export function useEventStreamComposable() {
 
       addEventSourceListener('channel.poll.end', (event) => {
         const detail = JSON.parse(event.data) as TwitchEventSubNotificationChannelPollEndEventDto;
+        if (detail.status === 'archived') {
+          return; // ignore archived polls as this fires after completed or terminated events came in already
+        }
         eventBus.dispatchEvent(new CustomEvent('channel.poll.end', { detail }));
       });
 
