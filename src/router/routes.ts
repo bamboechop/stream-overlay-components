@@ -13,12 +13,18 @@ import OnScreenCelebrationView from '@/views/OnScreenCelebrationView.vue';
 import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
 import ScheduleView from '@/views/ScheduleView.vue';
 import PollView from '@/views/PollView.vue';
+import BskyPostsView from '@/views/BskyPostsView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
     component: AdView,
     name: 'Ad Component',
     path: '/ad',
+  },
+  {
+    component: BskyPostsView,
+    name: 'Bluesky Posts Component',
+    path: '/bsky-posts',
   },
   {
     component: ChatView,
