@@ -26,6 +26,12 @@ export function useProgramInformationComposable() {
   });
 
   const programInformation = ref<Record<TProgramId, IProgram>>({
+    'bsky-posts': {
+      active: false,
+      iconPath: `/programs/${themePath}/bsky.icon.png`,
+      id: 'bsky-posts',
+      text: 'Neueste Bluesky Beiträge',
+    },
     'chat': {
       active: false,
       iconPath: `/programs/${themePath}/chat.icon.png`,
