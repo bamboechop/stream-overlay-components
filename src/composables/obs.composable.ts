@@ -33,12 +33,12 @@ const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
   '55c662f0-2b05-4278-8ac3-f7bf9e8159d4': { // "Kurze Pause" scene
     5: { programId: 'intermission' },
     13: { programId: 'chat' },
-    19: { programId: 'bsky-posts' },
+    16: { programId: 'bsky-posts' },
   },
   '7bb22505-8353-471d-9e9a-de3cbdc4e1aa': { // "Ende" scene
     6: { programId: 'end' },
     12: { programId: 'schedule', sourceName: 'Schedule' },
-    19: { programId: 'bsky-posts' },
+    15: { programId: 'bsky-posts' },
   },
 };
 
