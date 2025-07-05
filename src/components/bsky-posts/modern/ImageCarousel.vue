@@ -44,6 +44,7 @@ const splideOptions = computed<Options>(() => ({
 
 <style lang="scss" scoped>
 .bsky-image-carousel {
+  background-color: #1a1a1d;
   overflow: hidden;
 
   &__img {
