@@ -56,7 +56,7 @@ async function loadPosts() {
   }
   const fetchedPosts = await fetchLatestPosts(handle, 10);
   posts.value = filterPosts(fetchedPosts, 'Der Garten kommt zur Ruhe.');
-  currentIndex.value = 0;
+  currentIndex.value = 3;
 }
 
 function startCycling() {
@@ -66,15 +66,15 @@ function startCycling() {
   if (posts.value.length <= 1) {
     return;
   }
-  cycleTimer = window.setInterval(() => {
-    isCollapsed.value = true;
-    setTimeout(() => {
-      currentIndex.value = (currentIndex.value + 1) % posts.value.length;
-      setTimeout(() => {
-        isCollapsed.value = false;
-      }, 1500);
-    }, TRANSITION_DURATION);
-  }, 30 * 1000);
+  // cycleTimer = window.setInterval(() => {
+  //   isCollapsed.value = true;
+  //   setTimeout(() => {
+  //     currentIndex.value = (currentIndex.value + 1) % posts.value.length;
+  //     setTimeout(() => {
+  //       isCollapsed.value = false;
+  //     }, 1500);
+  //   }, TRANSITION_DURATION);
+  // }, 30 * 1000);
 }
 
 function stopCycling() {
@@ -125,6 +125,10 @@ watch(posts, () => {
     margin-top: -4px;
     padding: 12px;
     transition: border-top-left-radius .3s cubic-bezier(0.4,0,0.2,1), border-top-right-radius .3s cubic-bezier(0.4,0,0.2,1), margin-top .3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  :deep(.splide__slide) {
+    text-align: center;
   }
 }
 
