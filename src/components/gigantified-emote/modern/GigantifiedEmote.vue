@@ -25,6 +25,7 @@ import { useTwitchStore } from '@/stores/twitch.store';
 import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage } from '@/common/helpers/twitch-message.helper';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);
@@ -69,9 +70,9 @@ watch(messages, () => {
     const emotes = parseMessage(newestMessage.emotes, newestMessage.text, 'dark', '3.0').filter(part => part.type === 'emote');
     if (emotes.length > 0) {
       let { raw: emote, value: url } = emotes.at(-1)! as { raw: string; value: string };
-      if (emote?.startsWith('bamboe1')) {
-        const fileEnding = emote === 'bamboe1Lurk' ? 'gif' : 'png';
-        url = `/emotes/${emote}.${fileEnding}`;
+      const emoteObject = EMOTES.find(e => e.name === emote);
+      if (emoteObject) {
+        url = emoteObject.url;
       }
       if (!gigantifiedEmoteQueue.value.find(item => item.messageId === newestMessage.msgId)) {
         gigantifiedEmoteQueue.value.push({ emote, messageId: newestMessage.msgId, url });

@@ -15,9 +15,9 @@
         </template>
         ein Stufe {{ plan }} Abonnement geschenkt! Vielen Dank!
         <img
-          alt="bamboe1Love"
+          :alt="LOVE_EMOTE?.name"
           class="sub-gift__emote"
-          src="/emotes/bamboe1Love.png" />
+          :src="LOVE_EMOTE?.url" />
       </span>
     </div>
   </li>
@@ -26,10 +26,13 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import type { ISubGift } from '@/common/interfaces/index.interface';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 defineProps<ISubGift & { messageIndex?: number; messageOffset?: number }>();
 
 const mounted = ref(false);
+
+const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
 
 onMounted(() => {
   window.setTimeout(() => {

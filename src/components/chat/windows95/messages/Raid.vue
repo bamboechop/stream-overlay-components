@@ -6,17 +6,20 @@
     <main>
       Vielen Dank, wie war dein Stream?
       <img
-        alt="bamboe1Love"
+        :alt="LOVE_EMOTE?.name"
         class="raid__emote"
-        src="/emotes/bamboe1Love.png" />
+        :src="LOVE_EMOTE?.url" />
     </main>
   </li>
 </template>
 
 <script lang="ts" setup>
 import type { IRaid } from '@/common/interfaces/index.interface';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 defineProps<IRaid>();
+
+const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
 </script>
 
 <style lang="scss" scoped>

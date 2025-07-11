@@ -34,9 +34,9 @@
         </span>
         ein Stufe {{ plan }} Abonnement geschenkt! Vielen Dank!
         <img
-          alt="bamboe1Love"
+          :alt="LOVE_EMOTE?.name"
           class="sub-gift__emote"
-          src="/emotes/bamboe1Love.png" />
+          :src="LOVE_EMOTE?.url" />
       </main>
       <MessageInteraction :viewer-count="viewerCount" />
     </div>
@@ -55,11 +55,14 @@ import GiftSvg from '@/assets/gift.svg?component';
 import CornerDownRightSvg from '@/assets/corner-down-right.svg?component';
 import type { ISubGift } from '@/common/interfaces/index.interface';
 import MessageInteraction from '@/components/chat/cities-skylines-ii/MessageInteraction.vue';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 const props = defineProps<ISubGift>();
 
 const audioPlayer = ref<HTMLAudioElement>();
 const humanReadableTimestamp = ref('');
+
+const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
 
 onMounted(() => {
   const parsedTimestamp = new Date(props.timestamp ?? Date.now());

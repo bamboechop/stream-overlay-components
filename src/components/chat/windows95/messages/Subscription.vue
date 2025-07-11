@@ -6,16 +6,19 @@
     </template>
     hat soeben ein Stufe {{ plan }} Abonnement abgeschlossen! Dankeschön!
     <img
-      alt="bamboe1Love"
+      :alt="LOVE_EMOTE?.name"
       class="subscription__emote"
-      src="/emotes/bamboe1Love.png" />
+      :src="LOVE_EMOTE?.url" />
   </li>
 </template>
 
 <script lang="ts" setup>
 import type { ISubscription } from '@/common/interfaces/index.interface';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 defineProps<ISubscription>();
+
+const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
 </script>
 
 <style lang="scss" scoped>

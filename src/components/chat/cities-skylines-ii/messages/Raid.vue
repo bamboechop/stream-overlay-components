@@ -16,9 +16,9 @@
       <main class="raid__text">
         raidet uns mit {{ viewerCount }} Zusehern! Vielen Dank, wie war dein Stream?
         <img
-          alt="bamboe1Love"
+          :alt="LOVE_EMOTE?.name"
           class="raid__emote"
-          src="/emotes/bamboe1Love.png" />
+          :src="LOVE_EMOTE?.url" />
       </main>
       <MessageInteraction :viewer-count="viewerCount" />
     </div>
@@ -33,6 +33,7 @@
 import { onMounted, ref } from 'vue';
 import type { TRaidMessage } from '@/common/types/index.type';
 import MessageInteraction from '@/components/chat/cities-skylines-ii/MessageInteraction.vue';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 const props = defineProps<TRaidMessage>();
 
@@ -40,6 +41,8 @@ const audioPlayer = ref<HTMLAudioElement>();
 const heartFilled = Math.random() > 0.9;
 const humanReadableTimestamp = ref('');
 const interactionCount = ref('0');
+
+const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
 
 // TODO check if raid message is fading out after older messages and before newer messages
 

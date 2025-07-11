@@ -19,9 +19,9 @@
       <main class="subscription__text">
         hat soeben ein Stufe {{ plan }} Abonnement abgeschlossen! Dankeschön!
         <img
-          alt="bamboe1Love"
+          :alt="LOVE_EMOTE?.name"
           class="subscription__emote"
-          src="/emotes/bamboe1Love.png" />
+          :src="LOVE_EMOTE?.url" />
       </main>
       <MessageInteraction :viewer-count="viewerCount" />
     </div>
@@ -36,11 +36,14 @@
 import { onMounted, ref } from 'vue';
 import type { ISubscription } from '@/common/interfaces/index.interface';
 import MessageInteraction from '@/components/chat/cities-skylines-ii/MessageInteraction.vue';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 const props = defineProps<ISubscription>();
 
 const audioPlayer = ref<HTMLAudioElement>();
 const humanReadableTimestamp = ref('');
+
+const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
 
 onMounted(() => {
   const parsedTimestamp = new Date(props.timestamp ?? Date.now());

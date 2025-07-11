@@ -107,6 +107,7 @@ import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 import { broadcasterInfo } from '@/composables/twitch-chat.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 const props = defineProps<IChat & { messageIndex?: number; messageOffset?: number }>();
 const emits = defineEmits<{
@@ -124,20 +125,7 @@ const isGigantifiedEmoteMessage = msgId.value === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
 
-const emotes = [
-  '/emotes/bamboe1Butter.png',
-  '/emotes/bamboe1Cool.png',
-  '/emotes/bamboe1Cozy.png',
-  '/emotes/bamboe1Dead.png',
-  '/emotes/bamboe1Derp.png',
-  '/emotes/bamboe1KEKW.png',
-  '/emotes/bamboe1Love.png',
-  '/emotes/bamboe1Lurk.gif',
-  '/emotes/bamboe1Rage.png',
-  '/emotes/bamboe1Sad.png',
-  '/emotes/bamboe1Scared.png',
-  '/emotes/bamboe1Sexy.png',
-];
+const emotes = EMOTES.map(emote => emote.url);
 
 const durations = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 0.75 + 0.5).toFixed(2)))); // Random duration between 0.5 and 1.25 seconds
 const delays = ref<number[]>(emotes.map(() => Number.parseFloat((Math.random() * 3).toFixed(2)))); // Random delay up to 3 seconds

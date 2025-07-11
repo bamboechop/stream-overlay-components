@@ -18,6 +18,7 @@
 import { onMounted, ref } from 'vue';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import type { IEventStreamChannelPointsAutomaticRewardRedemptionAddData } from '@/common/interfaces/event-stream.interface';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 interface FloatingEmote {
   id: number;
@@ -33,20 +34,7 @@ interface FloatingEmote {
   };
 }
 
-const EMOTE_FILES = [
-  '/emotes/bamboe1Butter.png',
-  '/emotes/bamboe1Cool.png',
-  '/emotes/bamboe1Cozy.png',
-  '/emotes/bamboe1Dead.png',
-  '/emotes/bamboe1Derp.png',
-  '/emotes/bamboe1KEKW.png',
-  '/emotes/bamboe1Love.png',
-  '/emotes/bamboe1Lurk.gif',
-  '/emotes/bamboe1Rage.png',
-  '/emotes/bamboe1Sad.png',
-  '/emotes/bamboe1Scared.png',
-  '/emotes/bamboe1Sexy.png',
-];
+const EMOTE_FILES = EMOTES.map(emote => emote.url);
 
 const activeEmotes = ref<FloatingEmote[]>([]);
 const celebrationQueue = ref<(() => Promise<void>)[]>([]);

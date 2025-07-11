@@ -2,148 +2,28 @@
   <ul
     ref="listRef"
     class="scroll-emotes">
-    <!-- Triple buffer: 3 sets of emotes for seamless looping -->
-    <template
-      v-for="setIndex in 3"
-      :key="`set-${setIndex}`">
-      <li
-        v-for="emote in emotes"
-        :key="`${setIndex}-${emote.name}`"
-        class="scroll-emote-container">
-        <img
-          :alt="emote.name"
-          class="scroll-emote"
-          :src="emote.url" />
-        <template v-if="emote.new">
-          <span class="scroll-emote-new">New</span>
-        </template>
-        <template v-if="emote.updated">
-          <span class="scroll-emote-updated">Updated</span>
-        </template>
-        <span class="scroll-emote-name">{{ emote.name }}</span>
-      </li>
-    </template>
+    <li
+      v-for="(emote, index) in [...EMOTES, ...EMOTES, ...EMOTES]"
+      :key="`${emote.name}-${index}`"
+      class="scroll-emote-container">
+      <img
+        :alt="emote.name"
+        class="scroll-emote"
+        :src="emote.url" />
+      <template v-if="emote.new">
+        <span class="scroll-emote-new">New</span>
+      </template>
+      <template v-if="emote.updated">
+        <span class="scroll-emote-updated">Updated</span>
+      </template>
+      <span class="scroll-emote-name">{{ emote.name }}</span>
+    </li>
   </ul>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from 'vue';
-
-const emotes: { name: string; new?: boolean; updated?: boolean; url: string }[] = [
-  {
-    name: 'bamboe1Butter',
-    url: '/emotes/bamboe1Butter.png',
-  },
-  {
-    name: 'bamboe1Cool',
-    url: '/emotes/bamboe1Cool.png',
-  },
-  {
-    name: 'bamboe1Cozy',
-    url: '/emotes/bamboe1Cozy.png',
-  },
-  {
-    name: 'bamboe1Dead',
-    updated: true,
-    url: '/emotes/bamboe1Dead.png',
-  },
-  {
-    name: 'bamboe1Derp',
-    url: '/emotes/bamboe1Derp.png',
-  },
-  {
-    name: 'bamboe1KEKW',
-    url: '/emotes/bamboe1KEKW.png',
-  },
-  {
-    name: 'bamboe1Love',
-    url: '/emotes/bamboe1Love.png',
-  },
-  {
-    name: 'bamboe1Lurk',
-    url: '/emotes/bamboe1Lurk.gif',
-  },
-  {
-    name: 'bamboe1Rage',
-    url: '/emotes/bamboe1Rage.png',
-  },
-  {
-    name: 'bamboe1Raid',
-    url: '/emotes/bamboe1Raid.gif',
-  },
-  {
-    name: 'bamboe1Sad',
-    url: '/emotes/bamboe1Sad.png',
-  },
-  {
-    name: 'bamboe1Scared',
-    url: '/emotes/bamboe1Scared.png',
-  },
-  {
-    name: 'bamboe1Sexy',
-    url: '/emotes/bamboe1Sexy.png',
-  },
-  {
-    name: 'bamboe1Bla',
-    new: true,
-    url: '/emotes/bamboe1Bla.gif',
-  },
-  {
-    name: 'bamboe1Bonk',
-    new: true,
-    url: '/emotes/bamboe1Bonk.png',
-  },
-  {
-    name: 'bamboe1Clap',
-    new: true,
-    url: '/emotes/bamboe1Clap.gif',
-  },
-  {
-    name: 'bamboe1Drink',
-    new: true,
-    url: '/emotes/bamboe1Drink.png',
-  },
-  {
-    name: 'bamboe1GG',
-    new: true,
-    url: '/emotes/bamboe1GG.png',
-  },
-  {
-    name: 'bamboe1Innocent',
-    new: true,
-    url: '/emotes/bamboe1Innocent.gif',
-  },
-  {
-    name: 'bamboe1Noted',
-    new: true,
-    url: '/emotes/bamboe1Noted.gif',
-  },
-  {
-    name: 'bamboe1Party',
-    new: true,
-    url: '/emotes/bamboe1Party.gif',
-  },
-  {
-    name: 'bamboe1Pat',
-    new: true,
-    url: '/emotes/bamboe1Pat.png',
-  },
-  {
-    name: 'bamboe1Shy',
-    new: true,
-    url: '/emotes/bamboe1Shy.gif',
-  },
-  {
-    name: 'bamboe1Sleep',
-    new: true,
-    url: '/emotes/bamboe1Sleep.png',
-  },
-  {
-    name: 'bamboe1Steer',
-    new: true,
-    url: '/emotes/bamboe1Steer.gif',
-  },
-];
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 const listRef = ref<HTMLElement>();
 
@@ -162,7 +42,7 @@ function animate() {
   // Calculate the width of one complete set of emotes
   if (contentWidth === 0) {
     const children = listRef.value.children;
-    const singleSetLength = emotes.length;
+    const singleSetLength = EMOTES.length;
     let width = 0;
 
     for (let i = 0; i < singleSetLength; i++) {
