@@ -1,7 +1,7 @@
 <template>
   <section class="scroll-emotes-view">
     <template v-if="theme === 'modern'">
-      <ModernTheme :active />
+      <ModernTheme />
     </template>
   </section>
 </template>
