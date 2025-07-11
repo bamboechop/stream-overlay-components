@@ -14,6 +14,7 @@ import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
 import ScheduleView from '@/views/ScheduleView.vue';
 import PollView from '@/views/PollView.vue';
 import BskyPostsView from '@/views/BskyPostsView.vue';
+import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -75,6 +76,11 @@ export const routes: RouteRecordRaw[] = [
     component: ScheduleView,
     name: 'Schedule Component',
     path: '/schedule',
+  },
+  {
+    component: ScrollEmotesView,
+    name: 'Scroll Emotes Component',
+    path: '/scroll-emotes',
   },
   {
     component: TaskBarView,
