@@ -15,6 +15,7 @@ import ScheduleView from '@/views/ScheduleView.vue';
 import PollView from '@/views/PollView.vue';
 import BskyPostsView from '@/views/BskyPostsView.vue';
 import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
+import TimerView from '@/views/TimerView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -86,6 +87,11 @@ export const routes: RouteRecordRaw[] = [
     component: TaskBarView,
     name: 'Task Bar Component',
     path: '/task-bar',
+  },
+  {
+    component: TimerView,
+    name: 'Timer Component',
+    path: '/timer',
   },
   {
     component: WebcamView,

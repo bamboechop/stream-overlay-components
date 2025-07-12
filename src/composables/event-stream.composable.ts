@@ -103,6 +103,23 @@ export function useEventStreamComposable() {
         eventBus.dispatchEvent(new CustomEvent('channel.poll.end', { detail }));
       });
 
+      addEventSourceListener('overlay.timer.add', (event) => {
+        const detail = JSON.parse(event.data) as number;
+        eventBus.dispatchEvent(new CustomEvent('overlay.timer.add', { detail }));
+      });
+
+      addEventSourceListener('overlay.timer.pause', () => {
+        eventBus.dispatchEvent(new CustomEvent('overlay.timer.pause'));
+      });
+
+      addEventSourceListener('overlay.timer.reset', () => {
+        eventBus.dispatchEvent(new CustomEvent('overlay.timer.reset'));
+      });
+
+      addEventSourceListener('overlay.timer.start', () => {
+        eventBus.dispatchEvent(new CustomEvent('overlay.timer.start'));
+      });
+
       eventSource.onopen = () => {
         console.info('[EventStream] Connection established');
         isConnecting.value = false;
