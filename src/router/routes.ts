@@ -14,6 +14,7 @@ import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
 import ScheduleView from '@/views/ScheduleView.vue';
 import PollView from '@/views/PollView.vue';
 import BskyPostsView from '@/views/BskyPostsView.vue';
+import NextGameView from '@/views/NextGameView.vue';
 import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
 import TimerView from '@/views/TimerView.vue';
 
@@ -52,6 +53,11 @@ export const routes: RouteRecordRaw[] = [
     component: MediaPlayerView,
     name: 'Media Player Component',
     path: '/media-player',
+  },
+  {
+    component: NextGameView,
+    name: 'Next Game Component',
+    path: '/next-game',
   },
   {
     component: OnScreenCelebrationView,

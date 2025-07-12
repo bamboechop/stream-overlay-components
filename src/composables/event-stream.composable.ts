@@ -103,6 +103,14 @@ export function useEventStreamComposable() {
         eventBus.dispatchEvent(new CustomEvent('channel.poll.end', { detail }));
       });
 
+      addEventSourceListener('overlay.roll.category', () => {
+        eventBus.dispatchEvent(new CustomEvent('overlay.roll.category'));
+      });
+
+      addEventSourceListener('overlay.roll.game', () => {
+        eventBus.dispatchEvent(new CustomEvent('overlay.roll.game'));
+      });
+
       addEventSourceListener('overlay.timer.add', (event) => {
         const detail = JSON.parse(event.data) as number;
         eventBus.dispatchEvent(new CustomEvent('overlay.timer.add', { detail }));
