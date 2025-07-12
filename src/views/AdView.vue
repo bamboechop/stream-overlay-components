@@ -7,13 +7,11 @@
 <script lang="ts" setup>
 import ModernTheme from '@/components/ad-view/modern/Ad.vue';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
-import { useObsComposable } from '@/composables/obs.composable';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 
 const { theme } = useSearchParamsComposable();
 
-useObsComposable();
 useEventStreamComposable();
 useTwitchStreamInfoComposable();
 </script>
