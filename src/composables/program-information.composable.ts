@@ -56,6 +56,12 @@ export function useProgramInformationComposable() {
       id: 'media-player',
       text: category.value,
     },
+    'next-game': {
+      active: false,
+      iconPath: `/programs/${themePath}/next-game.icon.png`,
+      id: 'next-game',
+      text: 'Nächstes Spiel',
+    },
     'pcg': {
       active: false,
       iconPath: `/programs/${themePath}/pokemon-community-game.icon.png`,

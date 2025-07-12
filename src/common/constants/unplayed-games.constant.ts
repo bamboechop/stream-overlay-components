@@ -413,7 +413,7 @@ export const UNPLAYED_GAMES = [
   },
   {
     name: 'Castle Crashers',
-    genre: 'Beat \'em up',
+    genre: 'Beat\'em up',
   },
   {
     name: 'Carrier Command: Gaea Mission',
@@ -601,7 +601,7 @@ export const UNPLAYED_GAMES = [
   },
   {
     name: 'Sacred Citadel',
-    genre: 'Beat \'em up',
+    genre: 'Beat\'em up',
   },
   {
     name: 'Teleglitch: Die More Edition',

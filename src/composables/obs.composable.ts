@@ -24,6 +24,7 @@ const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
     41: { programId: 'media-player' },
     51: { programId: 'webcam' },
     69: { programId: 'pdf-viewer' },
+    98: { programId: 'next-game' },
   },
   '3cdbaeca-19a3-419e-b665-097a3298f557': { /// "Gleich gehts los" scene
     4: { programId: 'start' },
@@ -51,6 +52,7 @@ const obsAllowedSceneItemIds = [
   41, // Media Player
   51, // Webcam
   69, // PDF Viewer
+  98, // Next Game
 ];
 
 export async function useObsComposable() {

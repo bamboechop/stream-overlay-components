@@ -2,7 +2,7 @@
   <WindowFrame
     :active="active"
     class="next-game-window"
-    title="Next Game">
+    title="Nächstes Spiel">
     <div class="next-game">
       <p class="next-game__description">
         Ich besitze eine Steam Bibliothek mit über 680 Spielen. Davon sind über 400 Spiele bis heute ungespielt. Das ändert sich ab sofort.<br />

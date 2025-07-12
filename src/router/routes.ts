@@ -56,7 +56,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     component: NextGameView,
-    name: 'Next Game Component',
+    name: 'Nächstes Spiel Component',
     path: '/next-game',
   },
   {

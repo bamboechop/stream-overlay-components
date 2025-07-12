@@ -257,7 +257,7 @@ $borderRadius: 0.15em; // em to be relative to the font-size
 }
 
 .flip-card {
-  font-size: 72px;
+  font-size: 48px;
   line-height: 0.95;
   padding-bottom: $halfHeight;
   position: relative;
@@ -268,7 +268,7 @@ $borderRadius: 0.15em; // em to be relative to the font-size
 .flip-card__back-bottom,
 .flip-card__back::before,
 .flip-card__back::after {
-  backface-visiblity: hidden;
+  backface-visibility: hidden;
   background-color: #222;
   border-radius: $borderRadius $borderRadius 0 0;
   color: #ccc;
