@@ -16,6 +16,28 @@
       <template v-if="emote.updated">
         <span class="scroll-emote-updated">Updated</span>
       </template>
+      <div class="scroll-emote-icons">
+        <template v-if="emote.tier === 'follower'">
+          <Heart
+            class="scroll-emote-icon scroll-emote-icon--follower"
+            :size="16" />
+        </template>
+        <template v-if="emote.tier === '1' || emote.tier === '2' || emote.tier === '3'">
+          <Star
+            class="scroll-emote-icon scroll-emote-icon--star"
+            :size="16" />
+        </template>
+        <template v-if="emote.tier === '2' || emote.tier === '3'">
+          <Star
+            class="scroll-emote-icon scroll-emote-icon--star"
+            :size="16" />
+        </template>
+        <template v-if="emote.tier === '3'">
+          <Star
+            class="scroll-emote-icon scroll-emote-icon--star"
+            :size="16" />
+        </template>
+      </div>
       <span class="scroll-emote-name">{{ emote.name }}</span>
     </li>
   </ul>
@@ -23,6 +45,7 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from 'vue';
+import { Heart, Star } from 'lucide-vue-next';
 import { EMOTES } from '@/common/constants/emotes.constant';
 
 const listRef = ref<HTMLElement>();
@@ -91,6 +114,26 @@ onUnmounted(() => {
   aspect-ratio: 1 / 1;
   width: 128px;
   flex-shrink: 0;
+}
+
+.scroll-emote-icon--follower {
+  color: #d81515;
+  fill: #d81515;
+}
+
+.scroll-emote-icon--star {
+  color: #f3d113;
+  fill: #f3d113;
+}
+
+.scroll-emote-icons {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: center;
+  padding: 4px 4px 0 4px;
 }
 
 .scroll-emote-new,
