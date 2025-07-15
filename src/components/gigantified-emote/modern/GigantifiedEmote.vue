@@ -3,9 +3,11 @@
     <img
       class="gigantified-emote"
       :class="{
-        'animate-slide-through': isAnimating && !isLurkEmote,
+        'animate-slide-through': isAnimating && !isLurkEmote && !isNotedEmote,
         'animate-lurk': isAnimating && isLurkEmote,
+        'animate-noted': isAnimating && isNotedEmote,
         'gigantified-emote--lurk': isLurkEmote,
+        'gigantified-emote--noted': isNotedEmote,
       }"
       :src="gigantifiedEmoteQueue[0].url"
       :alt="gigantifiedEmoteQueue[0].emote"
@@ -42,11 +44,23 @@ const isLurkEmote = computed(() => {
   return gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Lurk';
 });
 
+const isNotedEmote = computed(() => gigantifiedEmoteQueue.value.find(item => item.emote === 'bamboe1Noted'));
+
+function getAudioSrc() {
+  if (isLurkEmote.value) {
+    return '/audio/mission-impossible.mp3';
+  }
+  if (isNotedEmote.value) {
+    return '/audio/noted.wav';
+  }
+  return '/audio/woosh.mp3';
+}
+
 function startAnimation() {
-  isAnimating.value = true;
-  audioPlayer.value!.src = isLurkEmote.value ? '/audio/mission-impossible.mp3' : '/audio/woosh.mp3';
+  audioPlayer.value!.src = getAudioSrc();
   currentTime.value = 0;
   playing.value = true;
+  isAnimating.value = true;
 }
 
 function onAnimationEnd() {
@@ -98,11 +112,23 @@ watch(messages, () => {
   &.animate-lurk {
     animation: lurk-animation 3.6s ease-in-out forwards;
   }
+
+  &.animate-noted {
+    animation: noted-animation 1.9s ease-in-out forwards;
+  }
 }
 
 .gigantified-emote--lurk {
   margin: 0 auto;
   max-width: 1920px;
+}
+
+.gigantified-emote--noted {
+  left: auto;
+  max-height: 720px;
+  right: 10px;
+  transform: translateY(100vh);
+  width: auto;
 }
 
 @keyframes slide-up {
@@ -129,6 +155,25 @@ watch(messages, () => {
   }
   100% {
     transform: translateX(-50%) translateY(calc(100vh + 150px));
+    opacity: 1;
+  }
+}
+
+@keyframes noted-animation {
+  0% {
+    transform: translateY(calc(100vh));
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(calc(100vh - 100%));
+    opacity: 1;
+  }
+  90% {
+    transform: translateY(calc(100vh - 100%));
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(100vh + 150px));
     opacity: 1;
   }
 }
