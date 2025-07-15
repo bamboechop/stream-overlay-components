@@ -73,9 +73,27 @@ export async function fetchLatestPosts(handle: string, limit: number = 5): Promi
 }
 
 /**
+ * Filters out posts that don't match the target author handle.
+ * Uses the VITE_BSKY_TARGET_HANDLE environment variable to determine the target author.
+ */
+export function filterPostsByAuthor(posts: BlueskyPost[]): BlueskyPost[] {
+  const targetHandle = import.meta.env.VITE_BSKY_TARGET_HANDLE;
+  if (!targetHandle) {
+    return posts;
+  }
+
+  return posts.filter(post => post.author === targetHandle);
+}
+
+/**
  * Filters out posts that contain the specified text.
  * Useful for filtering out specific types of posts like "stream going offline" messages.
+ * Also filters out posts where the author doesn't match the target handle.
  */
 export function filterPosts(posts: BlueskyPost[], filterText: string): BlueskyPost[] {
-  return posts.filter(post => !post.text.includes(filterText));
+  // First filter by author
+  const authorFiltered = filterPostsByAuthor(posts);
+
+  // Then filter by text content
+  return authorFiltered.filter(post => !post.text.includes(filterText));
 }
