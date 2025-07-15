@@ -3,9 +3,11 @@
     <img
       class="gigantified-emote"
       :class="{
-        'animate-slide-through': isAnimating && !isLurkEmote && !isNotedEmote,
+        'animate-slide-through': isAnimating && !isClapEmote && !isLurkEmote && !isNotedEmote,
+        'animate-clap': isAnimating && isClapEmote,
         'animate-lurk': isAnimating && isLurkEmote,
         'animate-noted': isAnimating && isNotedEmote,
+        'gigantified-emote--clap': isClapEmote,
         'gigantified-emote--lurk': isLurkEmote,
         'gigantified-emote--noted': isNotedEmote,
       }"
@@ -40,13 +42,17 @@ const audioPlayer = ref<HTMLAudioElement>();
 
 const { currentTime, playing, volume } = useMediaControls(audioPlayer, { src: '/audio/woosh.mp3' });
 
-const isLurkEmote = computed(() => {
-  return gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Lurk';
-});
+const isClapEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Clap');
 
-const isNotedEmote = computed(() => gigantifiedEmoteQueue.value.find(item => item.emote === 'bamboe1Noted'));
+const isLurkEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Lurk');
+
+const isNotedEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Noted');
 
 function getAudioSrc() {
+  if (isClapEmote.value) {
+    return '/audio/clap.mp3';
+  }
+
   if (isLurkEmote.value) {
     return '/audio/mission-impossible.mp3';
   }
@@ -109,6 +115,10 @@ watch(messages, () => {
     animation: slide-up 2.201s ease-in-out forwards;
   }
 
+  &.animate-clap {
+    animation: clap-animation 4.5s ease-in-out forwards;
+  }
+
   &.animate-lurk {
     animation: lurk-animation 3.6s ease-in-out forwards;
   }
@@ -121,6 +131,11 @@ watch(messages, () => {
 .gigantified-emote--lurk {
   margin: 0 auto;
   max-width: 1920px;
+}
+
+.gigantified-emote--clap {
+  max-height: 720px;
+  width: auto;
 }
 
 .gigantified-emote--noted {
@@ -137,6 +152,25 @@ watch(messages, () => {
   }
   to {
     transform: translateX(-50%) translateY(-200vh);
+  }
+}
+
+@keyframes clap-animation {
+  0% {
+    transform: translateX(-50%) translateY(calc(100vh));
+    opacity: 0;
+  }
+  5% {
+    transform: translateX(-50%) translateY(calc(100vh - 100%));
+    opacity: 1;
+  }
+  90% {
+    transform: translateX(-50%) translateY(calc(100vh - 100%));
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(calc(100vh + 150px));
+    opacity: 1;
   }
 }
 
