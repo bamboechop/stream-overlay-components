@@ -3,15 +3,17 @@
     <img
       class="gigantified-emote"
       :class="{
-        'animate-slide-through': isAnimating && !isClapEmote && !isLurkEmote && !isNotedEmote,
+        'animate-slide-through': isAnimating && !isBlaEmote && !isClapEmote && !isLurkEmote && !isNotedEmote && !isSteerEmote,
         'animate-bla': isAnimating && isBlaEmote,
         'animate-clap': isAnimating && isClapEmote,
         'animate-lurk': isAnimating && isLurkEmote,
         'animate-noted': isAnimating && isNotedEmote,
+        'animate-steer': isAnimating && isSteerEmote,
         'gigantified-emote--bla': isBlaEmote,
         'gigantified-emote--clap': isClapEmote,
         'gigantified-emote--lurk': isLurkEmote,
         'gigantified-emote--noted': isNotedEmote,
+        'gigantified-emote--steer': isSteerEmote,
       }"
       :src="gigantifiedEmoteQueue[0].url"
       :alt="gigantifiedEmoteQueue[0].emote"
@@ -52,6 +54,8 @@ const isLurkEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'ba
 
 const isNotedEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Noted');
 
+const isSteerEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Steer');
+
 function getAudioSrc() {
   if (isBlaEmote.value) {
     return '/audio/bla.wav';
@@ -67,6 +71,11 @@ function getAudioSrc() {
   if (isNotedEmote.value) {
     return '/audio/noted.wav';
   }
+
+  if (isSteerEmote.value) {
+    return '/audio/crash.wav';
+  }
+
   return '/audio/woosh.mp3';
 }
 
@@ -138,6 +147,10 @@ watch(messages, () => {
   &.animate-noted {
     animation: noted-animation 1.9s ease-in-out forwards;
   }
+
+  &.animate-steer {
+    animation: steer-animation 3.9s ease-in-out forwards;
+  }
 }
 
 .gigantified-emote--bla {
@@ -160,6 +173,16 @@ watch(messages, () => {
   max-height: 720px;
   right: 10px;
   transform: translateY(100vh);
+  width: auto;
+}
+
+.gigantified-emote--steer {
+  bottom: 0;
+  filter: none;
+  left: 0;
+  max-height: 1080px;
+  opacity: 0;
+  transform: none;
   width: auto;
 }
 
@@ -277,6 +300,21 @@ watch(messages, () => {
   100% {
     transform: translateY(calc(100vh + 150px));
     opacity: 1;
+  }
+}
+
+@keyframes steer-animation {
+  0% {
+    opacity: 0;
+  }
+
+  40%,
+  99% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 </style>
