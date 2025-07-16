@@ -1,4 +1,10 @@
 export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string; color: string; iconPath: string; intermissionTextMode: string }>> = {
+  'A Short Hike': {
+    backgroundImagePath: '/modern/game-backgrounds/a-short-hike.jpg',
+    color: 'rgba(188, 93, 32, 0.35)',
+    iconPath: '/programs/{themePath}/a-short-hike.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Brotato': {
     backgroundImagePath: '/modern/game-backgrounds/brotato.jpg',
     color: 'transparent',
