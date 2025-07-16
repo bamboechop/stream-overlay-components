@@ -3,14 +3,16 @@
     <img
       class="gigantified-emote"
       :class="{
-        'animate-slide-through': isAnimating && !isBlaEmote && !isClapEmote && !isLurkEmote && !isNotedEmote && !isSteerEmote,
+        'animate-slide-through': isAnimating && !isBlaEmote && !isClapEmote && !isDannerGeblitzt && !isLurkEmote && !isNotedEmote && !isSteerEmote,
         'animate-bla': isAnimating && isBlaEmote,
         'animate-clap': isAnimating && isClapEmote,
+        'animate-danner-geblitzt': isAnimating && isDannerGeblitzt,
         'animate-lurk': isAnimating && isLurkEmote,
         'animate-noted': isAnimating && isNotedEmote,
         'animate-steer': isAnimating && isSteerEmote,
         'gigantified-emote--bla': isBlaEmote,
         'gigantified-emote--clap': isClapEmote,
+        'gigantified-emote--danner-geblitzt': isDannerGeblitzt,
         'gigantified-emote--lurk': isLurkEmote,
         'gigantified-emote--noted': isNotedEmote,
         'gigantified-emote--steer': isSteerEmote,
@@ -48,6 +50,8 @@ const { currentTime, playing, volume } = useMediaControls(audioPlayer, { src: '/
 
 const isBlaEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Bla');
 
+const isDannerGeblitzt = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'danner6Geblitzt');
+
 const isClapEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Clap');
 
 const isLurkEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Lurk');
@@ -63,6 +67,10 @@ function getAudioSrc() {
 
   if (isClapEmote.value) {
     return '/audio/clap.mp3';
+  }
+
+  if (isDannerGeblitzt.value) {
+    return '/audio/geblitzt.wav';
   }
 
   if (isLurkEmote.value) {
@@ -140,6 +148,10 @@ watch(messages, () => {
     animation: clap-animation 4.5s ease-in-out forwards;
   }
 
+  &.animate-danner-geblitzt {
+    animation: danner-geblitzt-animation 11s ease-in-out forwards;
+  }
+
   &.animate-lurk {
     animation: lurk-animation 3.6s ease-in-out forwards;
   }
@@ -158,14 +170,22 @@ watch(messages, () => {
   width: auto;
 }
 
-.gigantified-emote--lurk {
-  margin: 0 auto;
-  max-width: 1920px;
-}
-
 .gigantified-emote--clap {
   max-height: 720px;
   width: auto;
+}
+
+.gigantified-emote--danner-geblitzt {
+  height: 100vh;
+  left: 50%;
+  opacity: 0;
+  transform: translateX(-50%);
+  width: auto;
+}
+
+.gigantified-emote--lurk {
+  margin: 0 auto;
+  max-width: 1920px;
 }
 
 .gigantified-emote--noted {
@@ -261,6 +281,30 @@ watch(messages, () => {
   }
   100% {
     transform: translateX(-50%) translateY(calc(100vh + 150px));
+    opacity: 1;
+  }
+}
+
+@keyframes danner-geblitzt-animation {
+  0% {
+    opacity: 0;
+  }
+
+  54.4% {
+    opacity: 0;
+  }
+
+  54.5% {
+    filter: brightness(0) invert(1);
+    opacity: 1;
+  }
+
+  63.5% {
+    filter: brightness(100%) invert(0);
+    opacity: 1;
+  }
+
+  100% {
     opacity: 1;
   }
 }
