@@ -4,9 +4,11 @@
       class="gigantified-emote"
       :class="{
         'animate-slide-through': isAnimating && !isClapEmote && !isLurkEmote && !isNotedEmote,
+        'animate-bla': isAnimating && isBlaEmote,
         'animate-clap': isAnimating && isClapEmote,
         'animate-lurk': isAnimating && isLurkEmote,
         'animate-noted': isAnimating && isNotedEmote,
+        'gigantified-emote--bla': isBlaEmote,
         'gigantified-emote--clap': isClapEmote,
         'gigantified-emote--lurk': isLurkEmote,
         'gigantified-emote--noted': isNotedEmote,
@@ -42,6 +44,8 @@ const audioPlayer = ref<HTMLAudioElement>();
 
 const { currentTime, playing, volume } = useMediaControls(audioPlayer, { src: '/audio/woosh.mp3' });
 
+const isBlaEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Bla');
+
 const isClapEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Clap');
 
 const isLurkEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Lurk');
@@ -49,6 +53,10 @@ const isLurkEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'ba
 const isNotedEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Noted');
 
 function getAudioSrc() {
+  if (isBlaEmote.value) {
+    return '/audio/bla.wav';
+  }
+
   if (isClapEmote.value) {
     return '/audio/clap.mp3';
   }
@@ -115,6 +123,10 @@ watch(messages, () => {
     animation: slide-up 2.201s ease-in-out forwards;
   }
 
+  &.animate-bla {
+    animation: bla-animation 6.5s ease-in-out forwards;
+  }
+
   &.animate-clap {
     animation: clap-animation 4.5s ease-in-out forwards;
   }
@@ -126,6 +138,11 @@ watch(messages, () => {
   &.animate-noted {
     animation: noted-animation 1.9s ease-in-out forwards;
   }
+}
+
+.gigantified-emote--bla {
+  max-height: 900px;
+  width: auto;
 }
 
 .gigantified-emote--lurk {
@@ -152,6 +169,57 @@ watch(messages, () => {
   }
   to {
     transform: translateX(-50%) translateY(-200vh);
+  }
+}
+
+@keyframes bla-animation {
+  // bottom left
+  0%,
+  14.27% {
+    transform: translateX(-125%) translateY(55vh);
+    scale: 0.8;
+  }
+
+  // top left
+  14.28%,
+  28.56% {
+    transform: translateX(-225%) translateY(0vh) rotate(90deg);
+    scale: 0.7;
+  }
+
+  // bottom right
+  28.57%,
+  42.89% {
+    transform: translateX(50%) translateY(40vh) rotate(270deg);
+    scale: 0.9;
+  }
+
+  // bottom left
+  42.90%,
+  57.13% {
+    transform: translateX(-100%) translateY(37vw) rotate(0deg);
+    scale: 0.75;
+  }
+
+  // bottom left diagonal
+  57.14%,
+  71.44% {
+    transform: translateX(-100vw) translateY(95vh) rotate(45deg);
+    scale: 0.6;
+  }
+
+  // top middle
+  71.45%,
+  85.70% {
+    transform: translateX(-50%) translateY(-5vh) rotate(180deg);
+    scale: 1;
+  }
+
+  // top right diagonal
+  85.71%,
+  100% {
+    transform: translateX(67%) translateY(-37%) rotate(225deg);
+    scale: 0.8;
   }
 }
 
