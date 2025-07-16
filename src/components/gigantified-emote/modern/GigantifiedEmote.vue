@@ -3,18 +3,20 @@
     <img
       class="gigantified-emote"
       :class="{
-        'animate-slide-through': isAnimating && !isBlaEmote && !isClapEmote && !isDannerGeblitzt && !isLurkEmote && !isNotedEmote && !isSteerEmote,
+        'animate-slide-through': isAnimating && !isBlaEmote && !isClapEmote && !isDannerGeblitzt && !isLurkEmote && !isNotedEmote && !isPartyEmote && !isSteerEmote,
         'animate-bla': isAnimating && isBlaEmote,
         'animate-clap': isAnimating && isClapEmote,
         'animate-danner-geblitzt': isAnimating && isDannerGeblitzt,
         'animate-lurk': isAnimating && isLurkEmote,
         'animate-noted': isAnimating && isNotedEmote,
+        'animate-party': isAnimating && isPartyEmote,
         'animate-steer': isAnimating && isSteerEmote,
         'gigantified-emote--bla': isBlaEmote,
         'gigantified-emote--clap': isClapEmote,
         'gigantified-emote--danner-geblitzt': isDannerGeblitzt,
         'gigantified-emote--lurk': isLurkEmote,
         'gigantified-emote--noted': isNotedEmote,
+        'gigantified-emote--party': isPartyEmote,
         'gigantified-emote--steer': isSteerEmote,
       }"
       :src="gigantifiedEmoteQueue[0].url"
@@ -58,6 +60,8 @@ const isLurkEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'ba
 
 const isNotedEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Noted');
 
+const isPartyEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Party');
+
 const isSteerEmote = computed(() => gigantifiedEmoteQueue.value[0]?.emote === 'bamboe1Steer');
 
 function getAudioSrc() {
@@ -76,8 +80,13 @@ function getAudioSrc() {
   if (isLurkEmote.value) {
     return '/audio/mission-impossible.mp3';
   }
+
   if (isNotedEmote.value) {
     return '/audio/noted.wav';
+  }
+
+  if (isPartyEmote.value) {
+    return '/audio/party.mp3';
   }
 
   if (isSteerEmote.value) {
@@ -160,6 +169,10 @@ watch(messages, () => {
     animation: noted-animation 1.9s ease-in-out forwards;
   }
 
+  &.animate-party {
+    animation: party-animation 8s ease-out forwards;
+  }
+
   &.animate-steer {
     animation: steer-animation 3.9s ease-in-out forwards;
   }
@@ -193,6 +206,16 @@ watch(messages, () => {
   max-height: 720px;
   right: 10px;
   transform: translateY(100vh);
+  width: auto;
+}
+
+.gigantified-emote--party {
+  bottom: 0;
+  left: 50%;
+  max-height: 1080px;
+  opacity: 0;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
   width: auto;
 }
 
@@ -343,6 +366,108 @@ watch(messages, () => {
   }
   100% {
     transform: translateY(calc(100vh + 150px));
+    opacity: 1;
+  }
+}
+
+@keyframes party-animation {
+  0%, 5% {
+    transform: translateX(-50%) translateY(0) scale(0.8);
+    opacity: 1;
+  }
+
+  10% {
+    transform: translateX(-80%) translateY(50px) scale(1.1);
+    opacity: 1;
+  }
+
+  15% {
+    transform: translateX(20%) translateY(0) scale(0.5);
+    opacity: 1;
+  }
+
+  20% {
+    transform: translateX(-100%) translateY(30px) scale(0.9);
+    opacity: 1;
+  }
+
+  25% {
+    transform: translateX(-20%) translateY(0) scale(1.0);
+    opacity: 1;
+  }
+
+  30% {
+    transform: translateX(-100%) translateY(40px) scale(0.6);
+    opacity: 1;
+  }
+
+  35% {
+    transform: translateX(50%) translateY(0) scale(1.1);
+    opacity: 1;
+  }
+
+  40% {
+    transform: translateX(-60%) translateY(20px) scale(0.7);
+    opacity: 1;
+  }
+
+  45% {
+    transform: translateX(-90%) translateY(0) scale(1.0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateX(-40%) translateY(60px) scale(0.5);
+    opacity: 1;
+  }
+
+  55% {
+    transform: translateX(40%) translateY(0) scale(0.9);
+    opacity: 1;
+  }
+
+  60% {
+    transform: translateX(-120%) translateY(35px) scale(1.1);
+    opacity: 1;
+  }
+
+  65% {
+    transform: translateX(-70%) translateY(0) scale(0.8);
+    opacity: 1;
+  }
+
+  70% {
+    transform: translateX(-80%) translateY(25px) scale(0.6);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translateX(20%) translateY(0) scale(1.0);
+    opacity: 1;
+  }
+
+  80% {
+    transform: translateX(-110%) translateY(45px) scale(0.7);
+    opacity: 1;
+  }
+
+  85% {
+    transform: translateX(50%) translateY(0) scale(1.1);
+    opacity: 1;
+  }
+
+  90% {
+    transform: translateX(-100%) translateY(30px) scale(0.9);
+    opacity: 1;
+  }
+
+  95% {
+    transform: translateX(-85%) translateY(0) scale(0.8);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-50%) translateY(0) scale(1.0);
     opacity: 1;
   }
 }
