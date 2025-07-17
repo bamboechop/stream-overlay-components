@@ -21,7 +21,6 @@
       }"
       :src="gigantifiedEmoteQueue[0].url"
       :alt="gigantifiedEmoteQueue[0].emote"
-      @load="startAnimation"
       @animationend="onAnimationEnd" />
   </template>
   <audio
@@ -117,6 +116,22 @@ watch([isAnimating, playing], ([isAnimating, isPlaying]) => {
   }
 });
 
+const currentFirstItem = ref<string | null>(null);
+watch(() => gigantifiedEmoteQueue.value[0]?.messageId, (newFirstId, oldFirstId) => {
+  if (newFirstId && newFirstId !== oldFirstId) {
+    currentFirstItem.value = newFirstId;
+    if (currentFirstItem.value === newFirstId
+      && !isAnimating.value
+      && !playing.value
+      && gigantifiedEmoteQueue.value.length > 0) {
+      setTimeout(() => {
+        startAnimation();
+      }, 2000); // delay to ensure the image is loaded
+    }
+  }
+});
+
+let messageId = 0;
 watch(messages, () => {
   const newestMessage = (messages.value as IChat[]).at(-1);
 
@@ -128,8 +143,10 @@ watch(messages, () => {
       if (emoteObject) {
         url = emoteObject.url;
       }
-      if (!gigantifiedEmoteQueue.value.find(item => item.messageId === newestMessage.msgId)) {
-        gigantifiedEmoteQueue.value.push({ emote, messageId: newestMessage.msgId, url });
+      // Generate unique ID for this emote instance
+      const uniqueId = `${newestMessage.msgId}-${++messageId}`;
+      if (!gigantifiedEmoteQueue.value.find(item => item.messageId === uniqueId)) {
+        gigantifiedEmoteQueue.value.push({ emote, messageId: uniqueId, url });
       }
     }
   }
