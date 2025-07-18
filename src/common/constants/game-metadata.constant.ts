@@ -5,6 +5,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/a-short-hike.icon.png',
     intermissionTextMode: 'default',
   },
+  'Bread & Fred': {
+    backgroundImagePath: '/modern/game-backgrounds/bread-and-fred.jpg',
+    color: 'rgba(77, 77, 159, 0.25)',
+    iconPath: '/programs/{themePath}/bread-and-fred.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Brotato': {
     backgroundImagePath: '/modern/game-backgrounds/brotato.jpg',
     color: 'transparent',
