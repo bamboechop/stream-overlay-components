@@ -1,6 +1,9 @@
 <template>
   <template v-if="theme === 'modern'">
-    <ModernTheme :active />
+    <ModernTheme
+      :active
+      :aspect-ratio="webcamAspectRatio"
+      :title />
   </template>
   <template v-if="theme === 'windows-95'">
     <Windows95Theme />
@@ -15,7 +18,7 @@ import Windows95Theme from '@/components/webcam/windows-95/Webcam.vue';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useApplicationStore } from '@/stores/application.store';
 
-const { theme } = useSearchParamsComposable();
+const { theme, title, webcamAspectRatio } = useSearchParamsComposable();
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

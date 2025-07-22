@@ -11,7 +11,9 @@ export function useSearchParamsComposable() {
     'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
     'theme'?: TTheme;
+    'title'?: string;
     'url'?: string;
+    'webcam-aspect-ratio'?: '1' | '16:9';
   }>('history');
   const localStorageTheme = useLocalStorage<TTheme>('theme', import.meta.env.VITE_THEME);
 
@@ -51,6 +53,8 @@ export function useSearchParamsComposable() {
     mode: searchParams.mode,
     theme,
     themePath: theme.value.replace('-', ''),
+    title: searchParams.title,
     url: searchParams.url,
+    webcamAspectRatio: searchParams['webcam-aspect-ratio'] ?? '16/9',
   };
 }
