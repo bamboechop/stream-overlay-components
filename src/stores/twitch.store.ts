@@ -119,8 +119,18 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   };
 
   const updateViewerCount = async (name: string) => {
-    const response = await axios.get(`https://api.twitch.tv/helix/streams?user_login=${name}`);
-    viewers.value = response.data.data?.[0]?.viewer_count ?? 0;
+    try {
+      const data = await RequestCache.request(`https://api.twitch.tv/helix/streams?user_login=${name}`, {
+        method: 'GET',
+      }, 10);
+
+      viewers.value = data.data?.[0]?.viewer_count ?? 0;
+    } catch (error) {
+      if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+        return;
+      }
+      throw error;
+    }
   };
 
   return {
