@@ -6,6 +6,7 @@ import { useApplicationStore } from '@/stores/application.store';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useProgramInformationComposable } from '@/composables/program-information.composable';
 import { useStreamStatusStore } from '@/stores/stream-status.store';
+import { RequestCache } from '@/services/request-cache.service';
 
 interface ISceneItemMapping {
   programId: TProgramId;
@@ -146,9 +147,21 @@ export async function useObsComposable() {
   }
 
   // handle scene switches
-  obs.on('CurrentProgramSceneChanged', async () => {
+  obs.on('CurrentProgramSceneChanged', async (event) => {
     removeActiveApplications();
     await getSceneItems();
+    if (live.value && event.sceneUuid === '7bb22505-8353-471d-9e9a-de3cbdc4e1aa') { // Ende scene
+      try {
+        await RequestCache.request(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/share-next-planned-stream`, {
+          method: 'GET',
+        }, 10);
+      } catch (error) {
+        if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+          return;
+        }
+        throw error;
+      }
+    }
   });
 
   // handle source visibility changes

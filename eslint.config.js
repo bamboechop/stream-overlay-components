@@ -34,7 +34,7 @@ export default antfu(
   {
     rules: {
       'curly': ['error', 'all'],
-      'no-console': ['error', { allow: ['error', 'groupCollapsed', 'groupEnd', 'info', 'trace', 'warn'] }],
+      'no-console': ['error', { allow: ['debug', 'error', 'groupCollapsed', 'groupEnd', 'info', 'trace', 'warn'] }],
       'no-else-return': ['error', { allowElseIf: false }],
       'node/prefer-global/process': ['error', 'always'],
       'style/brace-style': ['error', '1tbs'],
