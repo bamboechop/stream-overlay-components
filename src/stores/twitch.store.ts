@@ -54,13 +54,28 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
 
   let adScheduleRetryCount = 0;
   const getAdSchedule = async () => {
-    const response = await axios.get(`https://api.twitch.tv/helix/channels/ads?broadcaster_id=${import.meta.env.VITE_TWITCH_BROADCASTER_ID}`, {
-      headers: {
-        'Authorization': `Bearer ${token.value}`,
-        'Client-Id': import.meta.env.VITE_TWITCH_CLIENT_ID,
-      },
-    });
-    if (response.status !== 200) {
+    try {
+      const data = await RequestCache.request(`https://api.twitch.tv/helix/channels/ads?broadcaster_id=${import.meta.env.VITE_TWITCH_BROADCASTER_ID}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token.value}`,
+          'Client-Id': import.meta.env.VITE_TWITCH_CLIENT_ID,
+        },
+      }, 10);
+
+      adScheduleRetryCount = 0;
+      const [information] = data.data;
+      adSchedule.value = {
+        duration: information.duration,
+        nextTime: information.next_ad_at * 1000,
+      };
+    } catch (error) {
+      // If another instance recently made this request, silently skip
+      if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+        return;
+      }
+
+      // Handle HTTP errors with retry logic
       adSchedule.value = null;
       if (adScheduleRetryCount < 5) {
         adScheduleRetryCount++;
@@ -71,14 +86,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
         // eslint-disable-next-line no-alert
         window.alert('Ad Schedule fetching failed five times!');
       }
-      return;
     }
-    adScheduleRetryCount = 0;
-    const [information] = response.data.data;
-    adSchedule.value = {
-      duration: information.duration,
-      nextTime: information.next_ad_at * 1000,
-    };
   };
 
   const processStreamTogetherChannels = async (title: string) => {
