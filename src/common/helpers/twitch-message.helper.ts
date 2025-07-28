@@ -1,14 +1,34 @@
-import axios from 'axios';
 import type { Badges, SubMethod } from 'tmi.js';
 import { getEmoteAsUrl, parseEmotesInMessage } from 'tmi-utils';
 import { STREAM_TOGETHER_COLORS } from '../constants/stream-together-colors.constant';
+import { RequestCache } from '@/services/request-cache.service';
 
 export async function getUserIdByUserName(username: string): Promise<string | undefined> {
-  return (await axios.get(`https://api.twitch.tv/helix/users?login=${username}`))?.data?.data?.[0]?.id;
+  try {
+    const data = await RequestCache.request(`https://api.twitch.tv/helix/users?login=${username}`, {
+      method: 'GET',
+    }, 10);
+    return data?.data?.[0]?.id;
+  } catch (error) {
+    if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+      return undefined;
+    }
+    throw error;
+  }
 }
 
 export async function getUserNameByUserId(userId: string): Promise<string | undefined> {
-  return (await axios.get(`https://api.twitch.tv/helix/users?id=${userId}`))?.data?.data?.[0]?.display_name;
+  try {
+    const data = await RequestCache.request(`https://api.twitch.tv/helix/users?id=${userId}`, {
+      method: 'GET',
+    }, 10);
+    return data?.data?.[0]?.display_name;
+  } catch (error) {
+    if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+      return undefined;
+    }
+    throw error;
+  }
 }
 
 // TODO set date of store and reload image after a certain time
@@ -18,11 +38,20 @@ export async function getUserImageByUserId(userId: string): Promise<string> {
 
   let userImage = storedImages?.[userId];
   if (!userImage) {
-    const response = await axios.get(`https://api.twitch.tv/helix/users?id=${userId}`);
-    storedImages[userId] = response.data?.data?.[0]?.profile_image_url ?? undefined;
-    if (storedImages[userId]) {
-      userImage = storedImages[userId];
-      window.sessionStorage.setItem('user-avatars', JSON.stringify(storedImages));
+    try {
+      const data = await RequestCache.request(`https://api.twitch.tv/helix/users?id=${userId}`, {
+        method: 'GET',
+      }, 10);
+      storedImages[userId] = data?.data?.[0]?.profile_image_url ?? undefined;
+      if (storedImages[userId]) {
+        userImage = storedImages[userId];
+        window.sessionStorage.setItem('user-avatars', JSON.stringify(storedImages));
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+        return 'https://picsum.photos/40';
+      }
+      throw error;
     }
   }
   return userImage ?? 'https://picsum.photos/40';
