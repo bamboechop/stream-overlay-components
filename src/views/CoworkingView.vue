@@ -20,6 +20,7 @@ import SideStrip from '@/components/coworking/SideStrip.vue';
 import { useCoworkingStore } from '@/stores/coworking.store';
 import type { Note } from '@/common/interfaces/notes.interface';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
+import { RequestCache } from '@/services/request-cache.service';
 
 let eventSource: EventSource | null = null;
 
@@ -54,8 +55,17 @@ onMounted(async () => {
 
     eventSourceSetup();
 
-    const notes: Note[] = await (await window.fetch(`${import.meta.env.VITE_DIGITAL_DOPPLER_BASE_URL}/api/open-notes`)).json();
-    setNotes(notes);
+    try {
+      const notes: Note[] = await RequestCache.request(`${import.meta.env.VITE_DIGITAL_DOPPLER_BASE_URL}/api/open-notes`, {
+        method: 'GET',
+      }, 10);
+      setNotes(notes);
+    } catch (notesError) {
+      if (notesError instanceof Error && notesError.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+        return;
+      }
+      throw notesError;
+    }
   } catch (err) {
     // eslint-disable-next-line no-alert
     window.alert('Failed to fetch notes. Check the OBS debug view for this scene for more information.');
