@@ -18,6 +18,7 @@ import {
   client as tmiClient,
 } from 'tmi.js';
 import { storeToRefs } from 'pinia';
+import { RequestCache } from '@/services/request-cache.service';
 import type {
   IAction,
   IChat,
@@ -64,21 +65,44 @@ export function useTwitchChat(theme?: TTheme) {
 
   async function setUpBadges() {
     const badgePromises = [
-      axios.get<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${broadcasterInfo.id}`),
-      axios.get<ITwitchBadgeResponse>('https://api.twitch.tv/helix/chat/badges/global'),
+      RequestCache.request<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${broadcasterInfo.id}`, {
+        method: 'GET',
+      }, 10),
+      RequestCache.request<ITwitchBadgeResponse>('https://api.twitch.tv/helix/chat/badges/global', {
+        method: 'GET',
+      }, 10),
     ];
 
     if (Object.keys(streamTogetherChannelIds.value).length > 0) {
       for (const channelId of Object.values(streamTogetherChannelIds.value)) {
-        badgePromises.push(axios.get<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${channelId}`));
+        badgePromises.push(RequestCache.request<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${channelId}`, {
+          method: 'GET',
+        }, 10));
       }
     }
 
-    const [chatBadgesResponse, globalChatBadgesResponse, ...channelChatBadgesResponses] = await Promise.all(badgePromises);
+    // Use Promise.allSettled to handle cross-instance cache hits gracefully
+    const results = await Promise.allSettled(badgePromises);
+
+    // Extract results, providing empty data for failed requests
+    const chatBadgesResponse = results[0].status === 'fulfilled'
+      ? results[0].value
+      : { data: [] } as ITwitchBadgeResponse;
+
+    const globalChatBadgesResponse = results[1].status === 'fulfilled'
+      ? results[1].value
+      : { data: [] } as ITwitchBadgeResponse;
+
+    const channelChatBadgesResponses = results.slice(2).map(result =>
+      result.status === 'fulfilled'
+        ? result.value
+        : { data: [] } as ITwitchBadgeResponse,
+    );
+
     const availableBadges: Record<string, { description: string; id: string; imageUrl: string; title: string }[]> = {};
 
     // Process global badges
-    for (const set of globalChatBadgesResponse.data.data) {
+    for (const set of globalChatBadgesResponse.data) {
       availableBadges[set.set_id] = set.versions.map(version => ({
         description: version.description,
         id: version.id,
@@ -88,7 +112,7 @@ export function useTwitchChat(theme?: TTheme) {
     }
 
     // Process broadcaster badges - these override global badges
-    for (const set of chatBadgesResponse.data.data) {
+    for (const set of chatBadgesResponse.data) {
       availableBadges[set.set_id] = set.versions.map(version => ({
         description: version.description,
         id: version.id,
@@ -100,7 +124,7 @@ export function useTwitchChat(theme?: TTheme) {
     // Process other channels' badges with channel prefix to keep them distinct
     for (let i = 0; i < channelChatBadgesResponses.length; i++) {
       const channelId = streamTogetherChannels.value[i];
-      for (const set of channelChatBadgesResponses[i].data.data) {
+      for (const set of channelChatBadgesResponses[i].data) {
         const key = `${channelId}_${set.set_id}`;
         availableBadges[key] = set.versions.map(version => ({
           description: version.description,
