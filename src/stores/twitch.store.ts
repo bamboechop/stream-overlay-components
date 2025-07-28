@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useLocalStorage } from '@vueuse/core';
 import type { TMessage } from '@/common/types/index.type';
 import { getUserIdByUserName } from '@/common/helpers/twitch-message.helper';
+import { RequestCache } from '@/services/request-cache.service';
 
 const streamTogetherChannels = ref<string[]>([]);
 const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
@@ -92,11 +93,20 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   };
 
   const getChannelInformation = async () => {
-    const response = await axios.get(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`);
-    const { data } = response;
-    if (data) {
-      category.value = data.game_name;
-      processStreamTogetherChannels(data.title);
+    try {
+      const data = await RequestCache.request(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`, {
+        method: 'GET',
+      }, 10);
+
+      if (data) {
+        category.value = data.game_name;
+        processStreamTogetherChannels(data.title);
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+        return;
+      }
+      throw error;
     }
   };
 
