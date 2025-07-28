@@ -6,7 +6,6 @@ import { subgiftDummy } from '@data/subgift.data';
 import { actionDummy } from '@data/action.data';
 import { chatDummy } from '@data/chat.data';
 import { raidDummy } from '@data/raid.data';
-import axios from 'axios';
 import { useLocalStorage } from '@vueuse/core';
 import type { TMessage } from '@/common/types/index.type';
 import { getUserIdByUserName } from '@/common/helpers/twitch-message.helper';
