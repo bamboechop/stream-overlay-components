@@ -9,6 +9,9 @@ interface CacheEntry {
 interface StoredCacheInfo {
   timestamp: number;
   url: string;
+  status: 'in_progress' | 'completed' | 'failed';
+  result?: any;
+  error?: string;
 }
 
 export class RequestCache {
@@ -49,10 +52,17 @@ export class RequestCache {
   /**
    * Update localStorage with cache info for cross-instance coordination
    */
-  private static updateStoredCacheInfo(cacheKey: string, timestamp: number, url: string): void {
+  private static updateStoredCacheInfo(
+    cacheKey: string,
+    timestamp: number,
+    url: string,
+    status: 'in_progress' | 'completed' | 'failed' = 'in_progress',
+    result?: any,
+    error?: string,
+  ): void {
     try {
       const stored = this.getStoredCacheInfo();
-      stored[cacheKey] = { timestamp, url };
+      stored[cacheKey] = { timestamp, url, status, result, error };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stored));
     } catch (error) {
       console.warn('Failed to update request cache in localStorage:', error);
@@ -71,6 +81,54 @@ export class RequestCache {
     }
 
     return Date.now() - entry.timestamp < ttlSeconds * 1000;
+  }
+
+  /**
+   * Wait for a cross-instance request to complete and return its result
+   */
+  private static async waitForCrossInstanceResult<T>(
+    cacheKey: string,
+    url: string,
+    maxWaitMs: number = 5000,
+  ): Promise<T> {
+    const startTime = Date.now();
+    const pollInterval = 100; // Check every 100ms
+
+    return new Promise((resolve, reject) => {
+      const poll = () => {
+        const elapsed = Date.now() - startTime;
+
+        if (elapsed > maxWaitMs) {
+          reject(new Error(`Timeout waiting for cross-instance request: ${url}`));
+          return;
+        }
+
+        const stored = this.getStoredCacheInfo();
+        const entry = stored[cacheKey];
+
+        if (!entry) {
+          // Entry disappeared, might have been cleaned up
+          reject(new Error(`Cross-instance request entry disappeared: ${url}`));
+          return;
+        }
+
+        if (entry.status === 'completed') {
+          console.debug(`[RequestCache] Cross-instance result received: GET ${url}`);
+          resolve(entry.result);
+          return;
+        }
+
+        if (entry.status === 'failed') {
+          reject(new Error(entry.error || `Cross-instance request failed: ${url}`));
+          return;
+        }
+
+        // Still in progress, keep polling
+        setTimeout(poll, pollInterval);
+      };
+
+      poll();
+    });
   }
 
   /**
@@ -93,7 +151,11 @@ export class RequestCache {
       const cleaned: Record<string, StoredCacheInfo> = {};
 
       for (const [key, entry] of Object.entries(stored)) {
-        if (now - entry.timestamp <= maxAge) {
+        // Keep entries that are either recent or still in progress
+        const isRecent = now - entry.timestamp <= maxAge;
+        const isInProgress = entry.status === 'in_progress' && now - entry.timestamp <= 10000; // Keep in-progress up to 10 seconds
+
+        if (isRecent || isInProgress) {
           cleaned[key] = entry;
         }
       }
@@ -140,8 +202,8 @@ export class RequestCache {
 
     // Check if request was made recently by any instance
     if (this.isRequestRecentInAnyInstance(cacheKey, ttlSeconds)) {
-      console.debug(`[RequestCache] Cross-instance hit: ${config?.method || 'GET'} ${url}`);
-      return Promise.reject(new Error('REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE'));
+      console.debug(`[RequestCache] Cross-instance hit detected, waiting for result: ${config?.method || 'GET'} ${url}`);
+      return this.waitForCrossInstanceResult<T>(cacheKey, url);
     }
 
     console.debug(`[RequestCache] Making new request: ${config?.method || 'GET'} ${url}`);
@@ -150,10 +212,22 @@ export class RequestCache {
 
     // IMMEDIATELY store in localStorage to prevent race conditions
     // This ensures other instances see the request is in progress
-    this.updateStoredCacheInfo(cacheKey, timestamp, url);
+    this.updateStoredCacheInfo(cacheKey, timestamp, url, 'in_progress');
 
     // Make actual request using axios
-    const promise = axios(url, config).then(response => response.data);
+    const promise = axios(url, config)
+      .then((response) => {
+        const result = response.data;
+        // Store successful result in localStorage for other instances
+        this.updateStoredCacheInfo(cacheKey, timestamp, url, 'completed', result);
+        return result;
+      })
+      .catch((error) => {
+        // Store error in localStorage for other instances
+        const errorMessage = error.message || 'Request failed';
+        this.updateStoredCacheInfo(cacheKey, timestamp, url, 'failed', undefined, errorMessage);
+        throw error;
+      });
 
     // Store in memory cache
     this.cache.set(cacheKey, {

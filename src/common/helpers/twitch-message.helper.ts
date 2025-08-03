@@ -75,6 +75,12 @@ export function parseUserBadges(
 ): { description: string; id: string; imageUrl: string; title: string }[] {
   const badges: { description: string; id: string; imageUrl: string; title: string }[] = [];
   for (const [key, value] of Object.entries(userBadges)) {
+    // Defensive check: skip if badge type doesn't exist in availableBadges
+    if (!availableBadges[key]) {
+      console.warn(`Badge type '${key}' not found in availableBadges. This may be due to failed API requests.`);
+      continue;
+    }
+
     const badge = availableBadges[key].find(badge => badge.id === value);
     if (badge) {
       badges.push(badge);
