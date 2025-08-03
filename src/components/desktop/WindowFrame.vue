@@ -48,6 +48,7 @@ withDefaults(defineProps<{ active?: boolean; title?: string }>(), { active: fals
   flex-direction: column;
   gap: $window-frame-padding;
   padding: $window-frame-padding;
+  transition: background 0.5s ease-in-out, border-color 0.5s ease-in-out;
 
   &__bottom-bar {
     align-items: center;
