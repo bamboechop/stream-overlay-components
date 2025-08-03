@@ -4,14 +4,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "run-p type-check \"build:only {@}\" --",
-    "build:only": "vite build",
-    "dev": "vite",
+    "build": "npm run update:emote-flags && run-p type-check \"build:only {@}\" --",
+    "build:only": "npm run update:emote-flags && vite build",
+    "dev": "npm run update:emote-flags && vite",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "preview": "vite preview",
+    "preview": "npm run update:emote-flags && vite preview",
     "test:unit": "vitest",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "vue-tsc --build --force",
+    "update:emote-flags": "node scripts/update-emote-flags.cjs"
   },
   "dependencies": {
     "@atproto/api": "^0.15.19",

@@ -1,25 +1,32 @@
-export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 'follower' | '1' | '2' | '3'; updated?: boolean; url: string }[] = [
+export const EMOTES: { lastModified: string; name: string; new: boolean; tier: 'follower' | '1' | '2' | '3'; updated: boolean; url: string }[] = [
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Butter',
+    new: false,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Butter.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Cool',
+    new: false,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Cool.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Cozy',
+    new: false,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Cozy.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Dead',
+    new: false,
     tier: '1',
     updated: true,
     url: '/emotes/bamboe1Dead.png',
@@ -27,61 +34,81 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Derp',
+    new: false,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Derp.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1KEKW',
+    new: false,
     tier: 'follower',
+    updated: false,
     url: '/emotes/bamboe1KEKW.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Love',
+    new: false,
     tier: 'follower',
+    updated: false,
     url: '/emotes/bamboe1Love.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Lurk',
+    new: false,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Lurk.gif',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Rage',
+    new: false,
     tier: 'follower',
+    updated: false,
     url: '/emotes/bamboe1Rage.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Raid',
+    new: false,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Raid.gif',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Sad',
+    new: false,
     tier: 'follower',
+    updated: false,
     url: '/emotes/bamboe1Sad.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Scared',
+    new: false,
     tier: 'follower',
+    updated: false,
     url: '/emotes/bamboe1Scared.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Sexy',
+    new: false,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Sexy.png',
   },
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Snom',
+    new: false,
     tier: '3',
+    updated: false,
     url: '/emotes/bamboe1Snom.png',
   },
   {
@@ -89,6 +116,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Bla',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Bla.gif',
   },
   {
@@ -96,6 +124,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Bonk',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Bonk.png',
   },
   {
@@ -103,6 +132,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Clap',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Clap.gif',
   },
   {
@@ -110,6 +140,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Drink',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Drink.png',
   },
   {
@@ -117,6 +148,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1GG',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1GG.png',
   },
   {
@@ -124,6 +156,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Innocent',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Innocent.gif',
   },
   {
@@ -131,6 +164,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Noted',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Noted.gif',
   },
   {
@@ -138,6 +172,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Party',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Party.gif',
   },
   {
@@ -145,6 +180,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Pat',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Pat.png',
   },
   {
@@ -152,6 +188,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Shy',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Shy.gif',
   },
   {
@@ -159,6 +196,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Sleep',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Sleep.png',
   },
   {
@@ -166,6 +204,7 @@ export const EMOTES: { lastModified: string; name: string; new?: boolean; tier: 
     name: 'bamboe1Steer',
     new: true,
     tier: '1',
+    updated: false,
     url: '/emotes/bamboe1Steer.gif',
   },
 ];
