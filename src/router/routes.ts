@@ -17,6 +17,7 @@ import BskyPostsView from '@/views/BskyPostsView.vue';
 import NextGameView from '@/views/NextGameView.vue';
 import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
 import TimerView from '@/views/TimerView.vue';
+import MusicPlayerView from '@/views/MusicPlayerView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -53,6 +54,11 @@ export const routes: RouteRecordRaw[] = [
     component: MediaPlayerView,
     name: 'Media Player Component',
     path: '/media-player',
+  },
+  {
+    component: MusicPlayerView,
+    name: 'Music Player Component',
+    path: '/music-player',
   },
   {
     component: NextGameView,

@@ -6,6 +6,8 @@ export function useSearchParamsComposable() {
   const searchParams = useUrlSearchParams<{
     'active'?: 'true' | 'false';
     'chat-visible-timeout'?: string;
+    'ciderDuration'?: string;
+    'ciderHideAlbumArt'?: 'true' | 'false';
     'debug'?: 'true' | 'false';
     'gigantified-emote-volume'?: string;
     'mode'?: 'break' | 'end' | 'start';
@@ -44,13 +46,24 @@ export function useSearchParamsComposable() {
     return localStorageTheme.value;
   });
 
+  const musicPlayerDuration = computed(() => {
+    const param = searchParams.ciderDuration;
+    if (!param) {
+      return 0;
+    }
+    const value = Number.parseInt(param, 10);
+    return Number.isNaN(value) ? 0 : value;
+  });
+
   return {
     active: searchParams.active === 'true',
     chatVisibleTimeoutInSeconds: searchParams['chat-visible-timeout'] ? Number.parseInt(searchParams['chat-visible-timeout'], 10) : 10,
     debug: searchParams.debug === 'true',
     gigantifiedEmoteVolume,
+    hideAlbumArt: searchParams.ciderHideAlbumArt === 'true',
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,
+    musicPlayerDuration,
     theme,
     themePath: theme.value.replace('-', ''),
     title: searchParams.title,
