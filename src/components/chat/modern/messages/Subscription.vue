@@ -2,19 +2,15 @@
   <li
     class="subscription"
     :class="{ 'subscription--mounted': mounted }">
-    <div class="subscription__info">
-      <span class="subscription__name">
-        <strong :style="{ color }">{{ displayName }}</strong>
-        <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
-          ({{ userName }})
-        </template>
-        hat soeben ein Stufe {{ plan }} Abonnement abgeschlossen! Dankeschön!
-        <img
-          :alt="LOVE_EMOTE?.name"
-          class="subscription__emote"
-          :src="LOVE_EMOTE?.url" />
-      </span>
-    </div>
+    <strong class="subscription__name">{{ displayName }}</strong>
+    <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
+      <span class="subscription__username"> ({{ userName }})</span>
+    </template>
+    hat einen Kirschbaum gepflanzt und das Gleichgewicht gestärkt.
+    <img
+      :alt="COZY_EMOTE?.name"
+      class="subscription__emote"
+      :src="COZY_EMOTE?.url" />
   </li>
 </template>
 
@@ -27,7 +23,7 @@ defineProps<ISubscription & { messageIndex?: number; messageOffset?: number }>()
 
 const mounted = ref(false);
 
-const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
+const COZY_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Cozy');
 
 onMounted(() => {
   window.setTimeout(() => {
@@ -44,8 +40,6 @@ onMounted(() => {
   border: 2px solid #ffdf12;
   border-radius: $window-frame-border-radius;
   bottom: 0;
-  display: flex;
-  flex-direction: column;
   left: 0;
   padding: $window-frame-padding $window-frame-padding * 2;
   position: absolute;
@@ -61,12 +55,12 @@ onMounted(() => {
     vertical-align: middle;
   }
 
-  &__info {
-    align-items: end;
-    display: flex;
-    float: left;
-    gap: 4px;
-    text-align: left;
+  &__name {
+    color: v-bind(color);
+  }
+
+  &__username {
+    font-size: 12px;
   }
 }
 

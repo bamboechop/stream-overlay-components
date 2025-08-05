@@ -2,37 +2,26 @@
   <li
     class="sub-gift"
     :class="{ 'sub-gift--mounted': mounted }">
-    <div class="sub-gift__info">
-      <span class="sub-gift__name">
-        <strong :style="{ color: '#ff7512' }">{{ sender.displayName }}</strong>
-        <template v-if="sender.userName && sender.displayName?.toLowerCase() !== sender.userName.toLowerCase()">
-          ({{ sender.userName }})
-        </template>
-        hat gerade
-        <strong :style="{ color: '#ffdf12' }">{{ recipient.displayName }}</strong>
-        <template v-if="recipient.userName && recipient.displayName?.toLowerCase() !== recipient.userName.toLowerCase()">
-          ({{ recipient.userName }})
-        </template>
-        ein Stufe {{ plan }} Abonnement geschenkt! Vielen Dank!
-        <img
-          :alt="LOVE_EMOTE?.name"
-          class="sub-gift__emote"
-          :src="LOVE_EMOTE?.url" />
-      </span>
-    </div>
+    <strong :style="{ color: '#ff7512' }">{{ sender.displayName }}</strong>
+    <template v-if="sender.userName && sender.displayName?.toLowerCase() !== sender.userName.toLowerCase()">
+      <span class="sub-gift__username"> ({{ sender.userName }})</span>
+    </template>
+    hat im Garten einen Platz für
+    <strong :style="{ color: '#ffdf12' }">{{ recipient.displayName }}</strong>
+    <template v-if="recipient.userName && recipient.displayName?.toLowerCase() !== recipient.userName.toLowerCase()">
+      <span class="sub-gift__username"> ({{ recipient.userName }})</span>
+    </template>
+    vorbereitet. Vielen Dank.
   </li>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import type { ISubGift } from '@/common/interfaces/index.interface';
-import { EMOTES } from '@/common/constants/emotes.constant';
 
 defineProps<ISubGift & { messageIndex?: number; messageOffset?: number }>();
 
 const mounted = ref(false);
-
-const LOVE_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Love');
 
 onMounted(() => {
   window.setTimeout(() => {
@@ -49,8 +38,6 @@ onMounted(() => {
   border: 2px solid #ff7512;
   border-radius: $window-frame-border-radius;
   bottom: 0;
-  display: flex;
-  flex-direction: column;
   left: 0;
   padding: $window-frame-padding $window-frame-padding * 2;
   position: absolute;
@@ -66,12 +53,8 @@ onMounted(() => {
     vertical-align: middle;
   }
 
-  &__info {
-    align-items: end;
-    display: flex;
-    float: left;
-    gap: 4px;
-    text-align: left;
+  &__username {
+    font-size: 12px;
   }
 }
 

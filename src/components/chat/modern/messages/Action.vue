@@ -18,14 +18,12 @@
             :src="badge.imageUrl" />
         </template>
       </template>
-      <span
-        class="action__name"
-        :style="{ color }">
-        <strong>{{ displayName }}</strong>
+      <div class="action__name-container">
+        <strong class="action__name">{{ displayName }}</strong>
         <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
           ({{ userName }})
         </template>
-      </span>
+      </div>
     </div>
     <span class="action__text">
       <template
@@ -105,13 +103,21 @@ onMounted(() => {
   &__info {
     align-items: end;
     display: flex;
-    float: left;
     gap: 4px;
-    margin: -3px 4px 0 0;
   }
 
-  &__info--has-emote {
-    margin-top: -1px;
+  &__name {
+    color: v-bind(color);
+    font-size: 16px;
+  }
+
+  &__name-container {
+    font-size: 12px;
+    height: $badge-size; // both height and line-height are set to $badge-size to align the name with the badges
+    line-height: $badge-size;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

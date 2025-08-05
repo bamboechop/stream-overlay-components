@@ -2,18 +2,16 @@
   <li
     class="resub"
     :class="{ 'resub--mounted': mounted }">
-    <div
-      class="resub__info"
-      :class="{ 'resub__info--has-emote': messageParts.find(part => part.type === 'emote') }">
-      <span class="resub__name">
-        <strong :style="{ color }">{{ displayName }}</strong>
-        <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
-          ({{ userName }})
-        </template>
-        ist seit {{ cumulativeMonths ? cumulativeMonths : months }} Monaten mit einem Stufe {{ plan }} Abonnement dabei!
-      </span>
-    </div>
-    <span class="resub__text">
+    <strong class="resub__name">{{ displayName }}</strong>
+    <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
+      <span class="resub__username"> ({{ userName }})</span>
+    </template>
+    pflegt seit {{ cumulativeMonths ? cumulativeMonths : months }} Monaten den Garten!
+    <img
+      :alt="COZY_EMOTE?.name"
+      class="resub__emote"
+      :src="COZY_EMOTE?.url" />
+    <div class="resub__text">
       <template
         v-for="(part, index) of messageParts"
         :key="`resub-${part.value}-part-${index}`">
@@ -27,7 +25,7 @@
             :src="part.value" />
         </template>
       </template>
-    </span>
+    </div>
   </li>
 </template>
 
@@ -35,11 +33,14 @@
 import { onMounted, ref } from 'vue';
 import type { IResub } from '@/common/interfaces/index.interface';
 import { parseMessage } from '@/common/helpers/twitch-message.helper';
+import { EMOTES } from '@/common/constants/emotes.constant';
 
 const props = defineProps<IResub & { messageIndex?: number; messageOffset?: number }>();
 
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const mounted = ref(false);
+
+const COZY_EMOTE = EMOTES.find(emote => emote.name === 'bamboe1Cozy');
 
 onMounted(() => {
   window.setTimeout(() => {
@@ -58,8 +59,6 @@ onMounted(() => {
   border: 2px solid #ffac12;
   border-radius: $window-frame-border-radius;
   bottom: 0;
-  display: flex;
-  flex-direction: column;
   left: 0;
   padding: $window-frame-padding $window-frame-padding * 2;
   position: absolute;
@@ -80,20 +79,16 @@ onMounted(() => {
     vertical-align: middle;
   }
 
-  &__info {
-    align-items: end;
-    display: flex;
-    float: left;
-    gap: 4px;
-    margin: -3px 4px 0 0;
-  }
-
-  &__info--has-emote {
-    margin-top: -1px;
+  &__name {
+    color: v-bind(color);
   }
 
   &__text {
     font-style: italic;
+  }
+
+  &__username {
+    font-size: 12px;
   }
 }
 
