@@ -401,7 +401,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .poll-window {
-  background-image: linear-gradient(90deg,rgba(34, 34, 34, 0.95) 0%, rgba(34, 34, 34, 0.95) 55%, rgba(34, 34, 34, 0.05) 100%);
+  background-image: linear-gradient(90deg,rgba(34, 34, 34, 0.9) 0%, rgba(34, 34, 34, 0.9) 83%, rgba(34, 34, 34, 0) 100%);
   border-bottom-width: 1px;
   color: #fff;
   display: flex;
@@ -409,7 +409,7 @@ onUnmounted(() => {
   gap: 12px;
   height: 100%;
   padding: 18px 12px 24px 12px;
-  width: 40vw;
+  width: 25vw;
 }
 
 .poll-window-aside {
