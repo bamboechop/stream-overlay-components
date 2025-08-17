@@ -57,12 +57,16 @@
         </template>
       </template>
     </ul>
+    <audio
+      ref="chatNotificationAudio"
+      style="display: none;"></audio>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { type ComponentPublicInstance, nextTick, onMounted, ref, watch } from 'vue';
+import { useMediaControls } from '@vueuse/core';
 import StreamTogetherInfoBox from './StreamTogetherInfoBox.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
 import ActionMessage from '@/components/chat/modern/messages/Action.vue';
@@ -71,6 +75,9 @@ import RaidMessage from '@/components/chat/modern/messages/Raid.vue';
 import ResubMessage from '@/components/chat/modern/messages/Resub.vue';
 import SubGiftMessage from '@/components/chat/modern/messages/SubGift.vue';
 import SubscriptionMessage from '@/components/chat/modern/messages/Subscription.vue';
+import { broadcasterInfo } from '@/composables/twitch-chat.composable';
+import { PRIMARY_BOT_ACCOUNT_USERNAME } from '@/common/constants/bot-accounts.constant';
+import type { IChat } from '@/common/interfaces/index.interface';
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);
@@ -78,6 +85,15 @@ const { messages } = storeToRefs(store);
 const messagesList = ref<HTMLElement>();
 const messageRefs = ref<ComponentPublicInstance<typeof ActionMessage | typeof ChatMessage | typeof RaidMessage | typeof ResubMessage | typeof SubGiftMessage | typeof SubscriptionMessage>[]>([]);
 const messageHeights = ref<number[]>([]);
+
+const chatNotificationAudio = ref<HTMLAudioElement | null>(null);
+const canPlayNotificationSound = ref(false);
+const isSoundPlaying = ref(false);
+let notificationCooldownTimeout: number | null = null;
+
+const { currentTime, playing, volume } = useMediaControls(chatNotificationAudio, {
+  src: '/audio/chat-notification.mp3',
+});
 
 function getMessageOffset(index: number): number {
   let offset = 0;
@@ -105,11 +121,54 @@ async function calculateMessageHeights() {
   messageHeights.value = newHeights;
 }
 
-// Recalculate heights when messages change
-watch(messages, calculateMessageHeights, { deep: true });
+function shouldPlayNotificationSound(message: IChat) {
+  return message.msgType === 'chat' && ![broadcasterInfo.name.toLowerCase(), PRIMARY_BOT_ACCOUNT_USERNAME.toLowerCase()].includes(message.userName?.toLowerCase() ?? '');
+}
+
+function playNotificationSound() {
+  if (!canPlayNotificationSound.value || isSoundPlaying.value) {
+    return;
+  }
+
+  isSoundPlaying.value = true;
+
+  try {
+    currentTime.value = 0;
+    playing.value = true;
+
+    canPlayNotificationSound.value = false;
+    
+    if (notificationCooldownTimeout) {
+      clearTimeout(notificationCooldownTimeout);
+    }
+    
+    notificationCooldownTimeout = setTimeout(() => {
+      canPlayNotificationSound.value = true;
+      isSoundPlaying.value = false;
+    }, 10 * 1000);
+
+  } catch (error) {
+    console.warn('Error playing chat notification sound:', error);
+    isSoundPlaying.value = false;
+  }
+}
+
+watch(messages, () => {
+  calculateMessageHeights();
+ 
+  const latestMessage = messages.value.at(-1);
+  if (latestMessage && shouldPlayNotificationSound(latestMessage as IChat)) {
+    playNotificationSound();
+  }
+}, { deep: true });
 
 onMounted(() => {
   calculateMessageHeights();
+  volume.value = 0.25;
+ 
+  notificationCooldownTimeout = setTimeout(() => {
+    canPlayNotificationSound.value = true;
+  }, 10 * 1000);
 });
 </script>
 
