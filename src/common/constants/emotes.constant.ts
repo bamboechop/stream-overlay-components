@@ -28,7 +28,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
     name: 'bamboe1Dead',
     new: false,
     tier: '1',
-    updated: true,
+    updated: false,
     url: '/emotes/bamboe1Dead.png',
   },
   {
@@ -114,7 +114,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Bla',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Bla.gif',
@@ -122,7 +122,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Bonk',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Bonk.png',
@@ -130,7 +130,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Clap',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Clap.gif',
@@ -138,7 +138,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Drink',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Drink.png',
@@ -146,7 +146,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1GG',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1GG.png',
@@ -154,7 +154,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Innocent',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Innocent.gif',
@@ -162,7 +162,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Noted',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Noted.gif',
@@ -170,7 +170,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Party',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Party.gif',
@@ -178,7 +178,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Pat',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Pat.png',
@@ -186,7 +186,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Shy',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Shy.gif',
@@ -194,7 +194,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Sleep',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Sleep.png',
@@ -202,7 +202,7 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   {
     lastModified: '2025-07-11',
     name: 'bamboe1Steer',
-    new: true,
+    new: false,
     tier: '1',
     updated: false,
     url: '/emotes/bamboe1Steer.gif',
