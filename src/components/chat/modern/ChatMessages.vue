@@ -87,9 +87,9 @@ const messageRefs = ref<ComponentPublicInstance<typeof ActionMessage | typeof Ch
 const messageHeights = ref<number[]>([]);
 
 const chatNotificationAudio = ref<HTMLAudioElement | null>(null);
-const canPlayNotificationSound = ref(false);
 const isSoundPlaying = ref(false);
-let notificationCooldownTimeout: number | null = null;
+const shouldPlaySoundOnNextMessage = ref(false);
+let silenceTimeout: number | null = null;
 
 const { currentTime, playing, volume } = useMediaControls(chatNotificationAudio, {
   src: '/audio/chat-notification.mp3',
@@ -126,8 +126,20 @@ function shouldPlayNotificationSound(message: IChat) {
   return message.msgType === 'chat' && ![broadcasterInfo.name.toLowerCase(), PRIMARY_BOT_ACCOUNT_USERNAME.toLowerCase()].includes(message.userName?.toLowerCase() ?? '');
 }
 
+function startSilenceDetection() {
+  if (silenceTimeout) {
+    clearTimeout(silenceTimeout);
+  }
+  
+  shouldPlaySoundOnNextMessage.value = false;
+  
+  silenceTimeout = setTimeout(() => {
+    shouldPlaySoundOnNextMessage.value = true;
+  }, 5 * 60 * 1000);
+}
+
 function playNotificationSound() {
-  if (!canPlayNotificationSound.value || isSoundPlaying.value) {
+  if (!shouldPlaySoundOnNextMessage.value || isSoundPlaying.value) {
     return;
   }
 
@@ -137,19 +149,13 @@ function playNotificationSound() {
     currentTime.value = 0;
     playing.value = true;
 
-    canPlayNotificationSound.value = false;
+    shouldPlaySoundOnNextMessage.value = false;
     
-    if (notificationCooldownTimeout) {
-      clearTimeout(notificationCooldownTimeout);
-    }
-    
-    notificationCooldownTimeout = setTimeout(() => {
-      canPlayNotificationSound.value = true;
-      isSoundPlaying.value = false;
-    }, 5 * 60 * 1000);
+    startSilenceDetection();
 
   } catch (error) {
     console.warn('Error playing chat notification sound:', error);
+  } finally {
     isSoundPlaying.value = false;
   }
 }
@@ -159,17 +165,19 @@ watch(messages, () => {
  
   const latestMessage = messages.value.at(-1);
   if (latestMessage && shouldPlayNotificationSound(latestMessage as IChat)) {
-    playNotificationSound();
+    if (shouldPlaySoundOnNextMessage.value) {
+      playNotificationSound();
+    } else {
+      startSilenceDetection();
+    }
   }
 }, { deep: true });
 
 onMounted(() => {
-  calculateMessageHeights();
   volume.value = 0.25;
- 
-  notificationCooldownTimeout = setTimeout(() => {
-    canPlayNotificationSound.value = true;
-  }, 5 * 60 * 1000);
+
+  calculateMessageHeights();
+  startSilenceDetection();
 });
 </script>
 
