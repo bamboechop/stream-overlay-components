@@ -146,7 +146,7 @@ function playNotificationSound() {
     notificationCooldownTimeout = setTimeout(() => {
       canPlayNotificationSound.value = true;
       isSoundPlaying.value = false;
-    }, 10 * 1000);
+    }, 5 * 60 * 1000);
 
   } catch (error) {
     console.warn('Error playing chat notification sound:', error);
@@ -169,7 +169,7 @@ onMounted(() => {
  
   notificationCooldownTimeout = setTimeout(() => {
     canPlayNotificationSound.value = true;
-  }, 10 * 1000);
+  }, 5 * 60 * 1000);
 });
 </script>
 
