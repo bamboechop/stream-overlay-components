@@ -68,6 +68,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/need-for-speed-most-wanted.icon.png',
     intermissionTextMode: 'default',
   },
+  'Pokémon Legends: Arceus': {
+    backgroundImagePath: '/modern/game-backgrounds/pokemon-legends-arceus.jpg',
+    color: 'rgba(225, 210, 189, 0.9)',
+    iconPath: '/programs/{themePath}/pokemon-legends-arceus.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Pokémon Sword/Shield': {
     backgroundImagePath: '/modern/game-backgrounds/pokemon-sword.jpg',
     color: 'rgba(255, 255, 255, 0.5)',
