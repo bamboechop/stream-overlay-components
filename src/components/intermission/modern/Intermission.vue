@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMediaControls } from '@vueuse/core';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
@@ -42,10 +42,10 @@ import { TRAILERS_METADATA } from '@/common/constants/trailers-metadata.constant
 
 const props = defineProps<{ active?: boolean; mode?: 'end' | 'break' | 'start' }>();
 
-const VIDEO_PLAYBACK_DELAY = 60 * 5 * 1000; // 5 minutes
+const VIDEO_PLAYBACK_DELAY = 30 * 1000; // 30 seconds after ad ends
 
 const store = useTwitchStore();
-const { category } = storeToRefs(store);
+const { category, isAdRunning } = storeToRefs(store);
 const streamStatusStore = useStreamStatusStore();
 const { live } = storeToRefs(streamStatusStore);
 const { setVolume } = useCiderComposable();
@@ -55,6 +55,12 @@ const isVideoTextVisible = ref(false);
 let playTimeout: ReturnType<typeof setTimeout> | null = null;
 let hideTextTimeout: ReturnType<typeof setTimeout> | null = null;
 let hasStartedPlayback = ref(false);
+const firstAdFinished = ref(false);
+
+// Initialize ad break listener when component mounts
+onMounted(() => {
+  store.initializeAdBreakListener();
+});
 
 const { playing, ended } = useMediaControls(trailerVideoRef);
 
@@ -163,13 +169,21 @@ watch(ended, (isEnded) => {
   }
 });
 
-// Watch for stream going live to start trailer playback
-watch(live, (isLive) => {
-  if (isLive) {
+// Watch for ad finishing to start trailer playback
+watch(isAdRunning, (isRunning, wasRunning) => {
+  // When ad finishes (goes from true to false) and it's the first ad
+  if (wasRunning && !isRunning && !firstAdFinished.value && live.value) {
+    firstAdFinished.value = true;
+    // Start trailer playback 30 seconds after ad ends
     startTrailerPlayback();
-  } else {
-    // Reset when stream goes offline
+  }
+});
+
+// Reset when stream goes offline
+watch(live, (isLive) => {
+  if (!isLive) {
     hasStartedPlayback.value = false;
+    firstAdFinished.value = false;
     if (playTimeout) {
       clearTimeout(playTimeout);
       playTimeout = null;
@@ -182,9 +196,9 @@ watch(live, (isLive) => {
 });
 
 // Watch for changes in selectedTrailerData or mode to handle category/scene changes
-// Only trigger if stream is already live
+// Only trigger if stream is already live and first ad has finished
 watch([() => props.mode, selectedTrailerData], () => {
-  if (live.value) {
+  if (live.value && firstAdFinished.value) {
     hasStartedPlayback.value = false; // Reset to allow restarting with new trailer
     startTrailerPlayback();
   }

@@ -88,7 +88,7 @@ export async function useObsComposable() {
 
   const twitchStore = useTwitchStore();
   const { category } = storeToRefs(twitchStore);
-  const { getAdSchedule } = twitchStore;
+  const { getAdSchedule, resetAdState } = twitchStore;
 
   const obs = new OBSWebSocket();
   await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
@@ -189,10 +189,14 @@ export async function useObsComposable() {
   obs.on('StreamStateChanged', async (event) => {
     live.value = event.outputActive;
     if (live.value) {
-      // wait 10 minutes, this allows the pre-roll ad to be played and we receive an accurate value
+      // Wait 15 seconds for Twitch to update ad schedule after going live
+      // This should catch pre-roll ads that happen immediately
       window.setTimeout(async () => {
         await getAdSchedule();
-      }, 10 * 60 * 1000);
+      }, 15 * 1000);
+    } else {
+      // Reset ad state when stream goes offline
+      resetAdState();
     }
   });
 

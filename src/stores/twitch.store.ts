@@ -10,16 +10,22 @@ import { useLocalStorage } from '@vueuse/core';
 import type { TMessage } from '@/common/types/index.type';
 import { getUserIdByUserName } from '@/common/helpers/twitch-message.helper';
 import { RequestCache } from '@/services/request-cache.service';
+import { useEventStreamComposable } from '@/composables/event-stream.composable';
+import type { IEventStreamAdBreakBeginData } from '@/common/interfaces/event-stream.interface';
 
 const streamTogetherChannels = ref<string[]>([]);
 const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
 const token = useLocalStorage<string>('twitch-token', null);
+
+let adBreakUnsubscribe: (() => void) | null = null;
 
 export const useTwitchStore = defineStore('Twitch Store', () => {
   const adSchedule = ref<{ duration: number; nextTime: number } | null>(null);
   const category = ref('Media Player');
   const messages = ref<TMessage[]>([]);
   const viewers = ref(0);
+  const isAdRunning = ref(false);
+  const adDuration = ref<number>(0);
 
   const addDebugMessages = () => {
     messages.value.push(resubDummy, subscriptionDummy, subgiftDummy, actionDummy, ...chatDummy, raidDummy);
@@ -132,9 +138,35 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     }
   };
 
+  const initializeAdBreakListener = () => {
+    if (adBreakUnsubscribe) {
+      return;
+    }
+
+    const { on } = useEventStreamComposable();
+    adBreakUnsubscribe = on<IEventStreamAdBreakBeginData>('channel.ad_break.begin', (data) => {
+      isAdRunning.value = true;
+      adDuration.value = data.duration_seconds;
+      
+      // Set timeout to mark ad as finished after duration
+      window.setTimeout(() => {
+        isAdRunning.value = false;
+        adDuration.value = 0;
+      }, data.duration_seconds * 1000);
+    });
+  };
+
+  // Reset ad state when stream goes offline
+  const resetAdState = () => {
+    isAdRunning.value = false;
+    adDuration.value = 0;
+  };
+
   return {
+    adDuration,
     adSchedule,
     category,
+    isAdRunning,
     messages,
     streamTogetherChannels,
     streamTogetherChannelIds,
@@ -144,9 +176,11 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     clearMessages,
     getAdSchedule,
     getChannelInformation,
+    initializeAdBreakListener,
     processStreamTogetherChannels,
     removeMessageByMessageId,
     removeMessagesByUserId,
+    resetAdState,
     updateViewerCount,
   };
 }, {

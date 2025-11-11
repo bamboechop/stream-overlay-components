@@ -38,9 +38,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useTwitchStore } from '@/stores/twitch.store';
 import { useStreamStatusStore } from '@/stores/stream-status.store';
-import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
-import type { IEventStreamAdBreakBeginData } from '@/common/interfaces/event-stream.interface';
 
 const { debug } = useSearchParamsComposable();
 
@@ -48,8 +46,8 @@ const streamStatusStore = useStreamStatusStore();
 const { live } = storeToRefs(streamStatusStore);
 
 const twitchStore = useTwitchStore();
-const { adSchedule } = storeToRefs(twitchStore);
-const { getAdSchedule } = twitchStore;
+const { adDuration, adSchedule, isAdRunning } = storeToRefs(twitchStore);
+const { getAdSchedule, initializeAdBreakListener } = twitchStore;
 
 const diffInSeconds = ref(-1);
 const remainingTime = ref('');
@@ -63,26 +61,6 @@ function clearAdScheduleInterval() {
     adScheduleFetchInterval = 0;
   }
 }
-
-function startAdBreak(durationSeconds: number) {
-  clearAdScheduleInterval();
-  diffInSeconds.value = 0;
-  remainingTime.value = 'Werbung läuft, bis gleich.';
-
-  // Set duration and let CSS handle the animation
-  duration.value = durationSeconds;
-
-  // Clean up after the duration
-  window.setTimeout(() => {
-    diffInSeconds.value = -1;
-    duration.value = 0;
-  }, durationSeconds * 1000);
-
-  window.setTimeout(async () => {
-    await getAdSchedule();
-  }, (durationSeconds + 30) * 1000);
-}
-
 watch(() => adSchedule.value, (newValue) => {
   clearAdScheduleInterval();
   duration.value = 0;
@@ -104,7 +82,30 @@ watch(live, (newValue) => {
   }
 });
 
-const { on } = useEventStreamComposable();
+// Watch store's isAdRunning and adDuration to update UI
+watch([isAdRunning, adDuration], ([running, durationSeconds]) => {
+  if (running && durationSeconds > 0) {
+    clearAdScheduleInterval();
+    diffInSeconds.value = 0;
+    remainingTime.value = 'Werbung läuft, bis gleich.';
+    duration.value = durationSeconds;
+
+    // Clean up after the duration
+    window.setTimeout(() => {
+      diffInSeconds.value = -1;
+      duration.value = 0;
+    }, durationSeconds * 1000);
+
+    // Fetch new ad schedule after ad ends
+    window.setTimeout(async () => {
+      await getAdSchedule();
+    }, (durationSeconds + 30) * 1000);
+  } else if (!running && duration.value > 0) {
+    // Ad finished, reset local duration display
+    duration.value = 0;
+    diffInSeconds.value = -1;
+  }
+});
 
 function updateRemainingTime() {
   if (!adSchedule.value) {
@@ -120,7 +121,15 @@ function updateRemainingTime() {
     if (debug) {
       window.setTimeout(() => {
         if (adSchedule.value) {
-          startAdBreak(adSchedule.value.duration);
+          // Simulate ad break by directly setting store values
+          isAdRunning.value = true;
+          adDuration.value = adSchedule.value.duration;
+          
+          // Set timeout to mark ad as finished after duration
+          window.setTimeout(() => {
+            isAdRunning.value = false;
+            adDuration.value = 0;
+          }, adSchedule.value.duration * 1000);
         }
       }, 3000);
     }
@@ -143,10 +152,9 @@ function updateRemainingTime() {
   }
 }
 
-onMounted(async () => {
-  on<IEventStreamAdBreakBeginData>('channel.ad_break.begin', (data) => {
-    startAdBreak(data.duration_seconds);
-  });
+onMounted(() => {
+  // Initialize store's ad break listener
+  initializeAdBreakListener();
 });
 
 onBeforeUnmount(() => {
@@ -171,19 +179,15 @@ function triggerDebugCountdown() {
 }
 
 function triggerDebugAd() {
-  const debugAdData: IEventStreamAdBreakBeginData = {
-    broadcaster_user_id: 'debug_user_id',
-    broadcaster_user_login: 'debug_user_login',
-    broadcaster_user_name: 'Debug User',
-    duration_seconds: 180,
-    is_automatic: false,
-    requester_user_id: 'debug_requester_id',
-    requester_user_login: 'debug_requester_login',
-    requester_user_name: 'Debug Requester',
-    started_at: new Date().toISOString(),
-  };
-
-  startAdBreak(debugAdData.duration_seconds);
+  // Simulate ad break by directly setting store values
+  isAdRunning.value = true;
+  adDuration.value = 180;
+  
+  // Set timeout to mark ad as finished after duration
+  window.setTimeout(() => {
+    isAdRunning.value = false;
+    adDuration.value = 0;
+  }, 180 * 1000);
 }
 </script>
 
