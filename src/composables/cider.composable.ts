@@ -11,6 +11,7 @@ const reconnectDelay = 5000;
 const maxReconnectAttempts = 5;
 let reconnectAttempts = 0;
 let isSetupComplete = false;
+let volumeTransitionTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Track current song for backend sync
 const currentSongInfo = {
@@ -45,6 +46,83 @@ export function useCiderComposable() {
     const artist = currentSongInfo.isPlaying ? currentSongInfo.artist : '';
     const name = currentSongInfo.isPlaying ? currentSongInfo.name : '';
     sendSongToBackend(artist, name);
+  }
+
+  async function setVolumeImmediate(volume: number): Promise<boolean> {
+    // Clamp volume between 0 and 1, then round to 1 decimal place
+    const clampedVolume = Math.max(0, Math.min(1, volume));
+    const roundedVolume = Math.round(clampedVolume * 10) / 10;
+    
+    try {
+      const response = await fetch('http://localhost:10767/api/v1/playback/volume', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ volume: roundedVolume }),
+      });
+
+      if (!response.ok) {
+        console.warn('[Cider] Failed to set volume:', response.status, response.statusText);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('[Cider] Error setting volume:', error);
+      return false;
+    }
+  }
+
+  async function setVolume(currentVolume: number, targetVolume: number) {
+    // Clear any existing volume transition
+    if (volumeTransitionTimeout) {
+      clearTimeout(volumeTransitionTimeout);
+      volumeTransitionTimeout = null;
+    }
+
+    // Clamp volumes between 0 and 1
+    const clampedCurrent = Math.max(0, Math.min(1, currentVolume));
+    const clampedTarget = Math.max(0, Math.min(1, targetVolume));
+
+    // If volumes are the same, no transition needed
+    if (Math.abs(clampedCurrent - clampedTarget) < 0.01) {
+      return;
+    }
+
+    // Calculate step direction and number of steps
+    const stepSize = 0.1;
+    const difference = clampedTarget - clampedCurrent;
+    const steps = Math.ceil(Math.abs(difference) / stepSize);
+    const stepDirection = difference > 0 ? stepSize : -stepSize;
+
+    // Send volume steps with delay - chain them properly
+    let currentStep = 0;
+    const sendNextStep = async () => {
+      if (currentStep >= steps) {
+        // Final step - ensure we're exactly at target (rounded to 1 decimal)
+        const roundedTarget = Math.round(clampedTarget * 10) / 10;
+        await setVolumeImmediate(roundedTarget);
+        volumeTransitionTimeout = null;
+        return;
+      }
+
+      const stepVolume = Math.max(0, Math.min(1, clampedCurrent + (stepDirection * (currentStep + 1))));
+      // Round to 1 decimal place to avoid floating point precision issues
+      const roundedStepVolume = Math.round(stepVolume * 10) / 10;
+      const success = await setVolumeImmediate(roundedStepVolume);
+      
+      if (success) {
+        currentStep++;
+        // Schedule next step with 0.5 second delay
+        volumeTransitionTimeout = setTimeout(sendNextStep, 500);
+      } else {
+        console.warn('[Cider] Volume transition stopped due to error');
+        volumeTransitionTimeout = null;
+      }
+    };
+
+    // Start the transition
+    sendNextStep();
   }
   function scheduleReconnect() {
     if (reconnectTimeoutId) {
@@ -90,7 +168,7 @@ export function useCiderComposable() {
 
       webSocket.onmessage = (event) => {
         // Debug: Log all raw messages to see what we're receiving
-        console.debug('[Cider] Raw message received:', event.data);
+        // console.debug('[Cider] Raw message received:', event.data);
 
         const parseResult = parseSocketIOMessage(event.data);
 
@@ -246,5 +324,6 @@ export function useCiderComposable() {
     isConnecting,
     isConnected,
     reconnect: connectWebSocket,
+    setVolume,
   };
 }

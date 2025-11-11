@@ -36,6 +36,10 @@ coverage
 # PDFs in here are needed for the build
 public/pdfs/*.pdf
 
+# trailers are needed for the build
+public/trailers/*
+!public/trailers/.gitkeep
+
 public/programs/modern/*
 !public/programs/modern/.gitkeep
 
