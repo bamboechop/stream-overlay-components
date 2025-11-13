@@ -92,4 +92,10 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/trackmania.icon.png',
     intermissionTextMode: 'default',
   },
+  'VEIN': {
+    backgroundImagePath: '/modern/game-backgrounds/vein.jpg',
+    color: 'rgba(171, 0, 0, 0.75)',
+    iconPath: '/programs/{themePath}/vein.icon.png',
+    intermissionTextMode: 'default',
+  },
 } as const;
