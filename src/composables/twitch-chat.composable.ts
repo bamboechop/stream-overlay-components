@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
 import axios from 'axios';
 import type {
@@ -40,6 +40,7 @@ export const broadcasterInfo = {
 
 let client: Client | null = null;
 let viewerCountInterval: number | null = null;
+let validateTokenInterval: number | null = null;
 
 export function useTwitchChat(theme?: TTheme) {
   const { debug, messageDebug } = useSearchParamsComposable();
@@ -60,7 +61,10 @@ export function useTwitchChat(theme?: TTheme) {
     removeMessageByMessageId,
     removeMessagesByUserId,
     updateViewerCount,
+    validateToken,
   } = store;
+
+  const csrfToken = useLocalStorage<string>('csrf-token', null);
   const token = useLocalStorage<string>('twitch-token', null);
 
   async function setUpBadges() {
@@ -489,16 +493,31 @@ export function useTwitchChat(theme?: TTheme) {
 
   async function initTwitch(retry = false): Promise<void> {
     try {
+      if (validateTokenInterval) {
+        window.clearInterval(validateTokenInterval);
+        validateTokenInterval = null;
+      }
+
+      if (!retry) {
+        await validateToken();
+      }
       if (!token.value) {
         if (window.location.hash) {
           const queryParams = new URLSearchParams(window.location.hash.split('#')[1]);
-          if (queryParams.get('access_token')) {
+          if (queryParams.get('access_token') && queryParams.get('state') === csrfToken.value) {
             token.value = queryParams.get('access_token');
+            csrfToken.value = null;
+          } else {
+            if (csrfToken.value && csrfToken.value !== queryParams.get('state')) {
+              throw new Error('CSRF token mismatch');
+            }
+            throw new Error('No access token found');
           }
         } else {
-          // TODO generate a random string and use it as state param to prevent CSRF
+
+          csrfToken.value = Math.random().toString(36).substring(2, 15);
           // https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#implicit-grant-flow
-          window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=channel:read:ads`;
+          window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=channel:read:ads&state=${csrfToken.value}`;
           return;
         }
       }
@@ -507,7 +526,17 @@ export function useTwitchChat(theme?: TTheme) {
         'Authorization': `Bearer ${token.value}`,
         'Client-ID': clientId,
       };
+
+      if (!validateTokenInterval) {
+        validateTokenInterval = window.setInterval(async () => {
+          await validateToken();
+        }, 1000 * 60 * 45); // validate token every 45 minutes
+      }
     } catch (err) {
+      if (validateTokenInterval) {
+        window.clearInterval(validateTokenInterval);
+        validateTokenInterval = null;
+      }
       if ((err as { code: string }).code === 'ERR_BAD_REQUEST' && !retry) {
         token.value = null;
         await initTwitch(true);
@@ -536,6 +565,21 @@ export function useTwitchChat(theme?: TTheme) {
 
     loading.value = false;
   }
+
+  onBeforeUnmount(async () => {
+    if (validateTokenInterval) {
+      window.clearInterval(validateTokenInterval);
+      validateTokenInterval = null;
+    }
+    if (viewerCountInterval) {
+      window.clearInterval(viewerCountInterval);
+      viewerCountInterval = null;
+    }
+    if (client) {
+      await client.disconnect();
+      client = null;
+    }
+  });
 
   return {
     loading,

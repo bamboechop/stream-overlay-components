@@ -162,6 +162,23 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     adDuration.value = 0;
   };
 
+  const validateToken = async () => {
+    try {
+      await RequestCache.request('https://id.twitch.tv/oauth2/validate', {
+        headers: {
+          'Authorization': `Bearer ${token.value}`,
+        },
+        method: 'GET',
+      }, 10);
+    }
+    catch (error) {
+      if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
+        return;
+      }
+      throw error;
+    }
+  };
+
   return {
     adDuration,
     adSchedule,
@@ -182,6 +199,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     removeMessagesByUserId,
     resetAdState,
     updateViewerCount,
+    validateToken,
   };
 }, {
   share: {
