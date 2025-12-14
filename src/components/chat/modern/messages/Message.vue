@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineEmits, nextTick, onMounted, ref, toRefs } from 'vue';
+import { computed, nextTick, onMounted, ref, toRefs } from 'vue';
 import { storeToRefs } from 'pinia';
 import OtherChannelIndicator from '../OtherChannelIndicator.vue';
 import type { IChat } from '@/common/interfaces/index.interface';

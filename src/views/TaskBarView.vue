@@ -9,7 +9,6 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
 import ModernTheme from '@/components/task-bar/modern/TaskBar.vue';
 import Windows95Theme from '@/components/task-bar/windows95/TaskBar.vue';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';

@@ -50,16 +50,16 @@ defineProps<{ programs: IProgram[] }>();
     background-color: transparent;
     border: none;
     display: flex;
-    height: 40px;
+    height: 44px;
     justify-content: center;
     padding: 0;
-    width: 40px;
+    width: 44px;
   }
 
   &__button--active {
-    height: 48px;
+    height: 52px;
     position: relative;
-    width: 48px;
+    width: 52px;
 
     &::after {
       background-color: rgba(84, 97, 0, 0.75);
@@ -88,7 +88,6 @@ defineProps<{ programs: IProgram[] }>();
   border-bottom-left-radius: calc($window-frame-border-radius - $window-frame-padding);
   border-bottom-right-radius: 0;
   border-top-left-radius: 0;
-  height: 64px;
   width: max-content;
 }
 </style>

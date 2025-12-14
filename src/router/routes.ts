@@ -18,6 +18,7 @@ import NextGameView from '@/views/NextGameView.vue';
 import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
 import TimerView from '@/views/TimerView.vue';
 import MusicPlayerView from '@/views/MusicPlayerView.vue';
+import BottomBarView from '@/views/BottomBarView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -114,5 +115,10 @@ export const routes: RouteRecordRaw[] = [
     component: GigantifiedEmoteView,
     name: 'Gigantified Emote',
     path: '/gigantified-emote',
+  },
+  {
+    component: BottomBarView,
+    name: 'Bottom Bar',
+    path: '/bottom-bar',
   },
 ];
