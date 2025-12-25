@@ -3,7 +3,10 @@
     <WindowFrame
       :active
       class="bsky-posts-window"
-      :class="{ 'bsky-posts-window--collapsed': isCollapsed }">
+      :class="{ 
+        'bsky-posts-window--collapsed': isCollapsed,
+        'bsky-posts-window--faded': intermissionVideoPlaying
+      }">
       <div
         class="bsky-posts-window__content">
         <div
@@ -27,12 +30,17 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import BskyPost from './BskyPost.vue';
 import ImageCarousel from './ImageCarousel.vue';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { type BlueskyPost, fetchLatestPosts, filterPosts } from '@/composables/bluesky.composable';
+import { useApplicationStore } from '@/stores/application.store';
 
 defineProps<{ active?: boolean }>();
+
+const applicationStore = useApplicationStore();
+const { intermissionVideoPlaying } = storeToRefs(applicationStore);
 
 const posts = ref<BlueskyPost[]>([]);
 const currentIndex = ref(0);
@@ -101,6 +109,8 @@ watch(posts, () => {
 <style scoped lang="scss">
 .bsky-posts-window {
   width: 100%;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
 
   &__content {
     display: grid;
@@ -142,5 +152,9 @@ watch(posts, () => {
     border-top-right-radius: 4px;
     margin-top: -4px;
   }
+}
+
+.bsky-posts-window--faded {
+  opacity: 0;
 }
 </style>

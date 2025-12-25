@@ -1,7 +1,8 @@
 <template>
   <ul
     ref="listRef"
-    class="scroll-emotes">
+    class="scroll-emotes"
+    :class="{ 'scroll-emotes--faded': intermissionVideoPlaying }">
     <li
       v-for="(emote, index) in [...EMOTES, ...EMOTES, ...EMOTES]"
       :key="`${emote.name}-${index}`"
@@ -47,6 +48,11 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import { Heart, Star } from 'lucide-vue-next';
 import { EMOTES } from '@/common/constants/emotes.constant';
+import { useApplicationStore } from '@/stores/application.store';
+import { storeToRefs } from 'pinia';
+
+const applicationStore = useApplicationStore();
+const { intermissionVideoPlaying } = storeToRefs(applicationStore);
 
 const listRef = ref<HTMLElement>();
 
@@ -108,6 +114,12 @@ onUnmounted(() => {
   margin: 0;
   padding: 0;
   will-change: transform;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.scroll-emotes--faded {
+  opacity: 0;
 }
 
 .scroll-emote {

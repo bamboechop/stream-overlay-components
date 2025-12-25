@@ -39,16 +39,23 @@ import { useStreamStatusStore } from '@/stores/stream-status.store';
 import { useCiderComposable } from '@/composables/cider.composable';
 import { GAME_METADATA } from '@/common/constants/game-metadata.constant';
 import { TRAILERS_METADATA } from '@/common/constants/trailers-metadata.constant';
+import { useApplicationStore } from '@/stores/application.store';
 
 const props = defineProps<{ active?: boolean; mode?: 'end' | 'break' | 'start' }>();
 
 const VIDEO_PLAYBACK_DELAY = 30 * 1000; // 30 seconds after ad ends
 
+const applicationStore = useApplicationStore();
+const { intermissionVideoPlaying } = storeToRefs(applicationStore);
+
 const store = useTwitchStore();
 const { category, isAdRunning } = storeToRefs(store);
+
 const streamStatusStore = useStreamStatusStore();
 const { live } = storeToRefs(streamStatusStore);
+
 const { setVolume } = useCiderComposable();
+
 const trailerVideoRef = ref<HTMLVideoElement | null>(null);
 const isVideoVisible = ref(false);
 const isVideoTextVisible = ref(false);
@@ -147,6 +154,7 @@ const startTrailerPlayback = async () => {
 
 // Fade in when video starts playing
 watch(playing, (isPlaying) => {
+  intermissionVideoPlaying.value = isPlaying;
   if (isPlaying && props.mode === 'start') {
     isVideoVisible.value = true;
     // Fade in video text when playback starts

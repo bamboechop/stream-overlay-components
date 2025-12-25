@@ -8,6 +8,7 @@ export const useApplicationStore = defineStore('Application Store', () => {
   const { iconPath } = useProgramInformationComposable();
 
   const activeApplications = ref<IProgram[]>([]);
+  const intermissionVideoPlaying = ref(false);
   const previousActiveProgramId = ref<TProgramId | null>(null);
 
   const updateActiveApplication = () => {
@@ -88,6 +89,7 @@ export const useApplicationStore = defineStore('Application Store', () => {
 
   return {
     activeApplications,
+    intermissionVideoPlaying,
     addActiveApplication,
     removeActiveApplication,
     removeActiveApplications,
