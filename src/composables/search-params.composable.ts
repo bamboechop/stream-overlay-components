@@ -12,6 +12,7 @@ export function useSearchParamsComposable() {
     'gigantified-emote-volume'?: string;
     'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
+    'scene'?: 'desktop' | 'ingame';
     'theme'?: TTheme;
     'title'?: string;
     'url'?: string;
@@ -64,6 +65,7 @@ export function useSearchParamsComposable() {
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,
     musicPlayerDuration,
+    scene: searchParams.scene ?? 'desktop',
     theme,
     themePath: theme.value.replace('-', ''),
     title: searchParams.title,

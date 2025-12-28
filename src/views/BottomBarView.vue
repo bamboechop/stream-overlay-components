@@ -17,15 +17,20 @@ import ChatBottomBarTheme from '@/components/bottom-bar/Chat.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
-import { onMounted } from 'vue';
+import { useSearchParamsComposable } from '@/composables/search-params.composable';
+import { computed, onMounted } from 'vue';
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);
+
+const { scene } = useSearchParamsComposable();
 
 const { initChat, initTwitch } = useTwitchChat();
 
 useEventStreamComposable();
 useTwitchStreamInfoComposable();
+
+const backgroundColor = computed(() => scene === 'desktop' ? 'transparent' : 'rgba(0,0,0,0.5)');
 
 onMounted(async () => {
   await initTwitch();
@@ -35,13 +40,13 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .bottom-bar-view {
+  background-color: v-bind(backgroundColor);
   display: flex;
   max-height: 68px;
   width: 100%;
   max-width: 100vw;
   overflow: hidden;
 
-  background-color: black;
   margin-top: 200px;
 
   &__chat {
