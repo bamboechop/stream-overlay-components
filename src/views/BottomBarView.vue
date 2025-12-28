@@ -40,8 +40,6 @@ onMounted(async () => {
   width: 100%;
   max-width: 100vw;
 
-  margin-top: 200px;
-
   &__chat {
     display: flex;
     flex-direction: row-reverse;
