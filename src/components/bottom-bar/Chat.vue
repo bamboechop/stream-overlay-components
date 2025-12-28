@@ -91,7 +91,7 @@ const chatContainer = ref<HTMLDivElement | null>(null);
 const messageDisplayTimes = ref<Map<string, number>>(new Map());
 // Track when messages started sliding out (keyed by message ID)
 const messageSlideOutStartTimes = ref<Map<string, number>>(new Map());
-const MESSAGE_LIFETIME_MS = 5 * 1000; // 1 minute
+const MESSAGE_LIFETIME_MS = 60 * 1000; // 1 minute
 const SLIDE_OUT_ANIMATION_DURATION_MS = 400; // Match CSS transition duration
 
 // Reactive timestamp to trigger re-evaluation of offsets as messages age
