@@ -1,5 +1,9 @@
 <template>
-  <div class="chat-message">
+  <li
+    ref="messageElement"
+    class="chat-message"
+    :class="{ 'chat-message--mounted': mounted }"
+    :style="{ transform: transformStyle }">
     <template v-if="msgType === 'chat'">
       <img
         :alt="displayName"
@@ -62,7 +66,7 @@
           </div>
         </div>
     </template>
-  </div>
+  </li>
 </template>
 
 <script lang="ts" setup>
@@ -72,9 +76,9 @@ import { computed, nextTick, onMounted, ref } from 'vue';
 
 const TOASTEREI_BASE_URL = import.meta.env.VITE_DIE_TOASTEREI_BASE_URL;
 
-const props = defineProps<TMessage>();
+const props = defineProps<TMessage & { messageIndex?: number; messageOffset?: number }>();
 
-const isGigantifiedEmoteMessage = props.msgId?.value === 'gigantified-emote-message';
+const isGigantifiedEmoteMessage = props.msgType === 'chat' && 'msgId' in props && props.msgId === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
 const userImage = ref<string>('');
@@ -83,6 +87,7 @@ const scrollDistance = ref<number>(0);
 const shouldMarquee = ref<boolean>(false);
 const textElement = ref<HTMLSpanElement | null>(null);
 const textWrapper = ref<HTMLDivElement | null>(null);
+const mounted = ref(false);
 
 const messageBackgroundColor = computed(() => {
   if (props.msgType === 'chat' && props.color) {
@@ -127,6 +132,17 @@ const humanReadableTimestamp = computed(() => {
   });
 });
 
+const transformStyle = computed(() => {
+  if (!mounted.value) {
+    // Before mounting, slide in from the right
+    return 'translateX(100%)';
+  }
+  // After mounting, use the offset to position the message
+  // The offset is calculated from the right edge, so we move left by that amount
+  const offset = props.messageOffset ?? 0;
+  return `translateX(-${offset}px)`;
+});
+
 onMounted(async () => {
   if (props.msgType === 'chat') {
     userImage.value = `${TOASTEREI_BASE_URL}/avatars/${props.userId}.png`;
@@ -147,6 +163,9 @@ onMounted(async () => {
       }
     }
   }
+  
+  await nextTick();
+  mounted.value = true;
 });
 </script>
 
@@ -157,10 +176,14 @@ onMounted(async () => {
   border-top-right-radius: 8px;
   border: 1px solid v-bind(messageBorderColor);
   border-bottom: none;
-  flex-shrink: 0;
+  bottom: 0;
   max-width: 656px;
-  padding-top: 4px;
-  position: relative;
+  min-width: fit-content;
+  padding-top: 5px;
+  position: absolute;
+  right: 0;
+  transition: transform 400ms ease;
+  width: max-content;
 
   &__avatar {
     aspect-ratio: 1 / 1;
@@ -180,6 +203,7 @@ onMounted(async () => {
   &__content {
     padding-left: 52px;
     padding-right: 4px;
+    width: 100%;
   }
 
   &__header {
@@ -199,16 +223,19 @@ onMounted(async () => {
 
   &__text-wrapper {
     max-height: 46px;
+    max-width: 600px; // 656px - 52px (avatar padding) - 4px (right padding)
     overflow: hidden;
   }
 
   &__text {
     color: #fff;
-    display: inline-block;
+    display: block;
     font-family: 'Geist Mono', monospace;
     font-size: 13px;
     font-weight: 600;
     line-height: 16px;
+    max-width: 100%;
+    word-wrap: break-word;
 
     &--marquee {
       animation: scroll-up 20s linear infinite;
@@ -230,6 +257,7 @@ onMounted(async () => {
     min-width: 32px;
     padding: 2px;
   }
+
 }
 
 @keyframes scroll-up {
