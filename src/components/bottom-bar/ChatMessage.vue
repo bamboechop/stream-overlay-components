@@ -2,75 +2,34 @@
   <li
     ref="messageElement"
     class="chat-message"
-    :class="{ 'chat-message--mounted': mounted }"
+    :class="{
+      'chat-message--highlighted': msgId === 'highlighted-message',
+      'chat-message--mounted': mounted,
+    }"
     :style="{ transform: transformStyle }">
-    <template v-if="msgType === 'chat'">
+    <img
+      alt=""
+      class="chat-message__avatar"
+      :class="{ 'chat-message__avatar--highlighted': msgId === 'highlighted-message' }"
+      :src="userImage"
+      @error="handleUserImageError"
+      />
+      <div
+        class="chat-message__content"
+        :class="{ 'chat-message__content--no-content': !$slots.content }">
+        <slot name="header"></slot>
+        <slot name="content"></slot>
+      </div>
       <img
-        :alt="displayName"
-        class="chat-message__avatar"
-        :src="userImage"
-        />
-        <div class="chat-message__content">
-          <header class="chat-message__header">
-            <span class="chat-message__timestamp">{{ humanReadableTimestamp }}</span>
-            <template v-if="userBadges.length > 0">
-              <template
-                v-for="(badge, index) of userBadges"
-                :key="`badge-${badge.description}-${index}`">
-                <img
-                  :alt="badge.description"
-                  class="chat-message__badge"
-                  :src="badge.imageUrl" />
-              </template>
-            </template>
-            <span class="chat-message__name">
-              {{ displayName }}
-              <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
-                ({{ userName }})
-              </template>
-            </span>
-          </header>
-          <div
-            ref="textWrapper"
-            class="chat-message__text-wrapper">
-            <span
-              ref="textElement"
-              class="chat-message__text"
-              :class="{ 'chat-message__text--marquee': shouldMarquee }"
-              :style="shouldMarquee ? { '--scroll-distance': `-${scrollDistance}px` } : {}">
-              <template
-                v-for="(part, index) of messageParts"
-                :key="`message-${part.value}-part-${index}`">
-                <template v-if="part.type === 'text'">
-                  {{ part.value }}
-                </template>
-              </template>
-            <!--<template
-              v-for="(part, index) of messageParts"
-              :key="`message-${part.value}-part-${index}`">
-              <template v-if="part.type === 'text'">
-                {{ part.value }}
-              </template>
-            </template>
-            <template v-if="part.type === 'emote'">
-              <template v-if="messageParts.length > 1 && index === messageParts.length - 1 && isGigantifiedEmoteMessage">
-                <br />
-              </template>
-              <img
-                :alt="part.raw"
-                class="chat-message__emote"
-                :class="{ 'message__emote--gigantified': index === messageParts.length - 1 && isGigantifiedEmoteMessage }"
-                :src="part.value" />
-            </template>-->
-            </span>
-          </div>
-        </div>
-    </template>
+        v-if="messageParts.at(-1)?.type === 'emote' && isGigantifiedEmoteMessage"
+        :alt="messageParts.at(-1)!.raw"
+        class="chat-message__gigantified-emote"
+        :src="messageParts.at(-1)!.value" />
   </li>
 </template>
 
 <script lang="ts" setup>
-import { darkenHex, hexToRgb, parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
+import { hexToRgb, parseMessage } from '@/common/helpers/twitch-message.helper';
 import type { TMessage } from '@/common/types/index.type';
 import { computed, nextTick, onMounted, ref } from 'vue';
 
@@ -78,19 +37,16 @@ const TOASTEREI_BASE_URL = import.meta.env.VITE_DIE_TOASTEREI_BASE_URL;
 
 const props = defineProps<TMessage & { messageIndex?: number; messageOffset?: number }>();
 
-const isGigantifiedEmoteMessage = props.msgType === 'chat' && 'msgId' in props && props.msgId === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
-const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
+const mounted = ref(false);
 const userImage = ref<string>('');
 
-const scrollDistance = ref<number>(0);
-const shouldMarquee = ref<boolean>(false);
-const textElement = ref<HTMLSpanElement | null>(null);
-const textWrapper = ref<HTMLDivElement | null>(null);
-const mounted = ref(false);
+const isGigantifiedEmoteMessage = props.msgType === 'chat' && 'msgId' in props && props.msgId === 'gigantified-emote-message';
+
+const isActionOrChatMessage = computed(() => ['action', 'chat'].includes(props.msgType));
 
 const messageBackgroundColor = computed(() => {
-  if (props.msgType === 'chat' && props.color) {
+  if (isActionOrChatMessage.value && props.color) {
     const rgb = hexToRgb(props.color);
     if (rgb) {
       return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.3)`;
@@ -99,37 +55,12 @@ const messageBackgroundColor = computed(() => {
 });
 
 const messageBorderColor = computed(() => {
-  if (props.msgType === 'chat' && props.color) {
+  if (isActionOrChatMessage.value && props.color) {
     const rgb = hexToRgb(props.color);
     if (rgb) {
       return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.45)`;
     }
   }
-});
-
-const nameColor = computed(() => {
-  if (props.msgType === 'chat' && props.color) {
-    return props.color;
-  }
-});
-
-const timestampBackgroundColor = computed(() => {
-  if (props.msgType === 'chat' && props.color) {
-    return darkenHex(props.color);
-  }
-});
-
-const strokeColor = computed(() => {
-  if (props.msgType === 'chat' && props.color) {
-    return darkenHex(props.color);
-  }
-});
-
-const humanReadableTimestamp = computed(() => {
-  return new Date(props.timestamp ?? Date.now()).toLocaleTimeString('de', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 });
 
 const transformStyle = computed(() => {
@@ -143,25 +74,15 @@ const transformStyle = computed(() => {
   return `translateX(-${offset}px)`;
 });
 
+function handleUserImageError() {
+  userImage.value = `${TOASTEREI_BASE_URL}/avatars/default.png`;
+}
+
 onMounted(async () => {
+  console.log(props);
+  userImage.value = `${TOASTEREI_BASE_URL}/avatars/${props.userId}.png`;
   if (props.msgType === 'chat') {
-    userImage.value = `${TOASTEREI_BASE_URL}/avatars/${props.userId}.png`;
-
     messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
-    if (props.userBadges) {
-      userBadges.value = parseUserBadges(props.userBadges, props.availableBadges);
-    }
-
-    await nextTick();
-    if (textElement.value && textWrapper.value) {
-      const contentHeight = textElement.value.scrollHeight;
-      const visibleHeight = textWrapper.value.clientHeight;
-      const hasOverflow = contentHeight > visibleHeight;
-      shouldMarquee.value = hasOverflow;
-      if (hasOverflow) {
-        scrollDistance.value = contentHeight - visibleHeight;
-      }
-    }
   }
   
   await nextTick();
@@ -185,6 +106,19 @@ onMounted(async () => {
   transition: transform 400ms ease;
   width: max-content;
 
+  &::after {
+    background: rgba(17,17,17,.7);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    bottom: 0;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
   &__avatar {
     aspect-ratio: 1 / 1;
     bottom: 0;
@@ -194,10 +128,8 @@ onMounted(async () => {
     width: 64px;
   }
 
-  &__badge {
-    aspect-ratio: 1 / 1;
-    height: 16px;
-    width: 16px;
+  &__avatar--highlighted {
+    filter: invert(1);
   }
 
   &__content {
@@ -206,72 +138,21 @@ onMounted(async () => {
     width: 100%;
   }
 
-  &__header {
-    align-items: center;
-    column-gap: 2px;
-    display: flex;
+  &__content--no-content {
+    padding-bottom: 5px;
   }
 
-  &__name {
-    color: v-bind(nameColor);
-    font-family: 'Geist Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    paint-order: stroke fill;
-    -webkit-text-stroke: 1px v-bind(strokeColor);
+  &__gigantified-emote {
+    left: 50%;
+    max-height: 64px;
+    max-width: 64px;
+    position: absolute;
+    top: -64px;
+    transform: translateX(-50%);
   }
-
-  &__text-wrapper {
-    max-height: 46px;
-    max-width: 600px; // 656px - 52px (avatar padding) - 4px (right padding)
-    overflow: hidden;
-  }
-
-  &__text {
-    color: #fff;
-    display: block;
-    font-family: 'Geist Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 16px;
-    max-width: 100%;
-    word-wrap: break-word;
-
-    &--marquee {
-      animation: scroll-up 20s linear infinite;
-      will-change: transform;
-    }
-  }
-
-  &__timestamp {
-    align-items: center;
-    background-color: v-bind(timestampBackgroundColor);
-    border-radius: 4px;
-    color: #eee;
-    display: flex;
-    font-family: 'Geist Mono', monospace;
-    font-size: 9px;
-    font-weight: 600;
-    height: 16px;
-    justify-content: center;
-    min-width: 32px;
-    padding: 2px;
-  }
-
 }
 
-@keyframes scroll-up {
-  0% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(0);
-  }
-  75% {
-    transform: translateY(var(--scroll-distance, 0));
-  }
-  100% {
-    transform: translateY(var(--scroll-distance, 0));
-  }
-}
+.chat-message--highlighted {
+  filter: invert(1);
+} 
 </style>

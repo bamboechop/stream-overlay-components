@@ -7,10 +7,54 @@
         v-for="(message, index) of messages"
         :key="message.id">
         <ChatMessage
+          v-if="message.msgType === 'action' || message.msgType === 'chat'"
           :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof ChatMessage>"
           v-bind="message"
           :message-index="index"
+          :message-offset="getMessageOffset(index)">
+            <template #header>
+              <MessageHeader
+                :availableBadges="message.availableBadges"
+                :color="message.color"
+                :displayName="message.displayName"
+                :msgType="message.msgType"
+                :timestamp="message.timestamp"
+                :userBadges="message.userBadges"
+                :userName="message.userName" />
+            </template>
+            <template #content>
+              <MessageContent
+                :emotes="message.emotes"
+                :msgId="message.msgId"
+                :msgType="message.msgType"
+                :text="message.text"
+                :userId="message.userId" />
+            </template>
+        </ChatMessage>
+        <RaidMessage
+          v-if="message.msgType === 'raid'"
+          :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof RaidMessage>"
+          v-bind="message"
+          :message-index="index"
           :message-offset="getMessageOffset(index)" />
+          <ResubMessage
+            v-if="message.msgType === 'resub'"
+            :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof ResubMessage>"
+            v-bind="message"
+            :message-index="index"
+            :message-offset="getMessageOffset(index)" />
+          <SubMessage
+            v-if="message.msgType === 'subscription'"
+            :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof SubMessage>"
+            v-bind="message"
+            :message-index="index"
+            :message-offset="getMessageOffset(index)" />
+          <SubgiftMessage
+            v-if="message.msgType === 'subgift'"
+            :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof SubgiftMessage>"
+            v-bind="message"
+            :message-index="index"
+            :message-offset="getMessageOffset(index)" />
       </template>
     </ul>
     <audio
@@ -28,11 +72,17 @@ import type { IChat } from '@/common/interfaces/index.interface';
 import { PRIMARY_BOT_ACCOUNT_USERNAME } from '@/common/constants/bot-accounts.constant';
 import { broadcasterInfo } from '@/composables/twitch-chat.composable';
 import ChatMessage from '@/components/bottom-bar/ChatMessage.vue';
+import RaidMessage from '@/components/bottom-bar/RaidMessage.vue';
+import MessageHeader from '@/components/bottom-bar/message-parts/MessageHeader.vue';
+import MessageContent from '@/components/bottom-bar/message-parts/MessageContent.vue';
+import SubgiftMessage from './SubgiftMessage.vue';
+import SubMessage from './SubMessage.vue';
+import ResubMessage from './ResubMessage.vue';
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);
 
-const messageRefs = ref<ComponentPublicInstance<typeof ChatMessage>[]>([]);
+const messageRefs = ref<ComponentPublicInstance<typeof ChatMessage | typeof RaidMessage | typeof ResubMessage | typeof SubMessage | typeof SubgiftMessage>[]>([]);
 const messageWidths = ref<number[]>([]);
 const chatContainer = ref<HTMLDivElement | null>(null);
 
