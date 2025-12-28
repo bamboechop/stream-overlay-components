@@ -65,7 +65,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { type ComponentPublicInstance, nextTick, onMounted, ref, watch } from 'vue';
+import { type ComponentPublicInstance, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useMediaControls } from '@vueuse/core';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { IChat } from '@/common/interfaces/index.interface';
@@ -78,6 +78,7 @@ import MessageContent from '@/components/bottom-bar/message-parts/MessageContent
 import SubgiftMessage from './SubgiftMessage.vue';
 import SubMessage from './SubMessage.vue';
 import ResubMessage from './ResubMessage.vue';
+import type { TMessage } from '@/common/types/index.type';
 
 const store = useTwitchStore();
 const { messages } = storeToRefs(store);
@@ -85,6 +86,16 @@ const { messages } = storeToRefs(store);
 const messageRefs = ref<ComponentPublicInstance<typeof ChatMessage | typeof RaidMessage | typeof ResubMessage | typeof SubMessage | typeof SubgiftMessage>[]>([]);
 const messageWidths = ref<number[]>([]);
 const chatContainer = ref<HTMLDivElement | null>(null);
+
+// Track when messages are displayed (keyed by message ID)
+const messageDisplayTimes = ref<Map<string, number>>(new Map());
+// Track when messages started sliding out (keyed by message ID)
+const messageSlideOutStartTimes = ref<Map<string, number>>(new Map());
+const MESSAGE_LIFETIME_MS = 5 * 1000; // 1 minute
+const SLIDE_OUT_ANIMATION_DURATION_MS = 400; // Match CSS transition duration
+
+// Reactive timestamp to trigger re-evaluation of offsets as messages age
+const offsetUpdateTrigger = ref(Date.now());
 
 const chatNotificationAudio = ref<HTMLAudioElement | null>(null);
 const isSoundPlaying = ref(false);
@@ -95,12 +106,43 @@ const { currentTime, playing, volume } = useMediaControls(chatNotificationAudio,
   src: '/audio/chat-notification.mp3',
 });
 
-function getMessageOffset(index: number): number {
+function getBaseMessageOffset(index: number): number {
   let offset = 0;
   const totalMessages = messages.value.length;
   for (let i = index + 1; i < totalMessages; i++) {
     offset += (messageWidths.value[i] || 0) + 4; // 4px gap
   }
+  return offset;
+}
+
+function getMessageOffset(index: number): number {
+  // Access offsetUpdateTrigger to make this function reactive to time updates
+  void offsetUpdateTrigger.value;
+  
+  let offset = getBaseMessageOffset(index);
+  
+  // Add slide-out offset for messages that have been on screen for 1 minute or more
+  const message = messages.value[index];
+  if (message && 'id' in message && message.id) {
+    const displayTime = messageDisplayTimes.value.get(message.id);
+    if (displayTime) {
+      const age = Date.now() - displayTime;
+      if (age >= MESSAGE_LIFETIME_MS) {
+        // Track when slide-out started (only once)
+        if (!messageSlideOutStartTimes.value.has(message.id)) {
+          messageSlideOutStartTimes.value.set(message.id, Date.now());
+        }
+        
+        // Calculate additional offset to push message beyond SECURITY_OFFSET
+        if (chatContainer.value) {
+          const containerWidth = chatContainer.value.getBoundingClientRect().width;
+          const slideOutOffset = containerWidth + SECURITY_OFFSET + 100; // 100px buffer
+          offset += slideOutOffset;
+        }
+      }
+    }
+  }
+  
   return offset;
 }
 
@@ -147,18 +189,48 @@ function removeOffscreenMessages() {
       continue;
     }
 
-    // Calculate if message has slid off-screen
-    // Message's left edge position: containerWidth - offset - messageWidth
-    // Remove if: offset + messageWidth > containerWidth + SECURITY_OFFSET
-    const offset = getMessageOffset(i);
-    if (offset + messageWidth > containerWidth + SECURITY_OFFSET) {
-      messagesToRemove.push(message.id);
+    // Check if message has started sliding out
+    const slideOutStartTime = messageSlideOutStartTimes.value.get(message.id);
+    if (slideOutStartTime) {
+      // Message is sliding out - wait for animation to complete before removing
+      // The message will naturally take SLIDE_OUT_ANIMATION_DURATION_MS to reach the offscreen position
+      const slideOutDuration = Date.now() - slideOutStartTime;
+      if (slideOutDuration >= SLIDE_OUT_ANIMATION_DURATION_MS) {
+        messagesToRemove.push(message.id);
+      }
+    } else {
+      // Check if message has naturally slid off-screen (not via slide-out animation)
+      // Use base offset (without slide-out) to check natural overflow
+      // Message's left edge position: containerWidth - offset - messageWidth
+      // Remove if: offset + messageWidth > containerWidth + SECURITY_OFFSET
+      const baseOffset = getBaseMessageOffset(i);
+      if (baseOffset + messageWidth > containerWidth + SECURITY_OFFSET) {
+        // Check if message is at or past 1 minute - if so, trigger slide-out instead
+        const displayTime = messageDisplayTimes.value.get(message.id);
+        if (displayTime) {
+          const age = Date.now() - displayTime;
+          if (age >= MESSAGE_LIFETIME_MS) {
+            // Message should slide out, not be removed immediately
+            // Trigger slide-out by adding it to slide-out tracking
+            if (!messageSlideOutStartTimes.value.has(message.id)) {
+              messageSlideOutStartTimes.value.set(message.id, Date.now());
+            }
+            // Don't remove yet - let it slide out
+            continue;
+          }
+        }
+        // Message is naturally off-screen and not old enough to slide out
+        messagesToRemove.push(message.id);
+      }
     }
   }
 
   // Remove messages that are off-screen
   messagesToRemove.forEach((id) => {
     store.removeMessageByMessageId(id);
+    // Clean up tracking maps
+    messageDisplayTimes.value.delete(id);
+    messageSlideOutStartTimes.value.delete(id);
   });
 }
 
@@ -200,14 +272,74 @@ function playNotificationSound() {
   }
 }
 
+function trackMessageDisplayTime(message: TMessage) {
+  if (!('id' in message) || !message.id) {
+    return;
+  }
+  
+  // Only track if not already tracked (to preserve original timestamp)
+  if (!messageDisplayTimes.value.has(message.id)) {
+    // Use message timestamp if available, otherwise use current time
+    const displayTime = message.timestamp ?? Date.now();
+    messageDisplayTimes.value.set(message.id, displayTime);
+  }
+}
+
+// Clean up display times for removed messages
+function cleanupDisplayTimes() {
+  const currentMessageIds = new Set(
+    messages.value
+      .filter((msg): msg is typeof msg & { id: string } => 'id' in msg && !!msg.id)
+      .map((msg) => msg.id)
+  );
+  
+  // Remove display times and slide-out start times for messages that no longer exist
+  messageDisplayTimes.value.forEach((_, id) => {
+    if (!currentMessageIds.has(id)) {
+      messageDisplayTimes.value.delete(id);
+      messageSlideOutStartTimes.value.delete(id);
+    }
+  });
+}
+
+let slideOutInterval: number | null = null;
+
 onMounted(async () => {
   volume.value = 0.25;
   startSilenceDetection();
   await calculateMessageWidths();
   removeOffscreenMessages();
+  
+  // Set up interval to trigger recalculation of offsets as messages age
+  // This ensures smooth slide-out animation when messages reach 1 minute
+  slideOutInterval = window.setInterval(() => {
+    // Update reactive timestamp to trigger re-evaluation of getMessageOffset
+    offsetUpdateTrigger.value = Date.now();
+    
+    // Recalculate widths and remove offscreen messages
+    if (chatContainer.value) {
+      calculateMessageWidths();
+      removeOffscreenMessages();
+    }
+  }, 1000); // Check every second
+});
+
+onUnmounted(() => {
+  if (slideOutInterval !== null) {
+    clearInterval(slideOutInterval);
+  }
 });
 
 watch(messages, async () => {
+  const message = messages.value.at(-1);
+  if (!message) {
+    return;
+  }
+  trackMessageDisplayTime(message);
+  
+  // Clean up display times for removed messages
+  cleanupDisplayTimes();
+  
   await calculateMessageWidths();
   removeOffscreenMessages();
   

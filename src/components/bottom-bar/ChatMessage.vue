@@ -79,7 +79,6 @@ function handleUserImageError() {
 }
 
 onMounted(async () => {
-  console.log(props);
   userImage.value = `${TOASTEREI_BASE_URL}/avatars/${props.userId}.png`;
   if (props.msgType === 'chat') {
     messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
