@@ -1,5 +1,7 @@
 <template>
-  <div class="chat">
+  <div
+    ref="chatContainer"
+    class="chat">
     <ul class="chat__list">
       <template
         v-for="(message, index) of messages"
@@ -32,6 +34,7 @@ const { messages } = storeToRefs(store);
 
 const messageRefs = ref<ComponentPublicInstance<typeof ChatMessage>[]>([]);
 const messageWidths = ref<number[]>([]);
+const chatContainer = ref<HTMLDivElement | null>(null);
 
 const chatNotificationAudio = ref<HTMLAudioElement | null>(null);
 const isSoundPlaying = ref(false);
@@ -64,6 +67,49 @@ async function calculateMessageWidths() {
     newWidths[index] = measuredWidth + 16; // 16px for avatar overflow
   });
   messageWidths.value = newWidths;
+}
+
+const SECURITY_OFFSET = 600;
+
+function removeOffscreenMessages() {
+  if (!chatContainer.value) {
+    return;
+  }
+
+  const containerWidth = chatContainer.value.getBoundingClientRect().width;
+  const messagesToRemove: string[] = [];
+
+  // Iterate through messages from oldest (index 0) to newest
+  for (let i = 0; i < messages.value.length; i++) {
+    const message = messages.value[i];
+    
+    if (!('id' in message) || !message.id) {
+      continue;
+    }
+
+    const messageWidth = messageWidths.value[i];
+    if (!messageWidth || messageWidth === 0) {
+      continue;
+    }
+
+    const messageRef = messageRefs.value[i];
+    if (!messageRef?.$el) {
+      continue;
+    }
+
+    // Calculate if message has slid off-screen
+    // Message's left edge position: containerWidth - offset - messageWidth
+    // Remove if: offset + messageWidth > containerWidth + SECURITY_OFFSET
+    const offset = getMessageOffset(i);
+    if (offset + messageWidth > containerWidth + SECURITY_OFFSET) {
+      messagesToRemove.push(message.id);
+    }
+  }
+
+  // Remove messages that are off-screen
+  messagesToRemove.forEach((id) => {
+    store.removeMessageByMessageId(id);
+  });
 }
 
 function shouldPlayNotificationSound(message: IChat) {
@@ -104,14 +150,16 @@ function playNotificationSound() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   volume.value = 0.25;
   startSilenceDetection();
-  calculateMessageWidths();
+  await calculateMessageWidths();
+  removeOffscreenMessages();
 });
 
-watch(messages, () => {
-  calculateMessageWidths();
+watch(messages, async () => {
+  await calculateMessageWidths();
+  removeOffscreenMessages();
   
   const latestMessage = messages.value.at(-1);
   if (latestMessage && shouldPlayNotificationSound(latestMessage as IChat)) {
