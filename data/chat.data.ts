@@ -3,6 +3,7 @@ import type { IChat } from '@/common/interfaces/index.interface';
 export const chatDummy: IChat[] = [
   {
     availableBadges: {},
+    channel: 'chatdummychannel',
     color: '#0fda15',
     displayName: 'ChatDummy',
     emotes: {
@@ -23,6 +24,7 @@ export const chatDummy: IChat[] = [
   },
   {
     availableBadges: {},
+    channel: 'chatdummychannel',
     color: '#01c42d',
     displayName: 'ChatDummy',
     emotes: {

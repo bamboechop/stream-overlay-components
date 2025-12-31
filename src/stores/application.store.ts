@@ -73,13 +73,6 @@ export const useApplicationStore = defineStore('Application Store', () => {
     }
   };
 
-  const ensureApplicationExists = (application: IProgram) => {
-    const existingApplication = activeApplications.value.find(app => app.id === application.id);
-    if (!existingApplication) {
-      activeApplications.value.push(application);
-    }
-  };
-
   const updateMediaPlayerApplicationIcon = (id: TProgramId) => {
     const application = activeApplications.value.find(activeApplication => activeApplication.id === id);
     if (application) {
@@ -94,7 +87,6 @@ export const useApplicationStore = defineStore('Application Store', () => {
     removeActiveApplication,
     removeActiveApplications,
     setApplicationActive,
-    ensureApplicationExists,
     updateMediaPlayerApplicationIcon,
   };
 });

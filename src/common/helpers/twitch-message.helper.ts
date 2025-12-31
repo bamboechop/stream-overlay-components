@@ -104,3 +104,72 @@ export function getStreamTogetherColor(channelName: string, streamTogetherChanne
   const index = streamTogetherChannels.indexOf(channelName);
   return index >= 0 ? STREAM_TOGETHER_COLORS[index % STREAM_TOGETHER_COLORS.length] : STREAM_TOGETHER_COLORS[0];
 }
+
+export const hexToRgb = (hex: string): [number, number, number] | null => {
+  // Remove # if present
+  const cleanHex = hex.replace('#', '');
+  
+  // Handle 3-digit hex
+  if (cleanHex.length === 3) {
+    const r = parseInt(cleanHex[0] + cleanHex[0], 16);
+    const g = parseInt(cleanHex[1] + cleanHex[1], 16);
+    const b = parseInt(cleanHex[2] + cleanHex[2], 16);
+    return [r, g, b];
+  }
+  
+  // Handle 6-digit hex
+  if (cleanHex.length === 6) {
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    return [r, g, b];
+  }
+  
+  return null;
+};
+
+/**
+ * Converts RGB values to a hex color string
+ */
+export const rgbToHex = (r: number, g: number, b: number): string => {
+  const toHex = (value: number): string => {
+    const hex = Math.round(Math.max(0, Math.min(255, value))).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+};
+
+/**
+ * Darkens a hex color for use as a text stroke.
+ * Uses an adaptive multiplier based on color brightness to approximate
+ * the darkening shown in the color picker (e.g., #ff4500 → #661c00, #aacc00 → #546500).
+ */
+export const darkenHex = (hex: string): string | null => {
+  const rgb = hexToRgb(hex);
+  if (!rgb) {
+    return null;
+  }
+
+  const [r, g, b] = rgb;
+  const maxRgb = Math.max(r, g, b);
+  
+  // Adaptive multiplier: brighter colors use lower multiplier (~0.40), 
+  // less bright colors use higher multiplier (~0.49)
+  // Interpolate between 0.40 (for max RGB = 255) and 0.49 (for max RGB = 170)
+  let multiplier: number;
+  if (maxRgb >= 255) {
+    multiplier = 0.40;
+  } else if (maxRgb <= 170) {
+    multiplier = 0.49;
+  } else {
+    // Linear interpolation between 0.40 and 0.49
+    const ratio = (maxRgb - 170) / (255 - 170);
+    multiplier = 0.49 - (0.49 - 0.40) * ratio;
+  }
+  
+  const darkenedR = Math.round(r * multiplier);
+  const darkenedG = Math.round(g * multiplier);
+  const darkenedB = Math.round(b * multiplier);
+  
+  return rgbToHex(darkenedR, darkenedG, darkenedB);
+};
