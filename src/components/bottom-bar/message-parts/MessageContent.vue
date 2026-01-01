@@ -33,7 +33,7 @@ import { parseMessage } from '@/common/helpers/twitch-message.helper';
 
 const props = defineProps<{
   emotes?: { [emoteid: string]: string[] };
-  msgId?: 'highlighted-message';
+  msgId?: 'gigantified-emote-message' | 'highlighted-message';
   msgType: 'chat' | 'action';
   text: string;
   userId: string;
@@ -47,6 +47,9 @@ const messageParts = ref<Record<string, string | undefined>[]>([]);
 
 const isGigantifiedEmoteMessage = props.msgType === 'chat' && 'msgId' in props && props.msgId === 'gigantified-emote-message';
 
+// Threshold to account for sub-pixel rendering differences between scrollHeight and clientHeight
+const THRESHOLD = 2;
+
 onMounted(async () => {
   messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
 
@@ -54,7 +57,7 @@ onMounted(async () => {
   if (textElement.value && textWrapper.value) {
     const contentHeight = textElement.value.scrollHeight;
     const visibleHeight = textWrapper.value.clientHeight;
-    const hasOverflow = contentHeight > visibleHeight;
+    const hasOverflow = contentHeight > visibleHeight + THRESHOLD;
     shouldMarquee.value = hasOverflow;
     if (hasOverflow) {
       scrollDistance.value = contentHeight - visibleHeight;
