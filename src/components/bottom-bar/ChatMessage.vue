@@ -30,12 +30,12 @@
 
 <script lang="ts" setup>
 import { hexToRgb, parseMessage } from '@/common/helpers/twitch-message.helper';
-import type { TMessage } from '@/common/types/index.type';
+import type { IAction, IChat } from '@/common/interfaces/index.interface';
 import { computed, nextTick, onMounted, ref } from 'vue';
 
 const TOASTEREI_BASE_URL = import.meta.env.VITE_DIE_TOASTEREI_BASE_URL;
 
-const props = defineProps<TMessage & { messageIndex?: number; messageOffset?: number }>();
+const props = defineProps<(IAction | IChat) & { messageIndex?: number; messageOffset?: number }>();
 
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const mounted = ref(false);
