@@ -36,6 +36,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .bottom-bar-view {
   display: flex;
+  margin-top: 38px; // to accomodate gigantified emotes
   max-height: 68px;
   width: 100%;
   max-width: 100vw;
