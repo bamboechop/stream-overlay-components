@@ -222,13 +222,13 @@ function triggerDebugAd() {
 }
 
 .ad-window {
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
   bottom: 0;
+  left: -105%;
   overflow: hidden;
   position: fixed;
-  right: -105%;
-  transition: right .5s ease-in-out;
+  transition: left .5s ease-in-out;
   width: 100%;
 
   &::before {
@@ -257,7 +257,7 @@ function triggerDebugAd() {
 }
 
 .ad-window--visible {
-  right: 0;
+  left: 0;
 }
 
 .debug-controls {
