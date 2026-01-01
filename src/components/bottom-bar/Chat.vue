@@ -343,8 +343,7 @@ watch(messages, async () => {
   await calculateMessageWidths();
   removeOffscreenMessages();
   
-  const latestMessage = messages.value.at(-1);
-  if (latestMessage && shouldPlayNotificationSound(latestMessage as IChat)) {
+  if (message && shouldPlayNotificationSound(message as IChat)) {
     if (shouldPlaySoundOnNextMessage.value) {
       playNotificationSound();
     } else {
