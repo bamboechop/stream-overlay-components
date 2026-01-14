@@ -80,6 +80,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/pokemon-sword.icon.png',
     intermissionTextMode: 'default',
   },
+  'Software and Game Development': {
+    backgroundImagePath: '/modern/game-backgrounds/software-and-game-development.jpg',
+    color: 'rgba(170, 204, 0, 0.5)',
+    iconPath: '/programs/{themePath}/software-and-game-development.icon.png',
+    intermissionTextMode: 'default',
+  },
   'TCG Card Shop Simulator': {
     backgroundImagePath: '/modern/game-backgrounds/tcg-card-shop-simulator.jpg',
     color: 'rgba(167, 14, 19, 0.35)',
