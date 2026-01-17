@@ -35,6 +35,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/programs/{themePath}/drg-survivor.icon.png',
     intermissionTextMode: 'default',
   },
+  'Escape from Duckov': {
+    backgroundImagePath: '/modern/game-backgrounds/escape-from-duckov.jpg',
+    color: 'rgba(245, 145, 15, 0.625)',
+    iconPath: '/programs/{themePath}/escape-from-duckov.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Golf It!': {
     backgroundImagePath: '/modern/game-backgrounds/golf-it.jpg',
     color: 'rgba(135, 80, 5, 0.5)',
