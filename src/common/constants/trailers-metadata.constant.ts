@@ -1,4 +1,16 @@
 export const TRAILERS_METADATA = {
+  'Escape from Duckov': [
+    {
+      title: 'Escape from Duckov - Official Demo Trailer',
+      url: '/trailers/escape-from-duckov-official-demo-trailer.mp4',
+      youtubeUrl: 'https://www.youtube.com/watch?v=SfFmZvfn_xQ',
+    },
+    {
+      title: 'Escape From Duckov - Official Launch Trailer',
+      url: '/trailers/escape-from-duckov-official-launch-trailer.mp4',
+      youtubeUrl: 'https://www.youtube.com/watch?v=sSlRUkJx050',
+    },
+  ],
   'Pokémon Legends: Arceus': [
     {
       title: 'Pokémon-Legenden: Arceus - Eine bekannte Region. Eine neue Geschichte.',
