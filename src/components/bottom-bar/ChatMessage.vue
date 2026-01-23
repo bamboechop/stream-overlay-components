@@ -12,6 +12,7 @@
       class="chat-message__avatar"
       :class="{ 'chat-message__avatar--highlighted': msgId === 'highlighted-message' }"
       :src="userImage"
+      :style="{ opacity: imageLoaded ? 1 : 0 }"
       @error="handleUserImageError"
       />
       <div
@@ -40,6 +41,9 @@ const props = defineProps<(IAction | IChat) & { messageIndex?: number; messageOf
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 const mounted = ref(false);
 const userImage = ref<string>('');
+const imageLoaded = ref(false);
+
+const defaultAvatarUrl = `${TOASTEREI_BASE_URL}/avatars/default.png`;
 
 const isGigantifiedEmoteMessage = props.msgType === 'chat' && 'msgId' in props && props.msgId === 'gigantified-emote-message';
 
@@ -74,16 +78,64 @@ const transformStyle = computed(() => {
   return `translateX(-${offset}px)`;
 });
 
+function preloadImage(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = () => reject();
+    img.src = src;
+  });
+}
+
 function handleUserImageError() {
-  userImage.value = `${TOASTEREI_BASE_URL}/avatars/default.png`;
+  // Safety net: if image fails to load in template (shouldn't happen after preload, but edge cases exist)
+  userImage.value = defaultAvatarUrl;
+  imageLoaded.value = true; // Show default image immediately on error
 }
 
 onMounted(async () => {
-  userImage.value = `${TOASTEREI_BASE_URL}/avatars/${props.userId}.png`;
+  // Parse message parts first (needed for gigantified emote check)
   if (props.msgType === 'chat') {
     messageParts.value = parseMessage(props.emotes, props.text, 'dark', isGigantifiedEmoteMessage ? '3.0' : '2.0');
   }
-  
+
+  // Build the user avatar URL
+  const avatarUrl = `${TOASTEREI_BASE_URL}/avatars/${props.userId}.png?${Date.now()}`;
+
+  // Set the image URL immediately (browser starts loading, but we keep it invisible until preload completes)
+  userImage.value = avatarUrl;
+
+  // Start preload in parallel (don't await) - animation will start immediately
+  (async () => {
+    try {
+      await preloadImage(avatarUrl);
+      // Image is ready, fade it in
+      imageLoaded.value = true;
+    } catch {
+      // If avatar fails to load, fall back to default and preload it
+      try {
+        await preloadImage(defaultAvatarUrl);
+        userImage.value = defaultAvatarUrl;
+        imageLoaded.value = true;
+      } catch {
+        // If default also fails, set it anyway and show it
+        userImage.value = defaultAvatarUrl;
+        imageLoaded.value = true;
+      }
+    }
+  })();
+
+  // Preload gigantified emote if applicable (also in parallel)
+  if (isGigantifiedEmoteMessage && messageParts.value.at(-1)?.type === 'emote') {
+    const emoteUrl = messageParts.value.at(-1)!.value;
+    if (emoteUrl) {
+      preloadImage(emoteUrl).catch(() => {
+        // Silently fail - emote will still try to load in the template
+      });
+    }
+  }
+
+  // Start animation immediately after nextTick (in sync with other messages)
   await nextTick();
   mounted.value = true;
 });
@@ -124,6 +176,7 @@ onMounted(async () => {
     height: 64px;
     left: -16px;
     position: absolute;
+    transition: opacity 200ms ease;
     width: 64px;
   }
 
