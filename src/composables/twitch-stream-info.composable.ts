@@ -12,7 +12,7 @@ function areChannelsEqual(a: string[], b: string[]) {
   return a.every(channelA => b.includes(channelA));
 }
 
-export function useTwitchStreamInfoComposable() {
+export function useTwitchStreamInfoComposable(initializeChat = true) {
   const { initChat } = useTwitchChat();
 
   const twitchStore = useTwitchStore();
@@ -28,7 +28,7 @@ export function useTwitchStreamInfoComposable() {
         category.value = data.category_name;
         const previousStreamTogetherChannels = streamTogetherChannels.value.map(channel => channel);
         processStreamTogetherChannels(data.title);
-        if (!areChannelsEqual(previousStreamTogetherChannels, streamTogetherChannels.value)) {
+        if (!areChannelsEqual(previousStreamTogetherChannels, streamTogetherChannels.value) && initializeChat) {
           await initChat();
         }
       });
