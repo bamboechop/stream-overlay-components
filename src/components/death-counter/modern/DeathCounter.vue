@@ -12,7 +12,7 @@
 import { useTwitchStore } from '@/stores/twitch.store';
 import { storeToRefs } from 'pinia';
 import EscapeFromDuckovDeathCounter from './games/EscapeFromDuckovDeathCounter.vue';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import RequestCache from '@/services/request-cache.service';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import type { TwitchEventSubNotificationGameDeathToggleDto, TwitchEventSubNotificationGameDeathUpdateDto } from '@/common/interfaces/event-stream.interface';
@@ -27,6 +27,18 @@ const eventCleanupFunctions: (() => void)[] = [];
 const count = ref(0);
 const enabled = ref(false);
 
+async function getDeathCount() {
+  const response = await RequestCache.request<{ enabled: boolean; count: number }>(`${import.meta.env.VITE_BAMBBOT_API_URL}/misc/deaths?category=${category.value}`, {
+    method: 'GET',
+  }, 10);
+  enabled.value = response?.enabled ?? false;
+  count.value = response?.count ?? 0;
+}
+
+watch(category, async () => {
+  await getDeathCount();
+});
+
 onMounted(async () => {
   const onDeath = on<TwitchEventSubNotificationGameDeathUpdateDto>('game.death.update', (newCount) => {
     count.value = newCount?.count ?? 0;
@@ -39,11 +51,7 @@ onMounted(async () => {
   eventCleanupFunctions.push(onDeath, onToggle);
 
   await getChannelInformation();
-  const response = await RequestCache.request<{ enabled: boolean; count: number }>(`${import.meta.env.VITE_BAMBBOT_API_URL}/misc/deaths?category=${category.value}`, {
-    method: 'GET',
-  }, 10);
-  enabled.value = response?.enabled ?? false;
-  count.value = response?.count ?? 0;
+  await getDeathCount();
 });
 
 onUnmounted(() => {
