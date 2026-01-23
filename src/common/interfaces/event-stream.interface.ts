@@ -99,3 +99,11 @@ export interface TwitchEventSubNotificationChannelPollEndEventDto {
   ended_at: string;
   status: 'completed' | 'archived' | 'terminated';
 }
+
+export interface TwitchEventSubNotificationGameDeathToggleDto {
+  enabled: boolean;
+}
+
+export interface TwitchEventSubNotificationGameDeathUpdateDto {
+  count: number;
+}

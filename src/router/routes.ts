@@ -19,6 +19,7 @@ import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
 import TimerView from '@/views/TimerView.vue';
 import MusicPlayerView from '@/views/MusicPlayerView.vue';
 import BottomBarView from '@/views/BottomBarView.vue';
+import DeathCounterView from '@/views/DeathCounterView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -45,6 +46,11 @@ export const routes: RouteRecordRaw[] = [
     component: CoworkingView,
     name: 'Coworking Component',
     path: '/coworking',
+  },
+  {
+    component: DeathCounterView,
+    name: 'Death Counter Component',
+    path: '/death-counter',
   },
   {
     component: IntermissionView,

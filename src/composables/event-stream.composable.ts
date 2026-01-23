@@ -6,6 +6,8 @@ import type {
   TwitchEventSubNotificationChannelPollBeginEventDto,
   TwitchEventSubNotificationChannelPollEndEventDto,
   TwitchEventSubNotificationChannelPollProgressEventDto,
+  TwitchEventSubNotificationGameDeathToggleDto,
+  TwitchEventSubNotificationGameDeathUpdateDto,
 } from '@/common/interfaces/event-stream.interface';
 
 const eventBus = new EventTarget();
@@ -101,6 +103,16 @@ export function useEventStreamComposable() {
           return; // ignore archived polls as this fires after completed or terminated events came in already
         }
         eventBus.dispatchEvent(new CustomEvent('channel.poll.end', { detail }));
+      });
+
+      addEventSourceListener('game.death.toggle', (event) => {
+        const detail = JSON.parse(event.data) as TwitchEventSubNotificationGameDeathToggleDto;
+        eventBus.dispatchEvent(new CustomEvent('game.death.toggle', { detail }));
+      });
+
+      addEventSourceListener('game.death.update', (event) => {
+        const detail = JSON.parse(event.data) as TwitchEventSubNotificationGameDeathUpdateDto;
+        eventBus.dispatchEvent(new CustomEvent('game.death.update', { detail }));
       });
 
       addEventSourceListener('overlay.roll.category', () => {
