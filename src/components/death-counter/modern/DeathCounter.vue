@@ -39,7 +39,7 @@ onMounted(async () => {
   eventCleanupFunctions.push(onDeath, onToggle);
 
   await getChannelInformation();
-  const response = await RequestCache.request<{ enabled: boolean; count: number }>(`${import.meta.env.VITE_BAMBBOT_API_URL}/misc/deaths`, {
+  const response = await RequestCache.request<{ enabled: boolean; count: number }>(`${import.meta.env.VITE_BAMBBOT_API_URL}/misc/deaths?category=${category.value}`, {
     method: 'GET',
   }, 10);
   enabled.value = response?.enabled ?? false;
