@@ -7,11 +7,15 @@
         Guenther starb bislang <span class="escape-from-duckov-death-counter__text-number">{{ count }}</span> Mal
       </span>
     </div>
+    <DiedAgain />
+    <Command />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Skull } from 'lucide-vue-next';
+import Command from './escape-from-duckov/Command.vue';
+import DiedAgain from './escape-from-duckov/DiedAgain.vue';
 
 defineProps<{ count: number }>();
 </script>
@@ -32,10 +36,10 @@ defineProps<{ count: number }>();
     font-family: 'Round Corner Font Regular';
     font-size: 37px;
     gap: 11px;
-    right: 0;
     line-height: 1;
     padding: 13px 27px 13px 17px;
     position: absolute;
+    right: 0;
   }
 
   &__icon {
