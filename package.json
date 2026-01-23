@@ -10,7 +10,6 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "npm run update:emote-flags && vite preview",
-    "test:unit": "vitest",
     "type-check": "vue-tsc --build --force",
     "update:emote-flags": "node scripts/update-emote-flags.cjs"
   },
@@ -49,7 +48,6 @@
     "vite": "^5.1.6",
     "vite-plugin-vue-devtools": "^7.0.18",
     "vite-svg-loader": "^5.1.0",
-    "vitest": "^1.4.0",
     "vue-tsc": "^2.0.6"
   }
 }
