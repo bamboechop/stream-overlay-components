@@ -20,6 +20,8 @@ const currentSongInfo = {
   isPlaying: false,
 };
 
+const CIDER_APP_TOKEN = import.meta.env.VITE_CIDER_APP_TOKEN;
+
 export function useCiderComposable() {
   async function sendSongToBackend(artist: string, name: string) {
     try {
@@ -57,6 +59,7 @@ export function useCiderComposable() {
       const response = await fetch('http://localhost:10767/api/v1/playback/volume', {
         method: 'POST',
         headers: {
+          'apptoken': CIDER_APP_TOKEN,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ volume: roundedVolume }),
@@ -74,6 +77,7 @@ export function useCiderComposable() {
   }
 
   async function setVolume(currentVolume: number, targetVolume: number) {
+    console.info('[Cider] Setting volume:', currentVolume, targetVolume);
     // Clear any existing volume transition
     if (volumeTransitionTimeout) {
       clearTimeout(volumeTransitionTimeout);
