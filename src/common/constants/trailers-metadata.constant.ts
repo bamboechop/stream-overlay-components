@@ -34,6 +34,11 @@ export const TRAILERS_METADATA = {
       url: '/trailers/trackmania-fall-season-2025.mp4',
       youtubeUrl: 'https://www.youtube.com/watch?v=WzsaEUzj1Es',
     },
+    {
+      title: 'Trackmania',
+      url: '/trailers/trackmania-winter-season-2026.mp4',
+      youtubeUrl: 'https://www.youtube.com/watch?v=0-p3GeyksAs',
+    },
   ],
   'VEIN': [
     {
