@@ -50,6 +50,26 @@ export function useCiderComposable() {
     sendSongToBackend(artist, name);
   }
 
+  async function sendPlayPause(): Promise<boolean> {
+    try {
+      const response = await fetch('http://localhost:10767/api/v1/playback/playpause', {
+        method: 'POST',
+        headers: {
+          'apptoken': CIDER_APP_TOKEN,
+        },
+      });
+
+      if (!response.ok) {
+        console.warn('[Cider] Failed to set volume:', response.status, response.statusText);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('[Cider] Error sending play pause:', error);
+      return false;
+    }
+  }
+
   async function setVolumeImmediate(volume: number): Promise<boolean> {
     // Clamp volume between 0 and 1, then round to 1 decimal place
     const clampedVolume = Math.max(0, Math.min(1, volume));
@@ -106,8 +126,17 @@ export function useCiderComposable() {
         // Final step - ensure we're exactly at target (rounded to 1 decimal)
         const roundedTarget = Math.round(clampedTarget * 10) / 10;
         await setVolumeImmediate(roundedTarget);
+        // If we're going to 0, send play pause to stop playback
+        if (targetVolume === 0) {
+          await sendPlayPause();
+        }
         volumeTransitionTimeout = null;
         return;
+      }
+      
+      // If this is the first step and we're going from 0 to 1, send play pause to start playback
+      if (currentStep === 0 && targetVolume === 1 && currentVolume === 0) {
+        await sendPlayPause();
       }
 
       const stepVolume = Math.max(0, Math.min(1, clampedCurrent + (stepDirection * (currentStep + 1))));
@@ -117,8 +146,7 @@ export function useCiderComposable() {
       
       if (success) {
         currentStep++;
-        // Schedule next step with 0.5 second delay
-        volumeTransitionTimeout = setTimeout(sendNextStep, 500);
+        volumeTransitionTimeout = setTimeout(sendNextStep, 250);
       } else {
         console.warn('[Cider] Volume transition stopped due to error');
         volumeTransitionTimeout = null;

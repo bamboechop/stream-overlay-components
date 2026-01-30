@@ -159,12 +159,12 @@ watch(playing, (isPlaying) => {
     isVideoVisible.value = true;
     // Fade in video text when playback starts
     isVideoTextVisible.value = true;
-    // Lower Cider volume to 0.1 when trailer starts (from current volume 1.0)
-    setVolume(1.0, 0.1);
-    // Fade out video text 10 seconds after playback starts
+    // Lower Cider volume to 0 when trailer starts (from 1)
+    setVolume(1, 0);
+    // Fade out video text 5 seconds after playback starts
     hideTextTimeout = setTimeout(() => {
       isVideoTextVisible.value = false;
-    }, 10000); // 10 seconds
+    }, 5000);
   }
 });
 
@@ -172,8 +172,8 @@ watch(playing, (isPlaying) => {
 watch(ended, (isEnded) => {
   if (isEnded && props.mode === 'start') {
     isVideoVisible.value = false;
-    // Restore Cider volume to 1.0 when trailer ends (from current volume 0.1)
-    setVolume(0.1, 1.0);
+    // Restore Cider volume to 1 when trailer ends (from 0)
+    setVolume(0, 1);
   }
 });
 
