@@ -27,6 +27,12 @@ defineProps<{ active?: boolean }>();
   color: #fff;
 }
 
+.schedule-image {
+  border-radius: $window-frame-border-radius - $window-frame-padding;
+  display: block;
+  zoom: 0.375;
+}
+
 .schedule-window {
   width: max-content;
 }
