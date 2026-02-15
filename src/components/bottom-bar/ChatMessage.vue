@@ -14,7 +14,7 @@
       :src="userImage"
       :style="{ opacity: imageLoaded ? 1 : 0 }"
       @error="handleUserImageError"
-      />
+    />
       <div
         class="chat-message__content"
         :class="{ 'chat-message__content--no-content': !$slots.content }">
@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts" setup>
+import { preloadImage } from '@/common/helpers/common.helper';
 import { hexToRgb, parseMessage } from '@/common/helpers/twitch-message.helper';
 import type { IAction, IChat } from '@/common/interfaces/index.interface';
 import { computed, nextTick, onMounted, ref } from 'vue';
@@ -77,15 +78,6 @@ const transformStyle = computed(() => {
   const offset = props.messageOffset ?? 0;
   return `translateX(-${offset}px)`;
 });
-
-function preloadImage(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve();
-    img.onerror = () => reject();
-    img.src = src;
-  });
-}
 
 function handleUserImageError() {
   // Safety net: if image fails to load in template (shouldn't happen after preload, but edge cases exist)

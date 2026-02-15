@@ -20,6 +20,7 @@ import TimerView from '@/views/TimerView.vue';
 import MusicPlayerView from '@/views/MusicPlayerView.vue';
 import BottomBarView from '@/views/BottomBarView.vue';
 import DeathCounterView from '@/views/DeathCounterView.vue';
+import ShowToastyView from '@/views/ShowToastyView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -96,6 +97,11 @@ export const routes: RouteRecordRaw[] = [
     component: ScheduleView,
     name: 'Schedule Component',
     path: '/schedule',
+  },
+  {
+    component: ShowToastyView,
+    name: 'Show Toasty',
+    path: '/show-toasty',
   },
   {
     component: ScrollEmotesView,

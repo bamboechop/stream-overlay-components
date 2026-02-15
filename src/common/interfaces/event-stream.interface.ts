@@ -107,3 +107,8 @@ export interface TwitchEventSubNotificationGameDeathToggleDto {
 export interface TwitchEventSubNotificationGameDeathUpdateDto {
   count: number;
 }
+
+export interface IEventStreamToasteryChannelPointsShowData {
+  userId: string;
+  userName: string;
+}

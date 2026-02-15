@@ -3,6 +3,7 @@ import type {
   IEventStreamAdBreakBeginData,
   IEventStreamChannelPointsAutomaticRewardRedemptionAddData,
   IEventStreamChannelUpdateData,
+  IEventStreamToasteryChannelPointsShowData,
   TwitchEventSubNotificationChannelPollBeginEventDto,
   TwitchEventSubNotificationChannelPollEndEventDto,
   TwitchEventSubNotificationChannelPollProgressEventDto,
@@ -138,6 +139,11 @@ export function useEventStreamComposable() {
 
       addEventSourceListener('overlay.timer.start', () => {
         eventBus.dispatchEvent(new CustomEvent('overlay.timer.start'));
+      });
+
+      addEventSourceListener('toastery.channel-points.show', (event) => {
+        const detail = JSON.parse(event.data) as IEventStreamToasteryChannelPointsShowData;
+        eventBus.dispatchEvent(new CustomEvent('toastery.channel-points.show', { detail }));
       });
 
       eventSource.onopen = () => {
