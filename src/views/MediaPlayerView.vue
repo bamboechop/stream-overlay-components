@@ -1,20 +1,15 @@
 <template>
   <section class="media-player-view">
-    <template v-if="theme === 'modern'">
-      <ModernTheme :active />
-    </template>
+      <MediaPlayer :active />
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import ModernTheme from '@/components/media-player/modern/MediaPlayer.vue';
+import MediaPlayer from '@/components/media-player/modern/MediaPlayer.vue';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useApplicationStore } from '@/stores/application.store';
-
-const { theme } = useSearchParamsComposable();
 
 useTwitchStreamInfoComposable();
 

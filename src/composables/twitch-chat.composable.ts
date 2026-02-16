@@ -30,7 +30,6 @@ import type {
 } from '@/common/interfaces/index.interface';
 import { getUserIdByUserName, getUserImageByUserId, getUserNameByUserId, parseChannelName, parsePlan } from '@/common/helpers/twitch-message.helper';
 import { useTwitchStore } from '@/stores/twitch.store';
-import type { TTheme } from '@/common/types/index.type';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 
 export const broadcasterInfo = {
@@ -127,7 +126,7 @@ async function setUpBadges(
 async function setUpTwitchChatClient(
   availableBadges: Record<string, { description: string; id: string; imageUrl: string; title: string }[]>,
   debug: boolean,
-  theme: TTheme | undefined,
+  loadProfilePicture: boolean,
   userImageRef: Ref<string>,
   addMessage: (message: IAction | IChat | IRaid | IResub | ISubGift | ISubscription) => void,
   removeMessagesByUserId: (userId: string) => void,
@@ -179,7 +178,7 @@ async function setUpTwitchChatClient(
       return;
     }
 
-    if (theme === 'cities-skylines-ii') {
+    if (loadProfilePicture) {
       userImageRef.value = await getUserImageByUserId(userId);
     }
 
@@ -242,7 +241,7 @@ async function setUpTwitchChatClient(
       return;
     }
 
-    if (theme === 'cities-skylines-ii') {
+    if (loadProfilePicture) {
       userImageRef.value = await getUserImageByUserId(userId);
     }
 
@@ -301,7 +300,7 @@ async function setUpTwitchChatClient(
     }
 
     const userId = await getUserIdByUserName(username);
-    if (theme === 'cities-skylines-ii') {
+    if (loadProfilePicture) {
       if (userId) {
         userImageRef.value = await getUserImageByUserId(userId);
       }
@@ -345,7 +344,7 @@ async function setUpTwitchChatClient(
       return;
     }
 
-    if (theme === 'cities-skylines-ii') {
+    if (loadProfilePicture) {
       userImageRef.value = await getUserImageByUserId(userId);
     }
 
@@ -394,7 +393,7 @@ async function setUpTwitchChatClient(
     }
 
     let recipientImage, senderImage;
-    if (theme === 'cities-skylines-ii') {
+    if (loadProfilePicture) {
       [recipientImage, senderImage] = await Promise.all([
         getUserImageByUserId(recipientId),
         getUserImageByUserId(senderId),
@@ -455,7 +454,7 @@ async function setUpTwitchChatClient(
       return;
     }
 
-    if (theme === 'cities-skylines-ii') {
+    if (loadProfilePicture) {
       userImageRef.value = await getUserImageByUserId(userId);
     }
 
@@ -551,7 +550,7 @@ async function initChat(
   setUpTwitchChatClientFn: (
     availableBadges: Record<string, { description: string; id: string; imageUrl: string; title: string }[]>,
     debug: boolean,
-    theme: TTheme | undefined,
+    loadProfilePicture: boolean,
     userImageRef: Ref<string>,
     addMessage: (message: IAction | IChat | IRaid | IResub | ISubGift | ISubscription) => void,
     removeMessagesByUserId: (userId: string) => void,
@@ -567,7 +566,7 @@ async function initChat(
   streamTogetherChannelIds: Ref<{ [channel: string]: string }>,
   streamTogetherChannels: Ref<string[]>,
   debug: boolean,
-  theme: TTheme | undefined,
+  loadProfilePicture: boolean,
   userImage: Ref<string>,
   addMessage: (message: IAction | IChat | IRaid | IResub | ISubGift | ISubscription) => void,
   removeMessagesByUserId: (userId: string) => void,
@@ -580,7 +579,7 @@ async function initChat(
   await setUpTwitchChatClientFn(
     availableBadges,
     debug,
-    theme,
+    loadProfilePicture,
     userImage,
     addMessage,
     removeMessagesByUserId,
@@ -604,7 +603,7 @@ async function initChat(
   loading.value = false;
 }
 
-export function useTwitchChat(theme?: TTheme) {
+export function useTwitchChat(loadProfilePicture = false) {
   const { debug, messageDebug } = useSearchParamsComposable();
 
   const loading = ref(true);
@@ -638,7 +637,7 @@ export function useTwitchChat(theme?: TTheme) {
       streamTogetherChannelIds,
       streamTogetherChannels,
       debug,
-      theme,
+      loadProfilePicture,
       userImage,
       addMessage,
       removeMessagesByUserId,

@@ -1,20 +1,18 @@
 <template>
-  <template v-if="theme === 'modern'">
-    <ModernTheme
-      :active
-      :aspect-ratio="webcamAspectRatio"
-      :title />
-  </template>
+  <Webcam
+    :active
+    :aspect-ratio="webcamAspectRatio"
+    :title />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import ModernTheme from '@/components/webcam/modern/Webcam.vue';
+import Webcam from '@/components/webcam/modern/Webcam.vue';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useApplicationStore } from '@/stores/application.store';
 
-const { theme, title, webcamAspectRatio } = useSearchParamsComposable();
+const { title, webcamAspectRatio } = useSearchParamsComposable();
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

@@ -1,6 +1,5 @@
 import { computed } from 'vue';
-import { useLocalStorage, useUrlSearchParams } from '@vueuse/core';
-import type { TTheme } from '@/common/types/index.type';
+import { useUrlSearchParams } from '@vueuse/core';
 
 export function useSearchParamsComposable() {
   const searchParams = useUrlSearchParams<{
@@ -12,12 +11,10 @@ export function useSearchParamsComposable() {
     'gigantified-emote-volume'?: string;
     'mode'?: 'break' | 'end' | 'start';
     'message-debug'?: 'true' | 'false';
-    'theme'?: TTheme;
     'title'?: string;
     'url'?: string;
     'webcam-aspect-ratio'?: '1' | '16:9';
   }>('history');
-  const localStorageTheme = useLocalStorage<TTheme>('theme', import.meta.env.VITE_THEME);
 
   const gigantifiedEmoteVolume = computed(() => {
     const param = searchParams['gigantified-emote-volume'];
@@ -33,17 +30,6 @@ export function useSearchParamsComposable() {
     const normalizedValue = value <= 1 ? value : value / 100;
     // make sure volume value is between 0 and 1
     return Math.min(Math.max(normalizedValue, 0), 1);
-  });
-
-  const theme = computed(() => {
-    if (searchParams.theme) {
-      if (localStorageTheme.value !== searchParams.theme) {
-        localStorageTheme.value = searchParams.theme;
-      }
-    } else if (!localStorageTheme.value) {
-      localStorageTheme.value = import.meta.env.VITE_THEME;
-    }
-    return localStorageTheme.value;
   });
 
   const musicPlayerDuration = computed(() => {
@@ -64,8 +50,6 @@ export function useSearchParamsComposable() {
     messageDebug: searchParams['message-debug'] === 'true',
     mode: searchParams.mode,
     musicPlayerDuration,
-    theme,
-    themePath: theme.value.replace('-', ''),
     title: searchParams.title,
     url: searchParams.url,
     webcamAspectRatio: searchParams['webcam-aspect-ratio'] ?? '16/9',

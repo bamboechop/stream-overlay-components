@@ -1,12 +1,7 @@
 <template>
-  <template v-if="theme === 'modern'">
-    <ModernTheme />
-  </template>
+  <OnScreenCelebration />
 </template>
 
 <script lang="ts" setup>
-import ModernTheme from '@/components/on-screen-celebration/modern/OnScreenCelebration.vue';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
-
-const { theme } = useSearchParamsComposable();
+import OnScreenCelebration from '@/components/on-screen-celebration/modern/OnScreenCelebration.vue';
 </script>

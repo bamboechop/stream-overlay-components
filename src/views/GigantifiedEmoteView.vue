@@ -1,18 +1,13 @@
 <template>
-  <template v-if="theme === 'modern'">
-    <ModernTheme />
-  </template>
+  <GigantifiedEmote />
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import ModernTheme from '@/components/gigantified-emote/modern/GigantifiedEmote.vue';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
+import GigantifiedEmote from '@/components/gigantified-emote/modern/GigantifiedEmote.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 
-const { theme } = useSearchParamsComposable();
-
-const { initChat, initTwitch } = useTwitchChat(theme.value);
+const { initChat, initTwitch } = useTwitchChat();
 
 onMounted(async () => {
   await initTwitch();

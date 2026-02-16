@@ -1,16 +1,11 @@
 <template>
   <section class="scroll-emotes-view">
-    <template v-if="theme === 'modern'">
-      <ModernTheme />
-    </template>
+    <ScrollEmotes />
   </section>
 </template>
 
 <script setup lang="ts">
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
-import ModernTheme from '@/components/scroll-emotes/modern/ScrollEmotes.vue';
-
-const { theme } = useSearchParamsComposable();
+import ScrollEmotes from '@/components/scroll-emotes/modern/ScrollEmotes.vue';
 </script>
 
 <style scoped lang="scss">

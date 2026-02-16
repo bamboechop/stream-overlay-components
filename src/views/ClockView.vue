@@ -1,12 +1,7 @@
 <template>
-  <template v-if="theme === 'modern'">
-    <ModernTheme />
-  </template>
+  <Clock />
 </template>
 
 <script lang="ts" setup>
-import ModernTheme from '@/components/clock/modern/Clock.vue';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
-
-const { theme } = useSearchParamsComposable();
+import Clock from '@/components/clock/modern/Clock.vue';
 </script>
