@@ -4,7 +4,6 @@ import TaskBarView from '@/views/TaskBarView.vue';
 import ChatView from '@/views/ChatView.vue';
 import CoworkingView from '@/views/CoworkingView.vue';
 import ClockView from '@/views/ClockView.vue';
-import PokemonCommunityGameView from '@/views/PokemonCommunityGameView.vue';
 import WebcamView from '@/views/WebcamView.vue';
 import IntermissionView from '@/views/IntermissionView.vue';
 import AdView from '@/views/AdView.vue';
@@ -77,11 +76,6 @@ export const routes: RouteRecordRaw[] = [
     component: OnScreenCelebrationView,
     name: 'On Screen Celebration',
     path: '/on-screen-celebration',
-  },
-  {
-    component: PokemonCommunityGameView,
-    name: 'Pokemon Community Game Component',
-    path: '/pcg',
   },
   {
     component: PollView,
