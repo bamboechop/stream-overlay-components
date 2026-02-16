@@ -1,8 +1,3 @@
-@font-face {
-  font-family: 'Windows-95';
-  src: url("/windows-95/font.woff2") format("woff2");
-}
-
 :root {
   font-size: 12px;
   font-weight: 400;
@@ -25,14 +20,6 @@ body {
   background-color: transparent;
   margin: 0;
   padding: 0;
-}
-
-html[data-theme="cities-skylines-ii"] {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-}
-
-html[data-theme="windows-95"] {
-  font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .v-enter-active,

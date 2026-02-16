@@ -30,20 +30,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-:global(html[data-theme="windows-95"]) {
-  --background-color: #c3c3c3;
-
-  color: #000;
-  font-family: 'Windows-95', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  line-height: 1.1;
-}
-
-:global(html[data-theme="cities-skylines-ii"]),
-:global(html[data-theme="modern"]) {
-  --background-color: transparent;
-}
-
 .chat-view {
   height: 100vh;
   margin: 0 auto;
@@ -57,7 +43,12 @@ onMounted(async () => {
   opacity: 1;
 }
 
-:global(html[data-theme="cities-skylines-ii"] .chat-view) {
+:global(html) {
+  --background-color: transparent;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+:global(html .chat-view) {
   max-width: 565px;
 }
 </style>
