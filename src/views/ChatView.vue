@@ -12,7 +12,6 @@
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
 import CitiesSkylinesIITheme from '@/components/chat/cities-skylines-ii/ChatMessages.vue';
-import ModernTheme from '@/components/chat/modern/ChatWindow.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useTwitchStore } from '@/stores/twitch.store';
