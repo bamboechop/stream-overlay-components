@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import ScrollEmotes from '@/components/scroll-emotes/modern/ScrollEmotes.vue';
+import ScrollEmotes from '@/components/scroll-emotes/ScrollEmotes.vue';
 </script>
 
 <style scoped lang="scss">

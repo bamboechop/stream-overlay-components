@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import BskyPostsWindow from '@/components/bsky-posts/modern/BskyPostsWindow.vue';
+import BskyPostsWindow from '@/components/bsky-posts/BskyPostsWindow.vue';
 import { useApplicationStore } from '@/stores/application.store';
 
 const applicationStore = useApplicationStore();

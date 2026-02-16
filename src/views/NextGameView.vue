@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import NextGame from '@/components/next-game/modern/NextGame.vue';
+import NextGame from '@/components/next-game/NextGame.vue';
 import { useApplicationStore } from '@/stores/application.store';
 
 const applicationStore = useApplicationStore();

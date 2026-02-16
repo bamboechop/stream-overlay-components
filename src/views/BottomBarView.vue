@@ -4,15 +4,15 @@
       class="bottom-bar-view__task-bar"
       :programs="activeApplications" />
     <ChatBottomBarTheme class="bottom-bar-view__chat" />
-    <ClockModernTheme class="bottom-bar-view__clock" />
+    <Clock class="bottom-bar-view__clock" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useApplicationStore } from '@/stores/application.store';
-import TaskBarModernTheme from '@/components/task-bar/modern/TaskBar.vue';
-import ClockModernTheme from '@/components/clock/modern/Clock.vue';
+import TaskBarModernTheme from '@/components/task-bar/TaskBar.vue';
+import Clock from '@/components/clock/Clock.vue';
 import ChatBottomBarTheme from '@/components/bottom-bar/Chat.vue';
 import { useTwitchChat } from '@/composables/twitch-chat.composable';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';

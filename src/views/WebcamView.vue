@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import Webcam from '@/components/webcam/modern/Webcam.vue';
+import Webcam from '@/components/webcam/Webcam.vue';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 import { useApplicationStore } from '@/stores/application.store';
 

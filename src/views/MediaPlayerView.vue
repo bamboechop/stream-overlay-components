@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import MediaPlayer from '@/components/media-player/modern/MediaPlayer.vue';
+import MediaPlayer from '@/components/media-player/MediaPlayer.vue';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import { useApplicationStore } from '@/stores/application.store';
 

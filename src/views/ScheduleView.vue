@@ -8,7 +8,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useApplicationStore } from '@/stores/application.store';
-import Schedule from '@/components/schedule/modern/Schedule.vue';
+import Schedule from '@/components/schedule/Schedule.vue';
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

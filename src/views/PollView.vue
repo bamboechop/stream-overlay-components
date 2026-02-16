@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import PollWindow from '@/components/poll/modern/PollWindow.vue';
+import PollWindow from '@/components/poll/PollWindow.vue';
 </script>
 
 <style scoped lang="scss">
