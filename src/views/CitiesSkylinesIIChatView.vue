@@ -1,7 +1,7 @@
 <template>
   <section
-    class="chat-view"
-    :class="{ 'chat-view--show': showChat }">
+    class="cities-skylines-ii-chat-view"
+    :class="{ 'cities-skylines-ii-chat-view--show': showChat }">
     <CitiesSkylinesIITheme :loading="loading" />
   </section>
 </template>
@@ -30,7 +30,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.chat-view {
+.cities-skylines-ii-chat-view {
   height: 100vh;
   margin: 0 auto;
   opacity: 0;
@@ -39,7 +39,7 @@ onMounted(async () => {
   width: 100vw;
 }
 
-.chat-view--show {
+.cities-skylines-ii-chat-view--show {
   opacity: 1;
 }
 
@@ -48,7 +48,7 @@ onMounted(async () => {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-:global(html .chat-view) {
+:global(html .cities-skylines-ii-chat-view) {
   max-width: 565px;
 }
 </style>

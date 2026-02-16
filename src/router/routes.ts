@@ -1,25 +1,23 @@
 import type { RouteRecordRaw } from 'vue-router';
-import MediaPlayerView from '@/views/MediaPlayerView.vue';
-import TaskBarView from '@/views/TaskBarView.vue';
-import ChatView from '@/views/ChatView.vue';
-import CoworkingView from '@/views/CoworkingView.vue';
-import ClockView from '@/views/ClockView.vue';
-import WebcamView from '@/views/WebcamView.vue';
-import IntermissionView from '@/views/IntermissionView.vue';
 import AdView from '@/views/AdView.vue';
-import PDFViewer from '@/views/PDFViewer.vue';
-import OnScreenCelebrationView from '@/views/OnScreenCelebrationView.vue';
-import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
-import ScheduleView from '@/views/ScheduleView.vue';
-import PollView from '@/views/PollView.vue';
 import BskyPostsView from '@/views/BskyPostsView.vue';
-import NextGameView from '@/views/NextGameView.vue';
-import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
-import TimerView from '@/views/TimerView.vue';
-import MusicPlayerView from '@/views/MusicPlayerView.vue';
 import BottomBarView from '@/views/BottomBarView.vue';
+import CitiesSkylinesIIChatView from '@/views/CitiesSkylinesIIChatView.vue';
+import CoworkingView from '@/views/CoworkingView.vue';
 import DeathCounterView from '@/views/DeathCounterView.vue';
+import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
+import IntermissionView from '@/views/IntermissionView.vue';
+import MediaPlayerView from '@/views/MediaPlayerView.vue';
+import MusicPlayerView from '@/views/MusicPlayerView.vue';
+import NextGameView from '@/views/NextGameView.vue';
+import OnScreenCelebrationView from '@/views/OnScreenCelebrationView.vue';
+import PDFViewer from '@/views/PDFViewer.vue';
+import PollView from '@/views/PollView.vue';
+import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
+import ScheduleView from '@/views/ScheduleView.vue';
 import ShowToastyView from '@/views/ShowToastyView.vue';
+import TimerView from '@/views/TimerView.vue';
+import WebcamView from '@/views/WebcamView.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -28,19 +26,19 @@ export const routes: RouteRecordRaw[] = [
     path: '/ad',
   },
   {
+    component: BottomBarView,
+    name: 'Bottom Bar',
+    path: '/bottom-bar',
+  },
+  {
     component: BskyPostsView,
     name: 'Bluesky Posts Component',
     path: '/bsky-posts',
   },
   {
-    component: ChatView,
-    name: 'Chat Component',
-    path: '/chat',
-  },
-  {
-    component: ClockView,
-    name: 'Clock Component',
-    path: '/clock',
+    component: CitiesSkylinesIIChatView,
+    name: 'Cities Skylines II Chat Component',
+    path: '/cities-skylines-ii-chat',
   },
   {
     component: CoworkingView,
@@ -51,6 +49,11 @@ export const routes: RouteRecordRaw[] = [
     component: DeathCounterView,
     name: 'Death Counter Component',
     path: '/death-counter',
+  },
+  {
+    component: GigantifiedEmoteView,
+    name: 'Gigantified Emote',
+    path: '/gigantified-emote',
   },
   {
     component: IntermissionView,
@@ -103,11 +106,6 @@ export const routes: RouteRecordRaw[] = [
     path: '/scroll-emotes',
   },
   {
-    component: TaskBarView,
-    name: 'Task Bar Component',
-    path: '/task-bar',
-  },
-  {
     component: TimerView,
     name: 'Timer Component',
     path: '/timer',
@@ -116,15 +114,5 @@ export const routes: RouteRecordRaw[] = [
     component: WebcamView,
     name: 'Webcam Component',
     path: '/webcam',
-  },
-  {
-    component: GigantifiedEmoteView,
-    name: 'Gigantified Emote',
-    path: '/gigantified-emote',
-  },
-  {
-    component: BottomBarView,
-    name: 'Bottom Bar',
-    path: '/bottom-bar',
   },
 ];
