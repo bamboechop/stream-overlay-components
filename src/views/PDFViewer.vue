@@ -1,17 +1,12 @@
 <template>
-  <template v-if="theme === 'modern'">
-    <ModernTheme :active />
-  </template>
+  <PDFViewer :active />
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import ModernTheme from '@/components/pdf-viewer/modern/PDFViewer.vue';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
+import PDFViewer from '@/components/pdf-viewer/PDFViewer.vue';
 import { useApplicationStore } from '@/stores/application.store';
-
-const { theme } = useSearchParamsComposable();
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

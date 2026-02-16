@@ -1,16 +1,11 @@
 <template>
   <section class="poll-view">
-    <template v-if="theme === 'modern'">
-      <ModernTheme />
-    </template>
+    <PollWindow />
   </section>
 </template>
 
 <script setup lang="ts">
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
-import ModernTheme from '@/components/poll/modern/PollWindow.vue';
-
-const { theme } = useSearchParamsComposable();
+import PollWindow from '@/components/poll/PollWindow.vue';
 </script>
 
 <style scoped lang="scss">

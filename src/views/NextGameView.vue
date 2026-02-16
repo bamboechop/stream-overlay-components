@@ -1,19 +1,14 @@
 <template>
   <section class="next-game-view">
-    <template v-if="theme === 'modern'">
-      <ModernTheme :active />
-    </template>
+      <NextGame :active />
   </section>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
-import ModernTheme from '@/components/next-game/modern/NextGame.vue';
+import NextGame from '@/components/next-game/NextGame.vue';
 import { useApplicationStore } from '@/stores/application.store';
-
-const { theme } = useSearchParamsComposable();
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);

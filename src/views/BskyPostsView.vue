@@ -1,19 +1,14 @@
 <template>
   <section class="bsky-posts-view">
-    <template v-if="theme === 'modern'">
-      <ModernTheme :active />
-    </template>
+    <BskyPostsWindow :active />
   </section>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { useSearchParamsComposable } from '@/composables/search-params.composable';
-import ModernTheme from '@/components/bsky-posts/modern/BskyPostsWindow.vue';
+import BskyPostsWindow from '@/components/bsky-posts/BskyPostsWindow.vue';
 import { useApplicationStore } from '@/stores/application.store';
-
-const { theme } = useSearchParamsComposable();
 
 const applicationStore = useApplicationStore();
 const { activeApplications } = storeToRefs(applicationStore);
