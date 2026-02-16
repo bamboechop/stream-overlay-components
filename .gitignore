@@ -40,8 +40,8 @@ public/pdfs/*.pdf
 public/trailers/*
 !public/trailers/.gitkeep
 
-public/programs/modern/*
-!public/programs/modern/.gitkeep
+public/modern/programs/*
+!public/modern/programs/.gitkeep
 
 public/modern/game-backgrounds/*
 !public/modern/game-backgrounds/.gitkeep

@@ -14,7 +14,7 @@ export function useProgramInformationComposable() {
     const { iconPath } = GAME_METADATA[category.value] ?? { iconPath: null };
 
     if (!iconPath) {
-      return `/programs/modern/player.icon.png`;
+      return `/modern/programs/player.icon.png`;
     }
 
     return iconPath;
@@ -23,25 +23,25 @@ export function useProgramInformationComposable() {
   const programInformation = ref<Record<TProgramId, IProgram>>({
     'bsky-posts': {
       active: false,
-      iconPath: `/programs/modern/bsky.icon.png`,
+      iconPath: `/modern/programs/bsky.icon.png`,
       id: 'bsky-posts',
       text: 'Neueste Bluesky Beiträge',
     },
     'chat': {
       active: false,
-      iconPath: `/programs/modern/chat.icon.png`,
+      iconPath: `/modern/programs/chat.icon.png`,
       id: 'chat',
       text: 'Chat',
     },
     'end': {
       active: false,
-      iconPath: `/programs/modern/end.icon.png`,
+      iconPath: `/modern/programs/end.icon.png`,
       id: 'end',
       text: 'Ende',
     },
     'intermission': {
       active: false,
-      iconPath: `/programs/modern/intermission.icon.png`,
+      iconPath: `/modern/programs/intermission.icon.png`,
       id: 'intermission',
       text: 'Intermission',
     },
@@ -53,37 +53,37 @@ export function useProgramInformationComposable() {
     },
     'next-game': {
       active: false,
-      iconPath: `/programs/modern/next-game.icon.png`,
+      iconPath: `/modern/programs/next-game.icon.png`,
       id: 'next-game',
       text: 'Nächstes Spiel',
     },
     'pcg': {
       active: false,
-      iconPath: `/programs/modern/pokemon-community-game.icon.png`,
+      iconPath: `/modern/programs/pokemon-community-game.icon.png`,
       id: 'pcg',
       text: 'Pokémon Community Game',
     },
     'pdf-viewer': {
       active: false,
-      iconPath: `/programs/modern/pdf-viewer.icon.png`,
+      iconPath: `/modern/programs/pdf-viewer.icon.png`,
       id: 'pdf-viewer',
       text: 'PDF Viewer',
     },
     'schedule': {
       active: false,
-      iconPath: `/programs/modern/schedule.icon.png`,
+      iconPath: `/modern/programs/schedule.icon.png`,
       id: 'schedule',
       text: 'Streamplan',
     },
     'start': {
       active: false,
-      iconPath: `/programs/modern/start.icon.png`,
+      iconPath: `/modern/programs/start.icon.png`,
       id: 'start',
       text: 'Start',
     },
     'webcam': {
       active: false,
-      iconPath: `/programs/modern/webcam.icon.png`,
+      iconPath: `/modern/programs/webcam.icon.png`,
       id: 'webcam',
       text: 'Webcam',
     },
