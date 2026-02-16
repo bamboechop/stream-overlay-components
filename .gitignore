@@ -39,6 +39,3 @@ public/pdfs/*.pdf
 # trailers are needed for the build
 public/trailers/*
 !public/trailers/.gitkeep
-
-public/modern/game-backgrounds/*
-!public/modern/game-backgrounds/.gitkeep
