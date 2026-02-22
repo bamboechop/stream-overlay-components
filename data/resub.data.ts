@@ -1,6 +1,7 @@
 import type { IResub } from '@/common/interfaces/index.interface';
 
 export const resubDummy: IResub = {
+  channel: 'bamboechop',
   color: '#ffac12',
   cumulativeMonths: 2,
   displayName: 'ResubDummy',

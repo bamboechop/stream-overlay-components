@@ -2,6 +2,7 @@ import type { IAction } from '@/common/interfaces/index.interface';
 
 export const actionDummy: IAction = {
   availableBadges: {},
+  channel: 'bamboechop',
   color: '#01c42d',
   displayName: 'ActionMeDummy',
   emotes: {

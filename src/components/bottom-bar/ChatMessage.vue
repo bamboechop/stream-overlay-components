@@ -3,14 +3,14 @@
     ref="messageElement"
     class="chat-message"
     :class="{
-      'chat-message--highlighted': msgId === 'highlighted-message',
+      'chat-message--highlighted': isHighlightedMessage,
       'chat-message--mounted': mounted,
     }"
     :style="{ transform: transformStyle }">
     <img
       alt=""
       class="chat-message__avatar"
-      :class="{ 'chat-message__avatar--highlighted': msgId === 'highlighted-message' }"
+      :class="{ 'chat-message__avatar--highlighted': isHighlightedMessage }"
       :src="userImage"
       :style="{ opacity: imageLoaded ? 1 : 0 }"
       @error="handleUserImageError"
@@ -45,6 +45,10 @@ const userImage = ref<string>('');
 const imageLoaded = ref(false);
 
 const defaultAvatarUrl = `${TOASTEREI_BASE_URL}/avatars/default.png`;
+
+const isHighlightedMessage = computed(() => {
+  return 'msgId' in props && props.msgId === 'highlighted-message';
+});
 
 const isGigantifiedEmoteMessage = props.msgType === 'chat' && 'msgId' in props && props.msgId === 'gigantified-emote-message';
 
