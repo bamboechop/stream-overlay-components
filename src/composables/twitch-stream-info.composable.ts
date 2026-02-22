@@ -21,17 +21,17 @@ export function useTwitchStreamInfoComposable(initializeChat = true) {
   const { on } = useEventStreamComposable();
 
   onMounted(async () => {
+    on<IEventStreamChannelUpdateData>('channel.update', async (data) => {
+      category.value = data.category_name;
+      const previousStreamTogetherChannels = streamTogetherChannels.value.map(channel => channel);
+      processStreamTogetherChannels(data.title);
+      if (!areChannelsEqual(previousStreamTogetherChannels, streamTogetherChannels.value) && initializeChat) {
+        await initChat();
+      }
+    });
+
     try {
       await getChannelInformation();
-
-      on<IEventStreamChannelUpdateData>('channel.update', async (data) => {
-        category.value = data.category_name;
-        const previousStreamTogetherChannels = streamTogetherChannels.value.map(channel => channel);
-        processStreamTogetherChannels(data.title);
-        if (!areChannelsEqual(previousStreamTogetherChannels, streamTogetherChannels.value) && initializeChat) {
-          await initChat();
-        }
-      });
     } catch (err) {
       console.error('Failed to get channel information:', err);
     }

@@ -69,6 +69,18 @@ export class RequestCache {
     }
   }
 
+  private static removeStoredCacheInfo(cacheKey: string): void {
+    try {
+      const stored = this.getStoredCacheInfo();
+      if (stored[cacheKey]) {
+        delete stored[cacheKey];
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stored));
+      }
+    } catch (error) {
+      console.warn('Failed to remove request cache entry from localStorage:', error);
+    }
+  }
+
   /**
    * Check if a request was made recently by any browser instance
    */
@@ -223,6 +235,11 @@ export class RequestCache {
         return result;
       })
       .catch((error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          this.cache.delete(cacheKey);
+          this.removeStoredCacheInfo(cacheKey);
+          throw error;
+        }
         // Store error in localStorage for other instances
         const errorMessage = error.message || 'Request failed';
         this.updateStoredCacheInfo(cacheKey, timestamp, url, 'failed', undefined, errorMessage);

@@ -6,22 +6,34 @@ import { subgiftDummy } from '@data/subgift.data';
 import { actionDummy } from '@data/action.data';
 import { chatDummy } from '@data/chat.data';
 import { raidDummy } from '@data/raid.data';
-import { useLocalStorage } from '@vueuse/core';
+import { useSessionStorage } from '@vueuse/core';
 import type { TMessage } from '@/common/types/index.type';
 import { getUserIdByUserName } from '@/common/helpers/twitch-message.helper';
 import { RequestCache } from '@/services/request-cache.service';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import type { IEventStreamAdBreakBeginData } from '@/common/interfaces/event-stream.interface';
+import { twitchRequest, validateTokenWithTTL } from '@/services/twitch-auth.service';
+
+interface TwitchAdScheduleResponse {
+  data: Array<{
+    duration: number;
+    next_ad_at: number;
+  }>;
+}
+
+interface TwitchStreamResponse {
+  data: Array<{
+    viewer_count: number;
+  }>;
+}
 
 const streamTogetherChannels = ref<string[]>([]);
 const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
-const token = useLocalStorage<string>('twitch-token', null);
-
 let adBreakUnsubscribe: (() => void) | null = null;
 
 export const useTwitchStore = defineStore('Twitch Store', () => {
   const adSchedule = ref<{ duration: number; nextTime: number } | null>(null);
-  const category = ref('Media Player');
+  const category = useSessionStorage<string>('twitch-category', 'Media Player');
   const messages = ref<TMessage[]>([]);
   const viewers = ref(0);
   const isAdRunning = ref(false);
@@ -60,12 +72,8 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
   let adScheduleRetryCount = 0;
   const getAdSchedule = async () => {
     try {
-      const data = await RequestCache.request(`https://api.twitch.tv/helix/channels/ads?broadcaster_id=${import.meta.env.VITE_TWITCH_BROADCASTER_ID}`, {
+      const data = await twitchRequest<TwitchAdScheduleResponse>(`https://api.twitch.tv/helix/channels/ads?broadcaster_id=${import.meta.env.VITE_TWITCH_BROADCASTER_ID}`, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token.value}`,
-          'Client-Id': import.meta.env.VITE_TWITCH_CLIENT_ID,
-        },
       }, 10);
 
       adScheduleRetryCount = 0;
@@ -125,7 +133,7 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
 
   const updateViewerCount = async (name: string) => {
     try {
-      const data = await RequestCache.request(`https://api.twitch.tv/helix/streams?user_login=${name}`, {
+      const data = await twitchRequest<TwitchStreamResponse>(`https://api.twitch.tv/helix/streams?user_login=${name}`, {
         method: 'GET',
       }, 10);
 
@@ -164,12 +172,12 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
 
   const validateToken = async () => {
     try {
-      await RequestCache.request('https://id.twitch.tv/oauth2/validate', {
-        headers: {
-          'Authorization': `Bearer ${token.value}`,
-        },
-        method: 'GET',
-      }, 10);
+      const isValid = await validateTokenWithTTL(1000 * 60 * 45);
+      if (!isValid) {
+        const error = new Error('Twitch token invalid');
+        (error as { code?: string }).code = 'ERR_BAD_REQUEST';
+        throw error;
+      }
     }
     catch (error) {
       if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {

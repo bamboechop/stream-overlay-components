@@ -18,7 +18,7 @@ import {
   client as tmiClient,
 } from 'tmi.js';
 import { storeToRefs } from 'pinia';
-import { RequestCache } from '@/services/request-cache.service';
+import { twitchRequest } from '@/services/twitch-auth.service';
 import type {
   IAction,
   IChat,
@@ -51,17 +51,17 @@ async function setUpBadges(
   streamTogetherChannels: Ref<string[]>,
 ): Promise<Record<string, { description: string; id: string; imageUrl: string; title: string }[]>> {
   const badgePromises = [
-    RequestCache.request<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${broadcasterInfo.id}`, {
+    twitchRequest<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${broadcasterInfo.id}`, {
       method: 'GET',
     }, 10),
-    RequestCache.request<ITwitchBadgeResponse>('https://api.twitch.tv/helix/chat/badges/global', {
+    twitchRequest<ITwitchBadgeResponse>('https://api.twitch.tv/helix/chat/badges/global', {
       method: 'GET',
     }, 10),
   ];
 
   if (Object.keys(streamTogetherChannelIds.value).length > 0) {
     for (const channelId of Object.values(streamTogetherChannelIds.value)) {
-      badgePromises.push(RequestCache.request<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${channelId}`, {
+      badgePromises.push(twitchRequest<ITwitchBadgeResponse>(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${channelId}`, {
         method: 'GET',
       }, 10));
     }
