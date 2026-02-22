@@ -7,31 +7,12 @@
           class="task-bar__icon task-bar__icon--start"
           src="/modern/task-bar/start-button.png" />
       </button>
-      <template
-        v-for="program of programs"
-        :key="`task-bar-program-${program.text}`">
-        <button
-          class="task-bar__button"
-          :class="[
-            { 'task-bar__button--active': program.active },
-          ]"
-          :title="program.text"
-          type="button">
-          <img
-            :alt="program.text"
-            class="task-bar__icon"
-            :src="program.iconPath" />
-        </button>
-      </template>
     </div>
   </WindowFrame>
 </template>
 
 <script lang="ts" setup>
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
-import type { IProgram } from '@/components/task-bar/task-bar.interface';
-
-defineProps<{ programs: IProgram[] }>();
 </script>
 
 <style lang="scss" scoped>

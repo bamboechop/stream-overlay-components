@@ -57,12 +57,6 @@ export function useProgramInformationComposable() {
       id: 'next-game',
       text: 'Nächstes Spiel',
     },
-    'pcg': {
-      active: false,
-      iconPath: `/modern/programs/pokemon-community-game.icon.png`,
-      id: 'pcg',
-      text: 'Pokémon Community Game',
-    },
     'pdf-viewer': {
       active: false,
       iconPath: `/modern/programs/pdf-viewer.icon.png`,
