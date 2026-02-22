@@ -11,9 +11,9 @@ import { useApplicationStore } from '@/stores/application.store';
 import Schedule from '@/components/schedule/Schedule.vue';
 
 const applicationStore = useApplicationStore();
-const { activeApplications } = storeToRefs(applicationStore);
+const { activeProgramId } = storeToRefs(applicationStore);
 
-const active = computed(() => activeApplications.value.find(application => application.id === 'schedule')?.active);
+const active = computed(() => activeProgramId.value === 'schedule');
 </script>
 
 <style scoped lang="scss">

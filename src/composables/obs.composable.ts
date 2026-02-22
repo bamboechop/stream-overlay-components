@@ -1,10 +1,9 @@
 import OBSWebSocket from 'obs-websocket-js';
-import { onBeforeUnmount, ref, watch } from 'vue';
+import { onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import type { TProgramId } from '@/common/types/index.type';
 import { useApplicationStore } from '@/stores/application.store';
 import { useTwitchStore } from '@/stores/twitch.store';
-import { useProgramInformationComposable } from '@/composables/program-information.composable';
 import { useStreamStatusStore } from '@/stores/stream-status.store';
 import { RequestCache } from '@/services/request-cache.service';
 
@@ -42,16 +41,6 @@ const obsSceneMappings: { [sceneUuid: string]: ISceneMapping } = {
   },
 };
 
-const obsAllowedSceneItemIds = [
-  12, // Schedule
-  19, // Bluesky Posts
-  41, // Media Player
-  50, // Webcam
-  51, // Webcam
-  69, // PDF Viewer
-  98, // Next Game
-];
-
 export async function useObsComposable() {
   /*
    * needs to be before any async call otherwise Vue will show a warning in the console
@@ -63,78 +52,71 @@ export async function useObsComposable() {
     await disconnectWebSocketConnection();
   });
 
-  const programs = ref<{ [programName: string]: boolean }>({});
-
   const applicationStore = useApplicationStore();
-  const { activeApplications } = storeToRefs(applicationStore);
   const {
-    addActiveApplication,
-    removeActiveApplication,
-    removeActiveApplications,
-    updateMediaPlayerApplicationIcon,
+    applyVisibilityFromScene,
   } = applicationStore;
-
-  const { iconPath, programInformation } = useProgramInformationComposable();
 
   const streamStatusStore = useStreamStatusStore();
   const { live } = storeToRefs(streamStatusStore);
 
   const twitchStore = useTwitchStore();
-  const { category } = storeToRefs(twitchStore);
   const { getAdSchedule, resetAdState } = twitchStore;
 
   const obs = new OBSWebSocket();
   await obs.connect(import.meta.env.VITE_OBS_WEBSOCKET_URL, import.meta.env.VITE_OBS_WEBSOCKET_PASSWORD);
 
-  function updateProgramVisibility() {
-    for (const [id, visible] of Object.entries(programs.value) as [TProgramId, boolean][]) {
-      if (visible && !activeApplications.value.find(application => application.id === id)) {
-        addActiveApplication(programInformation.value[id as TProgramId]);
-      } else if (!visible) {
-        // Check if the program being hidden is currently active
-        const currentlyActive = activeApplications.value.find(app => app.active);
-        const isHidingActiveProgram = currentlyActive && currentlyActive.id === id;
+  function dedupeByLastOccurrence(ids: TProgramId[]): TProgramId[] {
+    const seen = new Set<TProgramId>();
+    const result: TProgramId[] = [];
 
-        removeActiveApplication(id);
+    for (let index = ids.length - 1; index >= 0; index -= 1) {
+      const id = ids[index];
+      if (!seen.has(id)) {
+        seen.add(id);
+        result.push(id);
+      }
+    }
 
-        if (isHidingActiveProgram && activeApplications.value.length > 0) {
-          const lastProgram = activeApplications.value.pop();
-          if (lastProgram) {
-            lastProgram.active = true;
+    return result.reverse();
+  }
+
+  async function getSceneItems(): Promise<TProgramId[]> {
+    const { currentProgramSceneUuid: sceneUuid } = await obs.call('GetSceneList');
+    const sceneItemList = await obs.call('GetSceneItemList', { sceneUuid });
+
+    // Get the scene-specific mapping or fall back to the default mapping
+    const sceneMapping = obsSceneMappings[sceneUuid] || obsSceneMappings['*'];
+    const sceneSourceNameMapping = new Map<string, ISceneItemMapping>();
+    for (const mapping of Object.values(sceneMapping)) {
+      if (mapping.sourceName) {
+        sceneSourceNameMapping.set(mapping.sourceName, mapping);
+      }
+    }
+    const visibleIdsInSceneOrder: TProgramId[] = [];
+
+    for (const item of sceneItemList.sceneItems) {
+      const mapping = sceneMapping[item.sceneItemId as number]
+        ?? (typeof item.sourceName === 'string' ? sceneSourceNameMapping.get(item.sourceName) : undefined);
+      if (mapping) {
+        // If sourceName is specified in the mapping, verify it matches
+        if (!mapping.sourceName || mapping.sourceName === item.sourceName) {
+          if (item.sceneItemEnabled) {
+            visibleIdsInSceneOrder.push(mapping.programId);
           }
         }
       }
     }
-  }
-
-  async function getSceneItems() {
-    const { currentProgramSceneUuid: sceneUuid } = await obs.call('GetSceneList');
-    const sceneItemList = await obs.call('GetSceneItemList', { sceneUuid });
-    programs.value = {};
-
-    // Get the scene-specific mapping or fall back to the default mapping
-    const sceneMapping = obsSceneMappings[sceneUuid] || obsSceneMappings['*'];
-
-    for (const item of sceneItemList.sceneItems) {
-      const mapping = sceneMapping[item.sceneItemId as number];
-      if (mapping) {
-        // If sourceName is specified in the mapping, verify it matches
-        if (!mapping.sourceName || mapping.sourceName === item.sourceName) {
-          programs.value[mapping.programId] = item.sceneItemEnabled as boolean;
-        }
-      }
-    }
-
-    // wait for 100ms before updating the visibility, otherwise the active window isn't getting highlighted when switching scenes
-    window.setTimeout(() => {
-      updateProgramVisibility();
-    }, 100);
+    return dedupeByLastOccurrence(visibleIdsInSceneOrder);
   }
 
   // handle scene switches
   obs.on('CurrentProgramSceneChanged', async (event) => {
-    removeActiveApplications();
-    await getSceneItems();
+    const visibleIdsInSceneOrder = await getSceneItems();
+    // wait for 100ms before updating the visibility, otherwise the active window isn't getting highlighted when switching scenes
+    window.setTimeout(() => {
+      applyVisibilityFromScene(visibleIdsInSceneOrder);
+    }, 100);
     if (live.value && event.sceneUuid === '7bb22505-8353-471d-9e9a-de3cbdc4e1aa') { // Ende scene
       try {
         await RequestCache.request(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/share-next-planned-stream`, {
@@ -150,18 +132,9 @@ export async function useObsComposable() {
   });
 
   // handle source visibility changes
-  obs.on('SceneItemEnableStateChanged', async (event) => {
-    const { sceneItemId } = event;
-    if (!obsAllowedSceneItemIds.includes(sceneItemId)) {
-      return;
-    }
-    const { currentProgramSceneUuid: sceneUuid } = await obs.call('GetSceneList');
-    const sceneMapping = obsSceneMappings[sceneUuid] || obsSceneMappings['*'];
-    const mapping = sceneMapping[sceneItemId];
-    if (mapping) {
-      programs.value[mapping.programId] = event.sceneItemEnabled;
-      updateProgramVisibility();
-    }
+  obs.on('SceneItemEnableStateChanged', async () => {
+    const visibleIdsInSceneOrder = await getSceneItems();
+    applyVisibilityFromScene(visibleIdsInSceneOrder);
   });
 
   /**
@@ -193,15 +166,6 @@ export async function useObsComposable() {
     await disconnectWebSocketConnection();
   });
 
-  watch(category, (newCategory, oldCategory) => {
-    if (oldCategory && newCategory !== oldCategory) {
-      programInformation.value['media-player'].iconPath = iconPath.value;
-      programInformation.value['media-player'].text = newCategory;
-      updateMediaPlayerApplicationIcon('media-player');
-    }
-  }, {
-    immediate: true,
-  });
-
-  await getSceneItems();
+  const visibleIdsInSceneOrder = await getSceneItems();
+  applyVisibilityFromScene(visibleIdsInSceneOrder);
 }

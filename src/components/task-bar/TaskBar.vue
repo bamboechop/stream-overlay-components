@@ -37,24 +37,6 @@ import WindowFrame from '@/components/desktop/WindowFrame.vue';
     width: 44px;
   }
 
-  &__button--active {
-    height: 52px;
-    position: relative;
-    width: 52px;
-
-    &::after {
-      background-color: rgba(84, 97, 0, 0.75);
-      border-radius: $window-frame-border-radius;
-      bottom: -6px;
-      content: '';
-      height: 3px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-    }
-  }
-
   &__icon {
     height: 100%;
     width: 100%;

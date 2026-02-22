@@ -1,92 +1,40 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import type { IProgram } from '@/components/task-bar/task-bar.interface';
+import { computed, ref } from 'vue';
 import type { TProgramId } from '@/common/types/index.type';
-import { useProgramInformationComposable } from '@/composables/program-information.composable';
 
 export const useApplicationStore = defineStore('Application Store', () => {
-  const { iconPath } = useProgramInformationComposable();
-
-  const activeApplications = ref<IProgram[]>([]);
+  const visibleProgramIds = ref<TProgramId[]>([]);
   const intermissionVideoPlaying = ref(false);
-  const previousActiveProgramId = ref<TProgramId | null>(null);
 
-  const updateActiveApplication = () => {
-    activeApplications.value = activeApplications.value.map((application, index) => {
-      if (index === activeApplications.value.length - 1) {
-        return {
-          ...application,
-          active: true,
-        };
-      }
+  const activeProgramId = computed(() => {
+    if (visibleProgramIds.value.length === 0) {
+      return null;
+    }
+    return visibleProgramIds.value[visibleProgramIds.value.length - 1];
+  });
 
-      return {
-        ...application,
-        active: false,
-      };
-    });
-  };
+  const applyVisibilityFromScene = (visibleIdsInSceneOrder: TProgramId[]) => {
+    const visibleIds = new Set(visibleIdsInSceneOrder);
 
-  const addActiveApplication = (application: IProgram) => {
-    activeApplications.value.push(application);
-    updateActiveApplication();
-  };
+    visibleProgramIds.value = visibleProgramIds.value.filter(id => visibleIds.has(id));
 
-  const removeActiveApplication = (id: TProgramId) => {
-    activeApplications.value = activeApplications.value.filter(activeApplication => activeApplication.id !== id);
-    updateActiveApplication();
-  };
-
-  const removeActiveApplications = () => {
-    activeApplications.value = [];
-    previousActiveProgramId.value = null;
-  };
-
-  const setApplicationActive = (id: TProgramId, active: boolean) => {
-    const application = activeApplications.value.find(app => app.id === id);
-    if (application) {
-      if (active) {
-        // Store the currently active program before changing it
-        const currentlyActive = activeApplications.value.find(app => app.active);
-        if (currentlyActive && currentlyActive.id !== id) {
-          previousActiveProgramId.value = currentlyActive.id;
-        }
-
-        // Deactivate all other applications first
-        activeApplications.value.forEach((app) => {
-          app.active = false;
-        });
-        // Then activate the target application
-        application.active = true;
-      } else {
-        application.active = false;
-
-        // If we're deactivating and have a previous active program, restore it
-        if (previousActiveProgramId.value) {
-          const previousActive = activeApplications.value.find(app => app.id === previousActiveProgramId.value);
-          if (previousActive) {
-            previousActive.active = true;
-            previousActiveProgramId.value = null;
-          }
-        }
+    for (const id of visibleIdsInSceneOrder) {
+      if (!visibleProgramIds.value.includes(id)) {
+        visibleProgramIds.value.push(id);
       }
     }
-  };
 
-  const updateMediaPlayerApplicationIcon = (id: TProgramId) => {
-    const application = activeApplications.value.find(activeApplication => activeApplication.id === id);
-    if (application) {
-      application.iconPath = iconPath.value;
+    const lastVisibleId = visibleIdsInSceneOrder[visibleIdsInSceneOrder.length - 1];
+    if (lastVisibleId && visibleProgramIds.value.includes(lastVisibleId)) {
+      visibleProgramIds.value = visibleProgramIds.value.filter(id => id !== lastVisibleId);
+      visibleProgramIds.value.push(lastVisibleId);
     }
   };
 
   return {
-    activeApplications,
+    visibleProgramIds,
+    activeProgramId,
     intermissionVideoPlaying,
-    addActiveApplication,
-    removeActiveApplication,
-    removeActiveApplications,
-    setApplicationActive,
-    updateMediaPlayerApplicationIcon,
+    applyVisibilityFromScene,
   };
 });
