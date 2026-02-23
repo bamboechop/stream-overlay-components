@@ -49,27 +49,26 @@ const { active = false, iconPath, title } = defineProps<{ active?: boolean; icon
 @import '@/assets/modern.variables';
 
 .window-frame {
-  background: rgba(255, 255, 255, 0.75);
+  background-color: transparent;
   border-radius: $window-frame-border-radius;
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  border: 5px solid rgba(255, 255, 255, 0.75);
   display: flex;
   flex-direction: column;
-  gap: $window-frame-padding;
-  padding: $window-frame-padding;
   position: relative;
-  transition: background 0.5s ease-in-out, border-color 0.5s ease-in-out;
+  transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
 
   &__application-icon {
     aspect-ratio: 1;
-    background: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.75);
     border-bottom-right-radius: $window-frame-border-radius;
     border-bottom: 2px solid rgba(255, 255, 255, 0.9);
     border-right: 2px solid rgba(255, 255, 255, 0.9);
     border-top-left-radius: 2px;
-    left: $window-frame-padding;
+    left: 0;
     padding: $window-frame-padding;
     position: absolute;
-    top: $window-frame-padding;
+    top: 0;
+    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
   }
 
   &__application-icon-image {
@@ -79,10 +78,12 @@ const { active = false, iconPath, title } = defineProps<{ active?: boolean; icon
 
   &__bottom-bar {
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.75);
     display: flex;
     font-weight: 700;
     justify-content: space-between;
-    margin: 0 0 0 $window-frame-padding * 2;
+    padding: $window-frame-padding 0 0 $window-frame-padding * 2;
+    transition: background-color 0.5s ease-in-out;
   }
 
   &__button {
@@ -106,12 +107,15 @@ const { active = false, iconPath, title } = defineProps<{ active?: boolean; icon
 }
 
 .window-frame--active {
-  background: rgba(170, 204, 0, 0.75);
   border-color: rgba(170, 204, 0, 0.75);
 
   .window-frame__application-icon {
-    background: rgba(170, 204, 0, 0.9);
-    border-color: rgba(170, 204, 0, 0.9);
+    background-color: rgba(170, 204, 0, 0.75);
+    border-color: rgba(170, 204, 0, 0.75);
+  }
+
+  .window-frame__bottom-bar {
+    background-color: rgba(170, 204, 0, 0.75);
   }
 }
 </style>

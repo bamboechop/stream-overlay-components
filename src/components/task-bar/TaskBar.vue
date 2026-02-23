@@ -48,7 +48,7 @@ import WindowFrame from '@/components/desktop/WindowFrame.vue';
 }
 
 .task-bar-window {
-  border-bottom-left-radius: calc($window-frame-border-radius - $window-frame-padding);
+  border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 0;
   width: max-content;

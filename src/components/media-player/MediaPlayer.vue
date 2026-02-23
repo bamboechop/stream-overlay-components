@@ -27,8 +27,6 @@ const { iconPath } = useProgramInformationComposable();
 
 .media-player {
   aspect-ratio: 16 / 9;
-  background-color: $chroma-key-color;
-  border-radius: $window-frame-border-radius - $window-frame-padding;
   color: #fff;
   max-height: calc(100vh - 38px);
 }

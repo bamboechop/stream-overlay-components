@@ -44,7 +44,8 @@ onMounted(async () => {
 
   &__clock,
   &__task-bar {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.75);
+    border-color: transparent;
     flex-shrink: 0;
     z-index: 1;
   }
