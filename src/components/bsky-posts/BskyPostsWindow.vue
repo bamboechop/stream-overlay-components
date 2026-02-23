@@ -113,6 +113,7 @@ watch(posts, () => {
   transition: opacity 0.5s ease-in-out;
 
   &__content {
+    background-color: #fff;
     display: grid;
     grid-template-rows: 1fr;
     transition: grid-template-rows .3s cubic-bezier(0.4,0,0.2,1);
