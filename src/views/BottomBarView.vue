@@ -18,7 +18,7 @@ import { onMounted } from 'vue';
 const { initChat, initTwitch } = useTwitchChat();
 
 useEventStreamComposable();
-useTwitchStreamInfoComposable();
+useTwitchStreamInfoComposable(true);
 
 onMounted(async () => {
   await initTwitch();

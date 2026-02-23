@@ -19,7 +19,7 @@ const { messageDebug } = useSearchParamsComposable();
 const { initChat, initTwitch, loading } = useTwitchChat(true);
 
 useEventStreamComposable();
-useTwitchStreamInfoComposable();
+useTwitchStreamInfoComposable(true);
 
 const showChat = ref(messageDebug);
 

@@ -18,7 +18,7 @@ import { useEventStreamComposable } from '@/composables/event-stream.composable'
 const { mode } = useSearchParamsComposable();
 
 useEventStreamComposable();
-useTwitchStreamInfoComposable();
+useTwitchStreamInfoComposable(false);
 
 const applicationStore = useApplicationStore();
 const { activeProgramId } = storeToRefs(applicationStore);

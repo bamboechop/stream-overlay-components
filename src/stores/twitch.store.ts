@@ -27,6 +27,11 @@ interface TwitchStreamResponse {
   }>;
 }
 
+interface ChannelInformationResponse {
+  game_name: string;
+  title: string;
+}
+
 const streamTogetherChannels = ref<string[]>([]);
 const streamTogetherChannelIds = ref<{ [channel: string]: string }>({});
 let adBreakUnsubscribe: (() => void) | null = null;
@@ -113,19 +118,19 @@ export const useTwitchStore = defineStore('Twitch Store', () => {
     }
   };
 
-  const getChannelInformation = async () => {
+  const getChannelInformation = async (): Promise<ChannelInformationResponse | null> => {
     try {
-      const data = await RequestCache.request(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`, {
+      const data = await RequestCache.request<ChannelInformationResponse>(`${import.meta.env.VITE_BAMBBOT_API_URL}/twitch/channel-information`, {
         method: 'GET',
       }, 10);
 
-      if (data) {
+      if (data?.game_name) {
         category.value = data.game_name;
-        processStreamTogetherChannels(data.title);
       }
+      return data ?? null;
     } catch (error) {
       if (error instanceof Error && error.message === 'REQUEST_RECENTLY_MADE_BY_OTHER_INSTANCE') {
-        return;
+        return null;
       }
       throw error;
     }

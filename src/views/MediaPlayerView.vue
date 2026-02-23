@@ -11,7 +11,7 @@ import MediaPlayer from '@/components/media-player/MediaPlayer.vue';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import { useApplicationStore } from '@/stores/application.store';
 
-useTwitchStreamInfoComposable();
+useTwitchStreamInfoComposable(false);
 
 const applicationStore = useApplicationStore();
 const { activeProgramId } = storeToRefs(applicationStore);

@@ -1,4 +1,4 @@
-import { onMounted } from 'vue';
+import { onBeforeUnmount, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useEventStreamComposable } from './event-stream.composable';
 import { useTwitchChat } from './twitch-chat.composable';
@@ -12,28 +12,71 @@ function areChannelsEqual(a: string[], b: string[]) {
   return a.every(channelA => b.includes(channelA));
 }
 
-export function useTwitchStreamInfoComposable(initializeChat = true) {
+export function useTwitchStreamInfoComposable(initializeChat = false) {
   const { initChat } = useTwitchChat();
 
   const twitchStore = useTwitchStore();
   const { category, streamTogetherChannels } = storeToRefs(twitchStore);
   const { getChannelInformation, processStreamTogetherChannels } = twitchStore;
   const { on } = useEventStreamComposable();
+  let retryTimeout: ReturnType<typeof setTimeout> | null = null;
+  let retryCount = 0;
+
+  const scheduleRetry = () => {
+    if (retryTimeout || retryCount >= 3) {
+      return;
+    }
+    retryCount += 1;
+    retryTimeout = setTimeout(() => {
+      retryTimeout = null;
+      void syncChannelInformation();
+    }, 3000);
+  };
+
+  const syncChannelInformation = async () => {
+    try {
+      const data = await getChannelInformation();
+      retryCount = 0;
+
+      if (initializeChat && data?.title) {
+        const previousStreamTogetherChannels = [...streamTogetherChannels.value];
+        await processStreamTogetherChannels(data.title);
+        if (!areChannelsEqual(previousStreamTogetherChannels, streamTogetherChannels.value)) {
+          await initChat();
+        }
+      }
+    } catch (err) {
+      console.error('Failed to get channel information:', err);
+      scheduleRetry();
+    }
+  };
 
   onMounted(async () => {
     on<IEventStreamChannelUpdateData>('channel.update', async (data) => {
-      category.value = data.category_name;
-      const previousStreamTogetherChannels = streamTogetherChannels.value.map(channel => channel);
-      processStreamTogetherChannels(data.title);
-      if (!areChannelsEqual(previousStreamTogetherChannels, streamTogetherChannels.value) && initializeChat) {
-        await initChat();
+      if (data.category_name) {
+        category.value = data.category_name;
+      }
+
+      if (initializeChat) {
+        const previousStreamTogetherChannels = [...streamTogetherChannels.value];
+        try {
+          await processStreamTogetherChannels(data.title);
+          if (!areChannelsEqual(previousStreamTogetherChannels, streamTogetherChannels.value)) {
+            await initChat();
+          }
+        } catch (err) {
+          console.error('Failed to update stream together channels:', err);
+        }
       }
     });
 
-    try {
-      await getChannelInformation();
-    } catch (err) {
-      console.error('Failed to get channel information:', err);
+    await syncChannelInformation();
+  });
+
+  onBeforeUnmount(() => {
+    if (retryTimeout) {
+      clearTimeout(retryTimeout);
+      retryTimeout = null;
     }
   });
 }
