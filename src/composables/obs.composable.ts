@@ -112,10 +112,10 @@ export async function useObsComposable() {
 
   // handle scene switches
   obs.on('CurrentProgramSceneChanged', async (event) => {
-    const visibleIdsInSceneOrder = await getSceneItems();
     // wait for 100ms before updating the visibility, otherwise the active window isn't getting highlighted when switching scenes
-    window.setTimeout(() => {
-      applyVisibilityFromScene(visibleIdsInSceneOrder);
+    window.setTimeout(async () => {
+      const latestVisibleIdsInSceneOrder = await getSceneItems();
+      applyVisibilityFromScene(latestVisibleIdsInSceneOrder);
     }, 100);
     if (live.value && event.sceneUuid === '7bb22505-8353-471d-9e9a-de3cbdc4e1aa') { // Ende scene
       try {
