@@ -11,7 +11,7 @@ import NextGame from '@/components/next-game/NextGame.vue';
 import { useApplicationStore } from '@/stores/application.store';
 
 const applicationStore = useApplicationStore();
-const { activeApplications } = storeToRefs(applicationStore);
+const { activeProgramId } = storeToRefs(applicationStore);
 
-const active = computed(() => activeApplications.value.find(application => application.id === 'next-game')?.active);
+const active = computed(() => activeProgramId.value === 'next-game');
 </script>

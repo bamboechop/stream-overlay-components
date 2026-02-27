@@ -1,6 +1,7 @@
 import type { ISubscription } from '@/common/interfaces/index.interface';
 
 export const subscriptionDummy: ISubscription = {
+  channel: 'bamboechop',
   color: '#ffdf12',
   displayName: 'SubscriptionDummy',
   emotes: {

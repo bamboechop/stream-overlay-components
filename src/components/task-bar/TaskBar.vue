@@ -7,31 +7,12 @@
           class="task-bar__icon task-bar__icon--start"
           src="/modern/task-bar/start-button.png" />
       </button>
-      <template
-        v-for="program of programs"
-        :key="`task-bar-program-${program.text}`">
-        <button
-          class="task-bar__button"
-          :class="[
-            { 'task-bar__button--active': program.active },
-          ]"
-          :title="program.text"
-          type="button">
-          <img
-            :alt="program.text"
-            class="task-bar__icon"
-            :src="program.iconPath" />
-        </button>
-      </template>
     </div>
   </WindowFrame>
 </template>
 
 <script lang="ts" setup>
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
-import type { IProgram } from '@/components/task-bar/task-bar.interface';
-
-defineProps<{ programs: IProgram[] }>();
 </script>
 
 <style lang="scss" scoped>
@@ -56,24 +37,6 @@ defineProps<{ programs: IProgram[] }>();
     width: 44px;
   }
 
-  &__button--active {
-    height: 52px;
-    position: relative;
-    width: 52px;
-
-    &::after {
-      background-color: rgba(84, 97, 0, 0.75);
-      border-radius: $window-frame-border-radius;
-      bottom: -6px;
-      content: '';
-      height: 3px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-    }
-  }
-
   &__icon {
     height: 100%;
     width: 100%;
@@ -85,7 +48,7 @@ defineProps<{ programs: IProgram[] }>();
 }
 
 .task-bar-window {
-  border-bottom-left-radius: calc($window-frame-border-radius - $window-frame-padding);
+  border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 0;
   width: max-content;

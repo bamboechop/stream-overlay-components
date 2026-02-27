@@ -1,16 +1,12 @@
 <template>
   <div class="bottom-bar-view">
-    <TaskBarModernTheme
-      class="bottom-bar-view__task-bar"
-      :programs="activeApplications" />
+    <TaskBarModernTheme class="bottom-bar-view__task-bar" />
     <ChatBottomBarTheme class="bottom-bar-view__chat" />
     <Clock class="bottom-bar-view__clock" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
-import { useApplicationStore } from '@/stores/application.store';
 import TaskBarModernTheme from '@/components/task-bar/TaskBar.vue';
 import Clock from '@/components/clock/Clock.vue';
 import ChatBottomBarTheme from '@/components/bottom-bar/Chat.vue';
@@ -19,13 +15,10 @@ import { useEventStreamComposable } from '@/composables/event-stream.composable'
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import { onMounted } from 'vue';
 
-const applicationStore = useApplicationStore();
-const { activeApplications } = storeToRefs(applicationStore);
-
 const { initChat, initTwitch } = useTwitchChat();
 
 useEventStreamComposable();
-useTwitchStreamInfoComposable();
+useTwitchStreamInfoComposable(true);
 
 onMounted(async () => {
   await initTwitch();
@@ -51,7 +44,8 @@ onMounted(async () => {
 
   &__clock,
   &__task-bar {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.75);
+    border-color: transparent;
     flex-shrink: 0;
     z-index: 1;
   }

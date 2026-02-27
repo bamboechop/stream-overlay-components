@@ -2,6 +2,7 @@
   <WindowFrame
     :active="active"
     class="schedule-window"
+    :icon-path="programInformation['schedule'].iconPath"
     title="Streamplan">
     <div class="schedule">
       <img
@@ -14,8 +15,11 @@
 
 <script lang="ts" setup>
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
+import { useProgramInformationComposable } from '@/composables/program-information.composable';
 
 defineProps<{ active?: boolean }>();
+
+const { programInformation } = useProgramInformationComposable();
 </script>
 
 <style lang="scss" scoped>
@@ -25,6 +29,7 @@ defineProps<{ active?: boolean }>();
   background-color: #0e0e10;
   border-radius: $window-frame-border-radius - $window-frame-padding;
   color: #fff;
+  padding-top: 39px;
 }
 
 .schedule-image {

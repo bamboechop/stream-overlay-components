@@ -8,5 +8,5 @@ import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 
 useEventStreamComposable();
-useTwitchStreamInfoComposable();
+useTwitchStreamInfoComposable(false);
 </script>

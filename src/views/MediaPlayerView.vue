@@ -11,12 +11,12 @@ import MediaPlayer from '@/components/media-player/MediaPlayer.vue';
 import { useTwitchStreamInfoComposable } from '@/composables/twitch-stream-info.composable';
 import { useApplicationStore } from '@/stores/application.store';
 
-useTwitchStreamInfoComposable();
+useTwitchStreamInfoComposable(false);
 
 const applicationStore = useApplicationStore();
-const { activeApplications } = storeToRefs(applicationStore);
+const { activeProgramId } = storeToRefs(applicationStore);
 
-const active = computed(() => activeApplications.value.find(application => application.id === 'media-player')?.active);
+const active = computed(() => activeProgramId.value === 'media-player');
 </script>
 
 <style lang="scss" scoped>

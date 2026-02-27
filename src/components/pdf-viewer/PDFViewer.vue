@@ -2,6 +2,7 @@
   <WindowFrame
     :active="active"
     class="pdf-viewer-window"
+    :icon-path="programInformation['pdf-viewer'].iconPath"
     title="PDF Viewer">
     <div
       class="pdf-viewer"
@@ -19,8 +20,11 @@
 import PdfEmbed from 'vue-pdf-embed';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
+import { useProgramInformationComposable } from '@/composables/program-information.composable';
 
 defineProps<{ active?: boolean }>();
+
+const { programInformation } = useProgramInformationComposable();
 
 const { url } = useSearchParamsComposable();
 

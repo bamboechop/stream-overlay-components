@@ -1,6 +1,7 @@
 import type { ISubGift } from '@/common/interfaces/index.interface';
 
 export const subgiftDummy: ISubGift = {
+  channel: 'bamboechop',
   id: 'abc-subgift-dummy-123',
   msgId: 'subgift',
   msgType: 'subgift',

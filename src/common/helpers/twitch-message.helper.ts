@@ -1,11 +1,19 @@
 import type { Badges, SubMethod } from 'tmi.js';
 import { getEmoteAsUrl, parseEmotesInMessage } from 'tmi-utils';
 import { STREAM_TOGETHER_COLORS } from '../constants/stream-together-colors.constant';
-import { RequestCache } from '@/services/request-cache.service';
+import { twitchRequest } from '@/services/twitch-auth.service';
+
+interface TwitchUsersResponse {
+  data: Array<{
+    id: string;
+    display_name: string;
+    profile_image_url: string;
+  }>;
+}
 
 export async function getUserIdByUserName(username: string): Promise<string | undefined> {
   try {
-    const data = await RequestCache.request(`https://api.twitch.tv/helix/users?login=${username}`, {
+    const data = await twitchRequest<TwitchUsersResponse>(`https://api.twitch.tv/helix/users?login=${username}`, {
       method: 'GET',
     }, 10);
     return data?.data?.[0]?.id;
@@ -19,7 +27,7 @@ export async function getUserIdByUserName(username: string): Promise<string | un
 
 export async function getUserNameByUserId(userId: string): Promise<string | undefined> {
   try {
-    const data = await RequestCache.request(`https://api.twitch.tv/helix/users?id=${userId}`, {
+    const data = await twitchRequest<TwitchUsersResponse>(`https://api.twitch.tv/helix/users?id=${userId}`, {
       method: 'GET',
     }, 10);
     return data?.data?.[0]?.display_name;
@@ -39,7 +47,7 @@ export async function getUserImageByUserId(userId: string): Promise<string> {
   let userImage = storedImages?.[userId];
   if (!userImage) {
     try {
-      const data = await RequestCache.request(`https://api.twitch.tv/helix/users?id=${userId}`, {
+      const data = await twitchRequest<TwitchUsersResponse>(`https://api.twitch.tv/helix/users?id=${userId}`, {
         method: 'GET',
       }, 10);
       storedImages[userId] = data?.data?.[0]?.profile_image_url ?? undefined;

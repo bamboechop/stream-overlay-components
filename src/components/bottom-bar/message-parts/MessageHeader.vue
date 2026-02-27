@@ -38,7 +38,7 @@ const props = defineProps<{
 
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
 
-const isActionOrChatMessage = computed(() => ['action', 'chat'].includes(props.msgType));
+const isActionOrChatMessage = computed(() => props.msgType === 'action' || props.msgType === 'chat');
 
 const humanReadableTimestamp = computed(() => {
   return new Date(props.timestamp ?? Date.now()).toLocaleTimeString('de', {

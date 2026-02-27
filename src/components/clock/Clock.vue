@@ -40,7 +40,7 @@ const time = useDateFormat(useNow(), 'HH:mm:ss');
 
 .clock-window-window {
   border-bottom-left-radius: 0;
-  border-bottom-right-radius: calc($window-frame-border-radius - $window-frame-padding);
+  border-bottom-right-radius: 0;
   border-top-right-radius: 0;
   width: max-content;
 }

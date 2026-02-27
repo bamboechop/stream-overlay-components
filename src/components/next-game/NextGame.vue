@@ -2,6 +2,7 @@
   <WindowFrame
     :active="active"
     class="next-game-window"
+    :icon-path="programInformation['next-game'].iconPath"
     title="Nächstes Spiel">
     <div class="next-game">
       <p class="next-game__description">
@@ -59,8 +60,11 @@ import FlipText from './FlipText.vue';
 import WindowFrame from '@/components/desktop/WindowFrame.vue';
 import { UNPLAYED_GAMES } from '@/common/constants/unplayed-games.constant';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
+import { useProgramInformationComposable } from '@/composables/program-information.composable';
 
 defineProps<{ active?: boolean }>();
+
+const { programInformation } = useProgramInformationComposable();
 
 const { on } = useEventStreamComposable();
 
@@ -161,7 +165,7 @@ onMounted(() => {
     font-size: 16px;
     gap: 12px;
     line-height: 1.5;
-    padding: 12px 24px;
+    padding: 78px 24px 12px 24px;
     position: relative;
 
     &__credits {

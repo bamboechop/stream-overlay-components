@@ -25,7 +25,7 @@
             <template #content>
               <MessageContent
                 :emotes="message.emotes"
-                :msgId="message.msgId"
+                :msgId="'msgId' in message ? message.msgId : undefined"
                 :msgType="message.msgType"
                 :text="message.text"
                 :userId="message.userId" />

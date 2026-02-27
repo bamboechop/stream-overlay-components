@@ -222,6 +222,7 @@ function triggerDebugAd() {
 }
 
 .ad-window {
+  background-color: rgba(255, 255, 255, 0.75);
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
   bottom: 0;
