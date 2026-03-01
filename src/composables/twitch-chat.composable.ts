@@ -1,6 +1,4 @@
 import { onBeforeUnmount, ref, type Ref } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
-import axios from 'axios';
 import type {
   AnonSubMysteryGiftUserstate,
   BanUserstate,
@@ -18,7 +16,7 @@ import {
   client as tmiClient,
 } from 'tmi.js';
 import { storeToRefs } from 'pinia';
-import { twitchRequest } from '@/services/twitch-auth.service';
+import { ensureAuthForRoute, twitchRequest } from '@/services/twitch-auth.service';
 import type {
   IAction,
   IChat,
@@ -40,11 +38,6 @@ export const broadcasterInfo = {
 let client: Client | null = null;
 let viewerCountInterval: number | null = null;
 let validateTokenInterval: number | null = null;
-
-const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
-const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
-const csrfToken = useLocalStorage<string>('csrf-token', null);
-const token = useLocalStorage<string>('twitch-token', null);
 
 async function setUpBadges(
   streamTogetherChannelIds: Ref<{ [channel: string]: string }>,
@@ -485,10 +478,7 @@ async function setUpTwitchChatClient(
 }
 
 async function initTwitch(
-  token: Ref<string | null>,
-  csrfToken: Ref<string | null>,
   validateToken: () => Promise<void>,
-  retry = false,
 ): Promise<void> {
   try {
     if (validateTokenInterval) {
@@ -496,34 +486,10 @@ async function initTwitch(
       validateTokenInterval = null;
     }
 
-    if (!retry) {
-      await validateToken();
+    if (!ensureAuthForRoute()) {
+      return;
     }
-    if (!token.value) {
-      if (window.location.hash) {
-        const queryParams = new URLSearchParams(window.location.hash.split('#')[1]);
-        if (queryParams.get('access_token') && queryParams.get('state') === csrfToken.value) {
-          token.value = queryParams.get('access_token');
-          csrfToken.value = null;
-        } else {
-          if (csrfToken.value && csrfToken.value !== queryParams.get('state')) {
-            throw new Error('CSRF token mismatch');
-          }
-          throw new Error('No access token found');
-        }
-      } else {
-
-        csrfToken.value = Math.random().toString(36).substring(2, 15);
-        // https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#implicit-grant-flow
-        window.location.href = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=channel:read:ads&state=${csrfToken.value}`;
-        return;
-      }
-    }
-
-    axios.defaults.headers.common = {
-      'Authorization': `Bearer ${token.value}`,
-      'Client-ID': clientId,
-    };
+    await validateToken();
 
     if (!validateTokenInterval) {
       validateTokenInterval = window.setInterval(async () => {
@@ -535,9 +501,8 @@ async function initTwitch(
       window.clearInterval(validateTokenInterval);
       validateTokenInterval = null;
     }
-    if ((err as { code: string }).code === 'ERR_BAD_REQUEST' && !retry) {
-      token.value = null;
-      await initTwitch(token, csrfToken, validateToken, true);
+    if ((err as { code?: string }).code === 'ERR_BAD_REQUEST') {
+      ensureAuthForRoute();
       return;
     }
     console.info('retry failed, see error below');
@@ -622,8 +587,8 @@ export function useTwitchChat(loadProfilePicture = false) {
     validateToken,
   } = store;
 
-  const initTwitchWrapper = async (retry = false): Promise<void> => {
-    await initTwitch(token, csrfToken, validateToken, retry);
+  const initTwitchWrapper = async (): Promise<void> => {
+    await initTwitch(validateToken);
   };
 
   const initChatWrapper = async (): Promise<void> => {

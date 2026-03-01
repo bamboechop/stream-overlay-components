@@ -17,6 +17,7 @@ import ScrollEmotesView from '@/views/ScrollEmotesView.vue';
 import ScheduleView from '@/views/ScheduleView.vue';
 import ShowToastyView from '@/views/ShowToastyView.vue';
 import TimerView from '@/views/TimerView.vue';
+import TwitchCallbackView from '@/views/TwitchCallbackView.vue';
 import WebcamView from '@/views/WebcamView.vue';
 
 export const routes: RouteRecordRaw[] = [
@@ -109,6 +110,11 @@ export const routes: RouteRecordRaw[] = [
     component: TimerView,
     name: 'Timer Component',
     path: '/timer',
+  },
+  {
+    component: TwitchCallbackView,
+    name: 'Twitch Callback',
+    path: '/twitch/callback',
   },
   {
     component: WebcamView,
