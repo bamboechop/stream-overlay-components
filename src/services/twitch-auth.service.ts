@@ -9,14 +9,6 @@ const lastValidatedAt = useLocalStorage<number>('twitch-token-validated-at', 0);
 const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
 const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
 
-function applyAuthHeaders(value: string) {
-  axios.defaults.headers.common = {
-    ...axios.defaults.headers.common,
-    'Authorization': `Bearer ${value}`,
-    'Client-ID': clientId,
-  };
-}
-
 function readTokenFromHash(): string | null {
   if (!window.location.hash) {
     return null;
@@ -70,7 +62,6 @@ export function ensureAuthHeaders(): boolean {
     return false;
   }
 
-  applyAuthHeaders(currentToken);
   return true;
 }
 
