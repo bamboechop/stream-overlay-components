@@ -225,6 +225,7 @@ function triggerDebugAd() {
   background-color: rgba(255, 255, 255, 0.75);
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+  border-width: 1px;
   bottom: 0;
   left: -105%;
   overflow: hidden;
