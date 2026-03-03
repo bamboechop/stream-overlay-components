@@ -155,6 +155,10 @@ function updateRemainingTime() {
 onMounted(() => {
   // Initialize store's ad break listener
   initializeAdBreakListener();
+
+  if (debug) {
+    document.body.style.backgroundColor = 'saddlebrown';
+  }
 });
 
 onBeforeUnmount(() => {
