@@ -80,6 +80,12 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/modern/programs/pokemon-legends-arceus.icon.png',
     intermissionTextMode: 'default',
   },
+  'Pokémon Pokopia': {
+    backgroundImagePath: '/modern/game-backgrounds/pokemon-pokopia.jpg',
+    color: 'rgba(225, 210, 189, 0.9)',
+    iconPath: '/modern/programs/pokemon-pokopia.icon.png',
+    intermissionTextMode: 'default',
+  },
   'Pokémon Sword/Shield': {
     backgroundImagePath: '/modern/game-backgrounds/pokemon-sword.jpg',
     color: 'rgba(255, 255, 255, 0.5)',

@@ -18,6 +18,18 @@ export const TRAILERS_METADATA = {
       youtubeUrl: 'https://www.youtube.com/watch?v=7juYHfFV6fU',
     },
   ],
+  'Pokémon Pokopia': [
+    {
+      title: 'Pokémon Pokopia',
+      url: '/trailers/pokemon-pokopia-trailer.mp4',
+      youtubeUrl: 'https://www.youtube.com/watch?v=pCiIh9TVoKg',
+    },
+    {
+      title: 'Pokémon Pokopia – Musik, Mahlzeiten und mehr!',
+      url: '/trailers/pokemon-pokopia-trailer-2.mp4',
+      youtubeUrl: 'https://www.youtube.com/watch?v=9JohzWgU3Qs',
+    },
+  ],
   'Trackmania': [
     {
       title: 'Trackmania Gameplay Trailer',
