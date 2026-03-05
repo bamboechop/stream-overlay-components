@@ -82,7 +82,7 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
   },
   'Pokémon Pokopia': {
     backgroundImagePath: '/modern/game-backgrounds/pokemon-pokopia.jpg',
-    color: 'rgba(225, 210, 189, 0.9)',
+    color: 'rgba(197, 119, 255, 0.75)',
     iconPath: '/modern/programs/pokemon-pokopia.icon.png',
     intermissionTextMode: 'default',
   },
