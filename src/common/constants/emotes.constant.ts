@@ -207,4 +207,12 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
     updated: false,
     url: '/emotes/bamboe1Steer.gif',
   },
+  {
+    lastModified: '2026-03-07',
+    name: 'bamboe1ToastyDerWoche',
+    new: true,
+    tier: '1',
+    updated: false,
+    url: '/emotes/bamboe1ToastyDerWoche.png',
+  },
 ];
