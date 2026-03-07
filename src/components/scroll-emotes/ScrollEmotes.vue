@@ -39,13 +39,19 @@
             :size="16" />
         </template>
       </div>
-      <span class="scroll-emote-name">{{ emote.name }}</span>
+      <span
+        class="scroll-emote-name"
+        :class="{ 'scroll-emote-name--marquee': hasMarquee(index) }"
+        :style="getMarqueeStyle(index)"
+        :ref="(el) => setNameRef(el as HTMLElement | null, index)">
+        <span class="scroll-emote-name-text">{{ emote.name }}</span>
+      </span>
     </li>
   </ul>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { Heart, Star } from 'lucide-vue-next';
 import { EMOTES } from '@/common/constants/emotes.constant';
 import { useApplicationStore } from '@/stores/application.store';
@@ -55,11 +61,51 @@ const applicationStore = useApplicationStore();
 const { intermissionVideoPlaying } = storeToRefs(applicationStore);
 
 const listRef = ref<HTMLElement>();
+const emoteNameRefs = ref<Array<HTMLElement | null>>([]);
+const marqueeDistances = ref<Record<number, number>>({});
 
 let animationId: number;
 let translateX = 0;
 let contentWidth = 0;
 const speed = 1;
+
+function setNameRef(el: HTMLElement | null, index: number) {
+  emoteNameRefs.value[index] = el;
+}
+
+function updateMarqueeState() {
+  const nextMarqueeDistances: Record<number, number> = {};
+
+  emoteNameRefs.value.forEach((el, index) => {
+    if (!el) {
+      return;
+    }
+
+    const distance = el.scrollWidth - el.clientWidth;
+
+    if (distance > 0) {
+      nextMarqueeDistances[index] = distance;
+    }
+  });
+
+  marqueeDistances.value = nextMarqueeDistances;
+}
+
+function hasMarquee(index: number) {
+  return marqueeDistances.value[index] !== undefined;
+}
+
+function getMarqueeStyle(index: number) {
+  const distance = marqueeDistances.value[index];
+  if (!distance) {
+    return undefined;
+  }
+
+  return {
+    '--marquee-distance': `${distance}px`,
+    '--marquee-duration': `${Math.max(4, distance / 20).toFixed(2)}s`,
+  };
+}
 
 function animate() {
   if (!listRef.value) {
@@ -95,12 +141,18 @@ function animate() {
 
 onMounted(() => {
   animationId = requestAnimationFrame(animate);
+  nextTick(() => {
+    updateMarqueeState();
+    window.addEventListener('resize', updateMarqueeState);
+  });
 });
 
 onUnmounted(() => {
   if (animationId) {
     cancelAnimationFrame(animationId);
   }
+
+  window.removeEventListener('resize', updateMarqueeState);
 });
 </script>
 
@@ -175,8 +227,9 @@ onUnmounted(() => {
 .scroll-emote-container {
   display: flex;
   flex-direction: column;
-  position: relative;
   flex-shrink: 0;
+  max-width: 128px;
+  position: relative;
 }
 
 .scroll-emote-name {
@@ -185,7 +238,33 @@ onUnmounted(() => {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
+  overflow: hidden;
   padding: 4px 8px;
   text-align: center;
+}
+
+.scroll-emote-name-text {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.scroll-emote-name--marquee {
+  text-overflow: clip;
+}
+
+.scroll-emote-name--marquee .scroll-emote-name-text {
+  animation: scroll-emote-marquee var(--marquee-duration, 6s) linear infinite alternate;
+  min-width: max-content;
+  text-align: left;
+  will-change: transform;
+}
+
+@keyframes scroll-emote-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--marquee-distance, 0px) * -1));
+  }
 }
 </style>
