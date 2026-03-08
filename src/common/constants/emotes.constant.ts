@@ -177,14 +177,6 @@ export const EMOTES: { lastModified: string; name: string; new: boolean; tier: '
   },
   {
     lastModified: '2025-07-11',
-    name: 'bamboe1Pat',
-    new: false,
-    tier: '1',
-    updated: false,
-    url: '/emotes/bamboe1Pat.png',
-  },
-  {
-    lastModified: '2025-07-11',
     name: 'bamboe1Shy',
     new: false,
     tier: '1',
