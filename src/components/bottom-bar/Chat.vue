@@ -18,7 +18,6 @@
                 :color="message.color"
                 :displayName="message.displayName"
                 :msgType="message.msgType"
-                :timestamp="message.timestamp"
                 :userBadges="message.userBadges"
                 :userName="message.userName" />
             </template>

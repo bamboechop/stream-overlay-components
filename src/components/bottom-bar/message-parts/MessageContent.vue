@@ -75,8 +75,8 @@ onMounted(async () => {
   overflow: hidden;
 
   &__emote {
-    max-height: 18px;
-    max-width: 18px;
+    max-height: 20px;
+    max-width: 20px;
   }
 
   &__emote--highlighted {
@@ -87,9 +87,9 @@ onMounted(async () => {
     color: #fff;
     display: block;
     font-family: 'Geist Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 16px;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 19px;
     max-width: 100%;
     word-wrap: break-word;
   }

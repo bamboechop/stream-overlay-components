@@ -137,47 +137,20 @@ export const hexToRgb = (hex: string): [number, number, number] | null => {
 };
 
 /**
- * Converts RGB values to a hex color string
+ * Chooses either a dark or light text stroke color based on
+ * the perceived brightness of the provided hex color.
  */
-export const rgbToHex = (r: number, g: number, b: number): string => {
-  const toHex = (value: number): string => {
-    const hex = Math.round(Math.max(0, Math.min(255, value))).toString(16);
-    return hex.length === 1 ? '0' + hex : hex;
-  };
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-};
-
-/**
- * Darkens a hex color for use as a text stroke.
- * Uses an adaptive multiplier based on color brightness to approximate
- * the darkening shown in the color picker (e.g., #ff4500 → #661c00, #aacc00 → #546500).
- */
-export const darkenHex = (hex: string): string | null => {
+export const getReadableStrokeColor = (hex: string, darkColor = '#111111', lightColor = '#ffffff'): string => {
   const rgb = hexToRgb(hex);
   if (!rgb) {
-    return null;
+    return darkColor;
   }
 
   const [r, g, b] = rgb;
-  const maxRgb = Math.max(r, g, b);
-  
-  // Adaptive multiplier: brighter colors use lower multiplier (~0.40), 
-  // less bright colors use higher multiplier (~0.49)
-  // Interpolate between 0.40 (for max RGB = 255) and 0.49 (for max RGB = 170)
-  let multiplier: number;
-  if (maxRgb >= 255) {
-    multiplier = 0.40;
-  } else if (maxRgb <= 170) {
-    multiplier = 0.49;
-  } else {
-    // Linear interpolation between 0.40 and 0.49
-    const ratio = (maxRgb - 170) / (255 - 170);
-    multiplier = 0.49 - (0.49 - 0.40) * ratio;
-  }
-  
-  const darkenedR = Math.round(r * multiplier);
-  const darkenedG = Math.round(g * multiplier);
-  const darkenedB = Math.round(b * multiplier);
-  
-  return rgbToHex(darkenedR, darkenedG, darkenedB);
+
+  // Relative luminance approximation (0 = black, 255 = white)
+  const luminance = (0.299 * r) + (0.587 * g) + (0.114 * b);
+
+  // Bright usernames get a dark stroke, dark usernames get a light stroke.
+  return luminance >= 140 ? darkColor : lightColor;
 };

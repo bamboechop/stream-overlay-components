@@ -1,6 +1,5 @@
 <template>
   <header class="message-header">
-    <span class="message-header__timestamp">{{ humanReadableTimestamp }}</span>
     <template v-if="userBadges.length > 0">
       <template
         v-for="(badge, index) of userBadges"
@@ -21,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { darkenHex, parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
+import { getReadableStrokeColor, parseUserBadges } from '@/common/helpers/twitch-message.helper';
 import type { IBadge } from '@/common/interfaces/index.interface';
 import type { Badges } from 'tmi.js';
 import { computed, onMounted, ref } from 'vue';
@@ -31,7 +30,6 @@ const props = defineProps<{
   color?: string;
   displayName?: string;
   msgType?: 'chat' | 'action';
-  timestamp?: number;
   userBadges?: Badges;
   userName?: string;
 }>();
@@ -39,13 +37,6 @@ const props = defineProps<{
 const userBadges = ref<{ description: string; id: string; imageUrl: string; title: string }[]>([]);
 
 const isActionOrChatMessage = computed(() => props.msgType === 'action' || props.msgType === 'chat');
-
-const humanReadableTimestamp = computed(() => {
-  return new Date(props.timestamp ?? Date.now()).toLocaleTimeString('de', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-});
 
 const nameColor = computed(() => {
   if (isActionOrChatMessage.value && props.color) {
@@ -55,13 +46,7 @@ const nameColor = computed(() => {
 
 const strokeColor = computed(() => {
   if (isActionOrChatMessage.value && props.color) {
-    return darkenHex(props.color);
-  }
-});
-
-const timestampBackgroundColor = computed(() => {
-  if (isActionOrChatMessage.value && props.color) {
-    return darkenHex(props.color);
+    return getReadableStrokeColor(props.color);
   }
 });
 
@@ -89,25 +74,10 @@ onMounted(async () => {
   &__name {
     color: v-bind(nameColor);
     font-family: 'Geist Mono', monospace;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 500;
     paint-order: stroke fill;
-    -webkit-text-stroke: 1px v-bind(strokeColor);
-  }
-
-    &__timestamp {
-    align-items: center;
-    background-color: v-bind(timestampBackgroundColor);
-    border-radius: 4px;
-    color: #eee;
-    display: flex;
-    font-family: 'Geist Mono', monospace;
-    font-size: 9px;
-    font-weight: 600;
-    height: 16px;
-    justify-content: center;
-    min-width: 32px;
-    padding: 2px;
+    -webkit-text-stroke: 4px v-bind(strokeColor);
   }
 }
 </style>
