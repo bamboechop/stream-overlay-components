@@ -8,6 +8,13 @@ import svgLoader from 'vite-svg-loader';
 // https://vitejs.dev/config/
 export default defineConfig({
   assetsInclude: ['**/*.pdf'],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ['import', 'global-builtin', 'color-functions'],
+      },
+    },
+  },
   plugins: [
     vue(),
     svgLoader(),
