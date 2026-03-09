@@ -27,7 +27,7 @@ import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
   availableBadges: Record<string, IBadge[]>;
-  color?: string;
+  color: string;
   displayName?: string;
   msgType?: 'chat' | 'action';
   userBadges?: Badges;
@@ -39,13 +39,13 @@ const userBadges = ref<{ description: string; id: string; imageUrl: string; titl
 const isActionOrChatMessage = computed(() => props.msgType === 'action' || props.msgType === 'chat');
 
 const nameColor = computed(() => {
-  if (isActionOrChatMessage.value && props.color) {
+  if (isActionOrChatMessage.value) {
     return props.color;
   }
 });
 
 const strokeColor = computed(() => {
-  if (isActionOrChatMessage.value && props.color) {
+  if (isActionOrChatMessage.value) {
     return getReadableStrokeColor(props.color);
   }
 });

@@ -15,7 +15,7 @@
             <template #header>
               <MessageHeader
                 :availableBadges="message.availableBadges"
-                :color="message.color"
+                :color="message.color ?? '#007896'"
                 :displayName="message.displayName"
                 :msgType="message.msgType"
                 :userBadges="message.userBadges"
