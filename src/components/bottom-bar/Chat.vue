@@ -10,6 +10,7 @@
           v-if="message.msgType === 'action' || message.msgType === 'chat'"
           :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof ChatMessage>"
           v-bind="message"
+          :color="message.color ?? '#007896'"
           :message-index="index"
           :message-offset="getMessageOffset(index)">
             <template #header>
