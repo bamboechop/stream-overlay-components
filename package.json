@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npm run update:emote-flags && run-p type-check \"build:only {@}\" --",
+    "build": "run-p type-check \"build:only {@}\" --",
     "build:only": "npm run update:emote-flags && vite build",
     "dev": "npm run update:emote-flags && vite",
     "lint": "eslint .",
