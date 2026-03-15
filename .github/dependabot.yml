@@ -12,3 +12,5 @@ updates:
     ignore:
       - dependency-name: "@types/node"
       - dependency-name: "eslint"
+    assignees:
+      - "bamboechop"
