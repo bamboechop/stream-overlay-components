@@ -101,12 +101,16 @@ onMounted(async () => {
 });
 
 watch(posts, () => {
-  stopCycling();
-  startCycling();
+  // stopCycling();
+  // startCycling();
 });
 </script>
 
 <style scoped lang="scss">
+:global(body) {
+  background: saddlebrown;
+}
+
 .bsky-posts-window {
   width: 100%;
   opacity: 1;
@@ -133,7 +137,6 @@ watch(posts, () => {
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.02em;
-    margin-top: -4px;
     padding: 12px;
     transition: border-top-left-radius .3s cubic-bezier(0.4,0,0.2,1), border-top-right-radius .3s cubic-bezier(0.4,0,0.2,1), margin-top .3s cubic-bezier(0.4,0,0.2,1);
   }
@@ -151,7 +154,6 @@ watch(posts, () => {
   .bsky-posts-window__follow-cta {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    margin-top: -4px;
   }
 }
 
