@@ -1,5 +1,5 @@
 <template>
-  <section class="media-player-view">
+  <section class="h-screen w-screen">
       <MediaPlayer :active />
   </section>
 </template>

@@ -1,10 +1,10 @@
 <template>
   <WindowFrame
     :active="active"
-    class="media-player-window"
+    class="w-full"
     :icon-path="iconPath"
     :title="category">
-    <div class="media-player"></div>
+    <div class="aspect-video text-white max-h-[calc(100vh-38px)]"></div>
   </WindowFrame>
 </template>
 
@@ -21,17 +21,3 @@ const { category } = storeToRefs(store);
 
 const { iconPath } = useProgramInformationComposable();
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/modern.variables';
-
-.media-player {
-  aspect-ratio: 16 / 9;
-  color: #fff;
-  max-height: calc(100vh - 38px);
-}
-
-.media-player-window {
-  width: 100%;
-}
-</style>
