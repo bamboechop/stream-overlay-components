@@ -107,10 +107,6 @@ watch(posts, () => {
 </script>
 
 <style scoped lang="scss">
-:global(body) {
-  background: saddlebrown;
-}
-
 .bsky-posts-window {
   width: 100%;
   opacity: 1;
