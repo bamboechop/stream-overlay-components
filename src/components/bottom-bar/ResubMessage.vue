@@ -15,7 +15,7 @@
         pflegt seit {{ cumulativeMonths ? cumulativeMonths : months }} Monaten den Garten!
         <img
           :alt="COZY_EMOTE?.name"
-          class="resub-message__emote"
+          class="max-h-[18px] max-w-[18px]"
           :src="COZY_EMOTE?.url" />
         <div class="resub-message__text">
           <template

@@ -42,6 +42,8 @@ import { useSearchParamsComposable } from '@/composables/search-params.composabl
 
 const { debug } = useSearchParamsComposable();
 
+const DEBUG_AD_DURATION_SECONDS = 30;
+
 const streamStatusStore = useStreamStatusStore();
 const { live } = storeToRefs(streamStatusStore);
 
@@ -185,13 +187,13 @@ function triggerDebugCountdown() {
 function triggerDebugAd() {
   // Simulate ad break by directly setting store values
   isAdRunning.value = true;
-  adDuration.value = 30;
-  
-  // Set timeout to mark ad as finished after duration
+  adDuration.value = DEBUG_AD_DURATION_SECONDS;
+
+  // Clear store when the simulated ad ends (same duration as watcher / adDuration)
   window.setTimeout(() => {
     isAdRunning.value = false;
     adDuration.value = 0;
-  }, 180 * 1000);
+  }, DEBUG_AD_DURATION_SECONDS * 1000);
 }
 </script>
 
