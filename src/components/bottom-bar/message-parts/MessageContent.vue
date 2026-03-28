@@ -18,7 +18,7 @@
         <template v-if="part.type === 'emote'">
           <img
             :alt="part.raw"
-            class="message-content__emote max-h-5 max-w-5"
+            class="max-h-5 max-w-5"
             :class="{ 'invert': msgId === 'highlighted-message' }"
             :src="part.value" />
         </template>
