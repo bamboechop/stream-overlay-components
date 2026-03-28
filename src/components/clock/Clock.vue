@@ -1,8 +1,8 @@
 <template>
-  <WindowFrame class="clock-window-window">
-    <div class="clock-window">
-      <span class="clock-window__time">{{ time }}</span>
-      <span class="clock-window__date">{{ date }}</span>
+  <WindowFrame class="rounded-b-none rounded-tr-none w-max">
+    <div class="items-center flex flex-col gap-1 px-4 py-2 w-[116px]">
+      <span class="text-[22px] font-semibold tabular-nums">{{ time }}</span>
+      <span class="text-base -tracking-[0.5px]">{{ date }}</span>
     </div>
   </WindowFrame>
 </template>
@@ -14,34 +14,3 @@ import WindowFrame from '@/components/desktop/WindowFrame.vue';
 const date = useDateFormat(useNow(), 'YYYY-MM-DD');
 const time = useDateFormat(useNow(), 'HH:mm:ss');
 </script>
-
-<style lang="scss" scoped>
-@import '@/assets/modern.variables';
-
-.clock-window {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: $window-frame-padding * 2 $window-frame-padding * 4;
-  width: 116px;
-
-  &__date {
-    font-size: 16px;
-    letter-spacing: -.5px;
-  }
-
-  &__time {
-    font-size: 22px;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-}
-
-.clock-window-window {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-  width: max-content;
-}
-</style>

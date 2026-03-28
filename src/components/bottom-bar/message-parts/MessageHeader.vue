@@ -1,16 +1,16 @@
 <template>
-  <header class="message-header">
+  <header class="flex items-center gap-0.5">
     <template v-if="userBadges.length > 0">
       <template
         v-for="(badge, index) of userBadges"
         :key="`badge-${badge.description}-${index}`">
         <img
           :alt="badge.description"
-          class="message-header__badge"
+          class="aspect-square h-4 w-4"
           :src="badge.imageUrl" />
       </template>
     </template>
-    <span class="message-header__name">
+    <span class="message-header-name font-geist-mono text-base font-medium">
       {{ displayName }}
       <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
         ({{ userName }})
@@ -59,25 +59,10 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped>
-  .message-header {
-    align-items: center;
-    column-gap: 2px;
-    display: flex;
-
-  &__badge {
-    aspect-ratio: 1 / 1;
-    height: 16px;
-    width: 16px;
-  }
-
-  &__name {
-    color: v-bind(nameColor);
-    font-family: 'Geist Mono', monospace;
-    font-size: 16px;
-    font-weight: 500;
-    paint-order: stroke fill;
-    -webkit-text-stroke: 4px v-bind(strokeColor);
-  }
+<style scoped>
+.message-header-name {
+  color: v-bind(nameColor);
+  paint-order: stroke fill;
+  -webkit-text-stroke: 4px v-bind(strokeColor);
 }
 </style>

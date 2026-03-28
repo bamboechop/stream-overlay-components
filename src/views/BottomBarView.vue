@@ -1,8 +1,8 @@
 <template>
-  <div class="bottom-bar-view">
-    <TaskBarModernTheme class="bottom-bar-view__task-bar" />
-    <ChatBottomBarTheme class="bottom-bar-view__chat" />
-    <Clock class="bottom-bar-view__clock" />
+  <div class="flex mt-[38px] max-h-[68px] w-full max-w-dvw">
+    <TaskBarModernTheme class="bg-white/75 border-transparent shrink-0 z-1" />
+    <ChatBottomBarTheme class="flex flex-row-reverse grow shrink min-w-0" />
+    <Clock class="bg-white/75 border-transparent shrink-0 z-1" />
   </div>
 </template>
 
@@ -25,29 +25,3 @@ onMounted(async () => {
   await initChat();
 });
 </script>
-
-<style lang="scss" scoped>
-.bottom-bar-view {
-  display: flex;
-  margin-top: 38px; // to accomodate gigantified emotes
-  max-height: 68px;
-  width: 100%;
-  max-width: 100vw;
-
-  &__chat {
-    display: flex;
-    flex-direction: row-reverse;
-    flex-grow: 1;
-    flex-shrink: 1;
-    min-width: 0;
-  }
-
-  &__clock,
-  &__task-bar {
-    background: rgba(255, 255, 255, 0.75);
-    border-color: transparent;
-    flex-shrink: 0;
-    z-index: 1;
-  }
-}
-</style>

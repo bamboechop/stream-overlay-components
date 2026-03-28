@@ -1,12 +1,12 @@
 <template>
   <div
     ref="textWrapper"
-    class="message-content">
+    class="max-h-[46px] max-w-[600px] overflow-hidden">
     <span
       ref="textElement"
-      class="message-content__text"
+      class="text-white block font-geist-mono text-base font-black leading-[19px] max-w-full word-wrap-break-word"
       :class="{
-        'message-content__text--marquee': shouldMarquee,
+        'animate-[message-content-scroll-up_20s_linear_infinite] will-change-transform': shouldMarquee,
       }"
       :style="shouldMarquee ? { '--scroll-distance': `-${scrollDistance}px` } : {}">
       <template
@@ -18,8 +18,8 @@
         <template v-if="part.type === 'emote'">
           <img
             :alt="part.raw"
-            class="message-content__emote"
-            :class="{ 'message-content__emote--highlighted': msgId === 'highlighted-message' }"
+            class="message-content__emote max-h-5 max-w-5"
+            :class="{ 'invert': msgId === 'highlighted-message' }"
             :src="part.value" />
         </template>
       </template>
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
 import { parseMessage } from '@/common/helpers/twitch-message.helper';
 
 const props = defineProps<{
@@ -39,10 +39,11 @@ const props = defineProps<{
   userId: string;
 }>();
 
-const textWrapper = ref<HTMLDivElement | null>(null);
+const textWrapper = useTemplateRef('textWrapper');
+const textElement = useTemplateRef('textElement');
+
 const shouldMarquee = ref<boolean>(false);
 const scrollDistance = ref<number>(0);
-const textElement = ref<HTMLSpanElement | null>(null);
 const messageParts = ref<Record<string, string | undefined>[]>([]);
 
 const isGigantifiedEmoteMessage = props.msgType === 'chat' && 'msgId' in props && props.msgId === 'gigantified-emote-message';
@@ -66,41 +67,14 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped>
-@import '@/assets/modern.variables';
-
-.message-content {
-  max-height: 46px;
-  max-width: 600px; // 656px - 52px (avatar padding) - 4px (right padding)
-  overflow: hidden;
-
-  &__emote {
-    max-height: 20px;
-    max-width: 20px;
-  }
-
-  &__emote--highlighted {
-    filter: invert(1);
-  }
-
-  &__text {
-    color: #fff;
-    display: block;
-    font-family: 'Geist Mono', monospace;
-    font-size: 16px;
-    font-weight: 900;
-    line-height: 19px;
-    max-width: 100%;
-    word-wrap: break-word;
-  }
-
-  &__text--marquee {
-    animation: scroll-up 20s linear infinite;
-    will-change: transform;
-  }
+<style scoped>
+.word-wrap-break-word {
+  word-wrap: break-word;
 }
+</style>
 
-@keyframes scroll-up {
+<style>
+@keyframes message-content-scroll-up {
   0% {
     transform: translateY(0);
   }

@@ -66,13 +66,6 @@
             ({{ userName }})
           </template>
         </div>
-        <template v-if="isOtherChannel && props.channelImage">
-          <OtherChannelIndicator
-            :channel="props.channel"
-            :channel-image="props.channelImage"
-            class="message__other-channel-indicator"
-            :stream-together-channels="streamTogetherChannels" />
-        </template>
       </div>
       <span class="message__text">
         <template
@@ -98,13 +91,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref, toRefs } from 'vue';
-import { storeToRefs } from 'pinia';
-import OtherChannelIndicator from '../OtherChannelIndicator.vue';
+import { nextTick, onMounted, ref, toRefs } from 'vue';
 import type { IChat } from '@/common/interfaces/index.interface';
 import { parseMessage, parseUserBadges } from '@/common/helpers/twitch-message.helper';
-import { broadcasterInfo } from '@/composables/twitch-chat.composable';
-import { useTwitchStore } from '@/stores/twitch.store';
 import { EMOTES } from '@/common/constants/emotes.constant';
 
 const props = defineProps<IChat & { messageIndex?: number; messageOffset?: number }>();
@@ -114,10 +103,6 @@ const emits = defineEmits<{
 
 const { animationId, msgId } = toRefs(props);
 
-const twitchStore = useTwitchStore();
-const { streamTogetherChannels } = storeToRefs(twitchStore);
-
-const isOtherChannel = computed(() => props.channel !== broadcasterInfo.name && props.channelImage);
 
 const isGigantifiedEmoteMessage = msgId.value === 'gigantified-emote-message';
 const messageParts = ref<Record<string, string | undefined>[]>([]);
