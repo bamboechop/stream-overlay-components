@@ -7,7 +7,7 @@
     :style="{ transform: transformStyle }">
     <img
       alt=""
-      class="bottom-0 left-[-16px] absolute aspect-square h-16 w-16"
+      class="bottom-0 left-[-16px] absolute aspect-square h-16 w-16 transition-opacity duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]"
       :class="{ 'invert': isHighlightedMessage }"
       :src="userImage"
       :style="{ opacity: imageLoaded ? 1 : 0 }"
