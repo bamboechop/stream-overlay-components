@@ -17,12 +17,6 @@ export const GAME_METADATA: Record<string, Partial<{ backgroundImagePath: string
     iconPath: '/modern/programs/brotato.icon.png',
     intermissionTextMode: 'default',
   },
-  'Cities: Skylines II': {
-    backgroundImagePath: '/modern/game-backgrounds/cities-skylines-ii.jpg',
-    color: 'rgba(30, 71, 159, 0.5)',
-    iconPath: '/modern/programs/cities-skylines-ii.icon.png',
-    intermissionTextMode: 'default',
-  },
   'Cult of the Lamb': {
     backgroundImagePath: '/modern/game-backgrounds/cult-of-the-lamb.jpg',
     color: 'rgba(239, 17, 30, 0.35)',
