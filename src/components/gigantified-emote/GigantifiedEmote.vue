@@ -153,7 +153,7 @@ watch(messages, () => {
 }, { deep: true, immediate: true });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .gigantified-emote {
   position: fixed;
   left: 50%;
@@ -161,38 +161,38 @@ watch(messages, () => {
   width: 100%;
   z-index: 9999;
   filter: drop-shadow(0 75px 20px rgba(0, 0, 0, 0.75));
+}
 
-  &.animate-slide-through {
-    animation: slide-up 2.201s ease-in-out forwards;
-  }
+.gigantified-emote.animate-slide-through {
+  animation: slide-up 2.201s ease-in-out forwards;
+}
 
-  &.animate-bla {
-    animation: bla-animation 6.5s ease-in-out forwards;
-  }
+.gigantified-emote.animate-bla {
+  animation: bla-animation 6.5s ease-in-out forwards;
+}
 
-  &.animate-clap {
-    animation: clap-animation 4.5s ease-in-out forwards;
-  }
+.gigantified-emote.animate-clap {
+  animation: clap-animation 4.5s ease-in-out forwards;
+}
 
-  &.animate-danner-geblitzt {
-    animation: danner-geblitzt-animation 11s ease-in-out forwards;
-  }
+.gigantified-emote.animate-danner-geblitzt {
+  animation: danner-geblitzt-animation 11s ease-in-out forwards;
+}
 
-  &.animate-lurk {
-    animation: lurk-animation 3.6s ease-in-out forwards;
-  }
+.gigantified-emote.animate-lurk {
+  animation: lurk-animation 3.6s ease-in-out forwards;
+}
 
-  &.animate-noted {
-    animation: noted-animation 1.9s ease-in-out forwards;
-  }
+.gigantified-emote.animate-noted {
+  animation: noted-animation 1.9s ease-in-out forwards;
+}
 
-  &.animate-party {
-    animation: party-animation 8s ease-out forwards;
-  }
+.gigantified-emote.animate-party {
+  animation: party-animation 8s ease-out forwards;
+}
 
-  &.animate-steer {
-    animation: steer-animation 3.9s ease-in-out forwards;
-  }
+.gigantified-emote.animate-steer {
+  animation: steer-animation 3.9s ease-in-out forwards;
 }
 
 .gigantified-emote--bla {
@@ -256,49 +256,49 @@ watch(messages, () => {
 }
 
 @keyframes bla-animation {
-  // bottom left
+  /* bottom left */
   0%,
   14.27% {
     transform: translateX(-125%) translateY(55vh);
     scale: 0.8;
   }
 
-  // top left
+  /* top left */
   14.28%,
   28.56% {
     transform: translateX(-225%) translateY(0vh) rotate(90deg);
     scale: 0.7;
   }
 
-  // bottom right
+  /* bottom right */
   28.57%,
   42.89% {
     transform: translateX(50%) translateY(40vh) rotate(270deg);
     scale: 0.9;
   }
 
-  // bottom left
+  /* bottom left */
   42.90%,
   57.13% {
     transform: translateX(-100%) translateY(37vw) rotate(0deg);
     scale: 0.75;
   }
 
-  // bottom left diagonal
+  /* bottom left diagonal */
   57.14%,
   71.44% {
     transform: translateX(-100vw) translateY(95vh) rotate(45deg);
     scale: 0.6;
   }
 
-  // top middle
+  /* top middle */
   71.45%,
   85.70% {
     transform: translateX(-50%) translateY(-5vh) rotate(180deg);
     scale: 1;
   }
 
-  // top right diagonal
+  /* top right diagonal */
   85.71%,
   100% {
     transform: translateX(67%) translateY(-37%) rotate(225deg);
