@@ -15,7 +15,7 @@
       </button>
     </div>
     <WindowFrame
-      class="ad-window bg-white/75 rounded-none rounded-r-lg border! bottom-0 overflow-hidden fixed! transition-[left]! duration-500 ease-in-out w-full before:bg-[#1e4e00] before:bottom-0 before:content-[''] before:left-0 before:opacity-0 before:absolute before:right-0 before:top-0 before:origin-left before:w-full before:-z-1"
+      class="ad-window bg-white/75 rounded-none rounded-r-lg border! bottom-0 overflow-hidden fixed! transition-[left]! duration-500 ease-in-out w-full before:bg-[#1e4e00] before:bottom-0 before:content-[''] before:left-0 before:opacity-0 before:absolute before:right-0 before:transition-opacity before:duration-300 before:ease-[cubic-bezier(0.25,0.1,0.25,1.0)] before:top-0 before:origin-left before:w-full before:-z-1"
       :class="diffInSeconds < 10 * 60 && diffInSeconds >= 0 ? 'left-0' : '-left-[105%]'"
       :style="duration > 0 ? { '--duration': `${duration}s` } : {}">
       <div class="flex flex-col items-center justify-center gap-1 py-2 px-4 min-h-14">
