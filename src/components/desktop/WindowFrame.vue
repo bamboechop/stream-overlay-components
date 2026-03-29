@@ -1,13 +1,13 @@
 <template>
   <div
-    class="bg-transparent rounded-lg border-[5px] border-white/75 flex flex-col relative transition-colors duration-500 ease-in-out"
-    :class="{ 'border-[rgba(170,204,0,0.75)]': active }">
+    class="bg-transparent rounded-lg border-[5px] flex flex-col relative transition-colors duration-500 ease-in-out"
+    :class="[active ? 'border-[rgba(170,204,0,0.75)]' : 'border-white/75']">
     <slot></slot>
     <template v-if="title">
       <template v-if="iconPath">
         <div
-          class="aspect-square bg-white/75 rounded-br-lg rounded-tl-xs border-b-2 border-r-2 border-white/90 left-0 p-1 absolute top-0 transition-colors duration-500 ease-in-out"
-          :class="{ 'bg-[rgba(170,204,0,0.75)] border-[rgba(170,204,0,0.75)]': active }">
+          class="aspect-square rounded-br-lg rounded-tl-xs border-b-2 border-r-2 left-0 p-1 absolute top-0 transition-colors duration-500 ease-in-out"
+          :class="[active ? 'bg-[rgba(170,204,0,0.75)] border-[rgba(170,204,0,0.75)]' : 'bg-white/75 border-white/90']">
           <img
             :alt="title"
             class="aspect-square max-w-14"
@@ -15,8 +15,8 @@
         </div>
       </template>
       <div
-        class="items-center bg-white/75 flex font-bold justify-between pt-1 pl-2 transition-colors duration-500 ease-in-out"
-        :class="{ 'bg-[rgba(170,204,0,0.75)]': active }">
+        class="items-center flex font-bold justify-between pt-1 pl-2 transition-colors duration-500 ease-in-out"
+        :class="[active ? 'bg-[rgba(170,204,0,0.75)]' : 'bg-white/75']">
         {{ title }}
         <div class="flex flex-row gap-1.5 p-1">
           <button
