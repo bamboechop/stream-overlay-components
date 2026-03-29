@@ -15,3 +15,15 @@ const { activeProgramId } = storeToRefs(applicationStore);
 
 const active = computed(() => activeProgramId.value === 'schedule');
 </script>
+
+<style scoped>
+@reference 'tailwindcss';
+
+:global(body) {
+  @apply h-screen;
+}
+
+:global(#app) {
+  @apply h-full;
+}
+</style>
