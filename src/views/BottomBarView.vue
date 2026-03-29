@@ -1,8 +1,8 @@
 <template>
   <div class="flex mt-[38px] max-h-[68px] w-full max-w-dvw">
-    <TaskBarModernTheme class="bg-white/75 border-transparent shrink-0 z-1" />
+    <TaskBarModernTheme class="bg-white/75! border-transparent! shrink-0 z-1" />
     <ChatBottomBarTheme class="flex flex-row-reverse grow shrink min-w-0" />
-    <Clock class="bg-white/75 border-transparent shrink-0 z-1" />
+    <Clock class="bg-white/75! border-transparent! shrink-0 z-1" />
   </div>
 </template>
 
