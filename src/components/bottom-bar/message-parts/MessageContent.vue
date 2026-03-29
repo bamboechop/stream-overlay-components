@@ -61,7 +61,7 @@ onMounted(async () => {
     const hasOverflow = contentHeight > visibleHeight + THRESHOLD;
     shouldMarquee.value = hasOverflow;
     if (hasOverflow) {
-      scrollDistance.value = contentHeight - visibleHeight;
+      scrollDistance.value = contentHeight - visibleHeight + 19; // add additional 19px to account for the line height of the text, 900 font-weight needs more space
     }
   }
 });
