@@ -1,7 +1,7 @@
 <template>
   <div
     ref="textWrapper"
-    class="max-h-[46px] max-w-[600px] overflow-hidden">
+    class="max-h-[38px] max-w-[600px] overflow-hidden">
     <span
       ref="textElement"
       class="text-white block font-geist-mono text-base font-black leading-[19px] max-w-full word-wrap-break-word"
