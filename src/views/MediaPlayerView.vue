@@ -1,5 +1,5 @@
 <template>
-  <section class="media-player-view">
+  <section class="h-screen w-screen">
       <MediaPlayer :active />
   </section>
 </template>
@@ -18,10 +18,3 @@ const { activeProgramId } = storeToRefs(applicationStore);
 
 const active = computed(() => activeProgramId.value === 'media-player');
 </script>
-
-<style lang="scss" scoped>
-.media-player-view {
-  height: 100vh;
-  width: 100vw;
-}
-</style>

@@ -1,8 +1,6 @@
 <template>
-  <div
-    ref="chatContainer"
-    class="chat">
-    <ul class="chat__list">
+  <div ref="chatContainer">
+    <ul class="h-full list-none m-0 p-0 relative">
       <template
         v-for="(message, index) of messages"
         :key="message.id">
@@ -37,24 +35,24 @@
           v-bind="message"
           :message-index="index"
           :message-offset="getMessageOffset(index)" />
-          <ResubMessage
-            v-if="message.msgType === 'resub'"
-            :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof ResubMessage>"
-            v-bind="message"
-            :message-index="index"
-            :message-offset="getMessageOffset(index)" />
-          <SubMessage
-            v-if="message.msgType === 'subscription'"
-            :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof SubMessage>"
-            v-bind="message"
-            :message-index="index"
-            :message-offset="getMessageOffset(index)" />
-          <SubgiftMessage
-            v-if="message.msgType === 'subgift'"
-            :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof SubgiftMessage>"
-            v-bind="message"
-            :message-index="index"
-            :message-offset="getMessageOffset(index)" />
+        <ResubMessage
+          v-if="message.msgType === 'resub'"
+          :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof ResubMessage>"
+          v-bind="message"
+          :message-index="index"
+          :message-offset="getMessageOffset(index)" />
+        <SubMessage
+          v-if="message.msgType === 'subscription'"
+          :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof SubMessage>"
+          v-bind="message"
+          :message-index="index"
+          :message-offset="getMessageOffset(index)" />
+        <SubgiftMessage
+          v-if="message.msgType === 'subgift'"
+          :ref="(el) => messageRefs[index] = el as ComponentPublicInstance<typeof SubgiftMessage>"
+          v-bind="message"
+          :message-index="index"
+          :message-offset="getMessageOffset(index)" />
       </template>
     </ul>
     <audio
@@ -65,7 +63,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { type ComponentPublicInstance, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { type ComponentPublicInstance, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import { useMediaControls } from '@vueuse/core';
 import { useTwitchStore } from '@/stores/twitch.store';
 import type { IChat } from '@/common/interfaces/index.interface';
@@ -85,7 +83,7 @@ const { messages } = storeToRefs(store);
 
 const messageRefs = ref<ComponentPublicInstance<typeof ChatMessage | typeof RaidMessage | typeof ResubMessage | typeof SubMessage | typeof SubgiftMessage>[]>([]);
 const messageWidths = ref<number[]>([]);
-const chatContainer = ref<HTMLDivElement | null>(null);
+const chatContainer = useTemplateRef('chatContainer');
 
 // Track when messages are displayed (keyed by message ID)
 const messageDisplayTimes = ref<Map<string, number>>(new Map());
@@ -370,15 +368,3 @@ watch(messages, async () => {
   }
 }, { deep: true });
 </script>
-
-<style lang="scss" scoped>
-.chat {
-  &__list {
-    height: 100%;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-  }
-}
-</style>

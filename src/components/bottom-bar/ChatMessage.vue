@@ -1,30 +1,28 @@
 <template>
   <li
-    ref="messageElement"
-    class="chat-message"
+    class="chat-message rounded-t-lg border border-b-0 bottom-0 max-w-[656px] max-h-full min-w-fit pt-[5px] absolute right-0 transition-transform duration-400 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] w-max after:bg-[rgba(17,17,17,.7)] after:rounded-t-lg after:bottom-0 after:content-[''] after:left-0 after:absolute after:right-0 after:top-0 after:-z-1"
     :class="{
-      'chat-message--highlighted': isHighlightedMessage,
-      'chat-message--mounted': mounted,
+      'invert': isHighlightedMessage,
     }"
     :style="{ transform: transformStyle }">
     <img
       alt=""
-      class="chat-message__avatar"
-      :class="{ 'chat-message__avatar--highlighted': isHighlightedMessage }"
+      class="bottom-0 left-[-16px] absolute aspect-square h-16 w-16 transition-opacity duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]"
+      :class="{ 'invert': isHighlightedMessage }"
       :src="userImage"
       :style="{ opacity: imageLoaded ? 1 : 0 }"
       @error="handleUserImageError"
     />
       <div
-        class="chat-message__content"
-        :class="{ 'chat-message__content--no-content': !$slots.content }">
+        class="pl-[52px] pr-1 w-full"
+        :class="{ 'pb-[5px]': !$slots.content }">
         <slot name="header"></slot>
         <slot name="content"></slot>
       </div>
       <img
         v-if="messageParts.at(-1)?.type === 'emote' && isGigantifiedEmoteMessage"
         :alt="messageParts.at(-1)!.raw"
-        class="chat-message__gigantified-emote"
+        class="left-1/2 max-h-16 max-w-16 absolute -top-16 -translate-x-1/2"
         :src="messageParts.at(-1)!.value" />
   </li>
 </template>
@@ -137,70 +135,9 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .chat-message {
   background-color: v-bind(messageBackgroundColor);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border: 1px solid v-bind(messageBorderColor);
-  border-bottom: none;
-  bottom: 0;
-  max-width: 656px;
-  min-width: fit-content;
-  padding-top: 5px;
-  position: absolute;
-  right: 0;
-  transition: transform 400ms ease;
-  width: max-content;
-
-  &::after {
-    background: rgba(17,17,17,.7);
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    bottom: 0;
-    content: '';
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: -1;
-  }
-
-  &__avatar {
-    aspect-ratio: 1 / 1;
-    bottom: 0;
-    height: 64px;
-    left: -16px;
-    position: absolute;
-    transition: opacity 200ms ease;
-    width: 64px;
-  }
-
-  &__avatar--highlighted {
-    filter: invert(1);
-  }
-
-  &__content {
-    padding-left: 52px;
-    padding-right: 4px;
-    width: 100%;
-  }
-
-  &__content--no-content {
-    padding-bottom: 5px;
-  }
-
-  &__gigantified-emote {
-    left: 50%;
-    max-height: 64px;
-    max-width: 64px;
-    position: absolute;
-    top: -64px;
-    transform: translateX(-50%);
-  }
+  border-color: v-bind(messageBorderColor);
 }
-
-.chat-message--highlighted {
-  filter: invert(1);
-} 
 </style>

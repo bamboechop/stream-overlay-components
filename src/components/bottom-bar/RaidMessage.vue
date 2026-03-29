@@ -1,22 +1,21 @@
 <template>
   <li
-    ref="messageElement"
-    class="raid-message"
+    class="bg-[rgba(255,54,155,0.075)] border border-[#ff369b] border-b-0 rounded-t-lg bottom-0 text-white font-geist-mono font-semibold max-w-[656px] min-w-fit pt-[5px] absolute right-0 transition-transform duration-400 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] w-max after:bg-[rgba(17,17,17,.7)] after:rounded-t-lg after:bottom-0 after:content-[''] after:left-0 after:absolute after:right-0 after:top-0 after:-z-1"
     :style="{ transform: transformStyle }">
     <img
       alt=""
-      class="raid-message__avatar"
+      class="aspect-square bottom-0 h-16 -left-4 absolute w-16"
       src="/toastys/raid-bot.png"
       />
-      <div class="raid-message__content">
+      <div class="pl-[52px] pr-1 w-full">
         💨🎐 Ein frischer Wind trägt <strong>{{ viewerCount > 1 ? `${viewerCount} Gäste` : 'einen Gast' }}</strong> in den Garten.
         <br />
-        Willkommen, und danke für den Raid, <strong class="raid-message__name">{{ userName }}</strong>.
+        Willkommen, und danke für den Raid, <strong class="text-[#ff369b] font-bold">{{ userName }}</strong>.
         <br />
         Wie war eure Reise?
         <img
           :alt="LOVE_EMOTE?.name"
-          class="raid-message__emote"
+          class="max-h-[18px] max-w-[18px]"
           :src="LOVE_EMOTE?.url" />
       </div>
   </li>
@@ -50,62 +49,3 @@ onMounted(async () => {
   }, 0);
 });
 </script>
-
-<style lang="scss" scoped>
-.raid-message {
-  background-color: rgba(255, 54, 155, 0.075);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border: 1px solid #ff369b;
-  border-bottom: none;
-  bottom: 0;
-  color: #fff;
-  font-family: 'Geist Mono', monospace;
-  font-weight: 600;
-  max-width: 656px;
-  min-width: fit-content;
-  padding-top: 5px;
-  position: absolute;
-  right: 0;
-  transition: transform 400ms ease;
-  width: max-content;
-
-  &::after {
-    background: rgba(17,17,17,.7);
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    bottom: 0;
-    content: '';
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: -1;
-  }
-
-  &__avatar {
-    aspect-ratio: 1 / 1;
-    bottom: 0;
-    height: 64px;
-    left: -16px;
-    position: absolute;
-    width: 64px;
-  }
-
-  &__content {
-    padding-left: 52px;
-    padding-right: 4px;
-    width: 100%;
-  }
-
-  &__emote {
-    max-height: 18px;
-    max-width: 18px;
-  }
-
-  &__name {
-    color: #ff369b;
-    font-weight: 700;
-  }
-}
-</style>

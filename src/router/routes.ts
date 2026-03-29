@@ -2,8 +2,6 @@ import type { RouteRecordRaw } from 'vue-router';
 import AdView from '@/views/AdView.vue';
 import BskyPostsView from '@/views/BskyPostsView.vue';
 import BottomBarView from '@/views/BottomBarView.vue';
-import CitiesSkylinesIIChatView from '@/views/CitiesSkylinesIIChatView.vue';
-import CoworkingView from '@/views/CoworkingView.vue';
 import DeathCounterView from '@/views/DeathCounterView.vue';
 import GigantifiedEmoteView from '@/views/GigantifiedEmoteView.vue';
 import IntermissionView from '@/views/IntermissionView.vue';
@@ -35,16 +33,6 @@ export const routes: RouteRecordRaw[] = [
     component: BskyPostsView,
     name: 'Bluesky Posts Component',
     path: '/bsky-posts',
-  },
-  {
-    component: CitiesSkylinesIIChatView,
-    name: 'Cities Skylines II Chat Component',
-    path: '/cities-skylines-ii-chat',
-  },
-  {
-    component: CoworkingView,
-    name: 'Coworking Component',
-    path: '/coworking',
   },
   {
     component: DeathCounterView,

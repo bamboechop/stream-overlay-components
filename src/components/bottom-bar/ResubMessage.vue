@@ -1,22 +1,21 @@
 <template>
   <li
-    ref="messageElement"
-    class="resub-message"
+    class="bg-[rgba(255,172,18,0.05)] border border-[#ffac12] border-b-0 rounded-t-lg bottom-0 text-white font-geist-mono font-semibold max-w-[656px] min-w-fit pt-[5px] absolute right-0 transition-transform duration-400 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] w-max after:bg-[rgba(17,17,17,.7)] after:rounded-t-lg after:bottom-0 after:content-[''] after:left-0 after:absolute after:right-0 after:top-0 after:-z-1"
     :style="{ transform: transformStyle }">
     <img
       alt=""
-      class="resub-message__avatar"
+      class="aspect-square bottom-0 h-16 -left-4 absolute w-16"
       src="/toastys/resub-bot.png"
       />
-      <div class="resub-message__content">
-        <strong class="resub-message__name">{{ displayName }}</strong>
+      <div class="pl-[52px] pr-1 w-full">
+        <strong class="resub-message-name">{{ displayName }}</strong>
         <template v-if="userName && displayName?.toLowerCase() !== userName.toLowerCase()">
-          <span class="resub-message__username"> ({{ userName }})</span>
+          <span class="text-xs"> ({{ userName }})</span>
         </template>
         pflegt seit {{ cumulativeMonths ? cumulativeMonths : months }} Monaten den Garten!
         <img
           :alt="COZY_EMOTE?.name"
-          class="resub-message__emote"
+          class="max-h-[18px] max-w-[18px]"
           :src="COZY_EMOTE?.url" />
         <div class="resub-message__text">
           <template
@@ -28,7 +27,7 @@
             <template v-if="part.type === 'emote'">
               <img
                 :alt="part.raw"
-                class="resub-message__emote"
+                class="max-h-[18px] max-w-[18px]"
                 :src="part.value" />
             </template>
           </template>
@@ -70,69 +69,8 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped>
-.resub-message {
-  background-color: rgba(255, 172, 18, 0.05);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border: 1px solid #ffac12;
-  border-bottom: none;
-  bottom: 0;
-  color: #fff;
-  font-family: 'Geist Mono', monospace;
-  font-weight: 600;
-  max-width: 656px;
-  min-width: fit-content;
-  padding-top: 5px;
-  position: absolute;
-  right: 0;
-  transition: transform 400ms ease;
-  width: max-content;
-
-  &::after {
-    background: rgba(17,17,17,.7);
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    bottom: 0;
-    content: '';
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: -1;
-  }
-
-  &__avatar {
-    aspect-ratio: 1 / 1;
-    bottom: 0;
-    height: 64px;
-    left: -16px;
-    position: absolute;
-    width: 64px;
-  }
-
-  &__badge {
-    height: 18px;
-    width: 18px;
-  }
-
-  &__content {
-    padding-left: 52px;
-    padding-right: 4px;
-    width: 100%;
-  }
-
-  &__emote {
-    max-height: 18px;
-    max-width: 18px;
-  }
-
-  &__name {
-    color: v-bind(color);
-  }
-
-  &__username {
-    font-size: 12px;
-  }
+<style scoped>
+.resub-message-name {
+  color: v-bind(color);
 }
 </style>

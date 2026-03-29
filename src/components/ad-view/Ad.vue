@@ -2,29 +2,29 @@
   <div>
     <div
       v-if="debug"
-      class="debug-controls">
+      class="flex gap-2 fixed right-2.5 top-2.5 z-9999">
       <button
-        class="debug-button"
+        class="bg-blue-950 border-0 rounded-sm text-white text-sm py-2 px-3 transition-colors hover:bg-blue-800"
         @click="triggerDebugCountdown">
         Debug: 1min Countdown
       </button>
       <button
-        class="debug-button"
+        class="bg-blue-950 border-0 rounded-sm text-white text-sm py-2 px-3 transition-colors hover:bg-blue-800"
         @click="triggerDebugAd">
         Debug: 30s Ad
       </button>
     </div>
     <WindowFrame
-      class="ad-window"
-      :class="{ 'ad-window--visible': diffInSeconds < 10 * 60 && diffInSeconds >= 0 }"
+      class="ad-window bg-white/75 rounded-none rounded-r-lg border! border-l-0! bottom-0 overflow-hidden fixed! transition-[left]! duration-500 ease-in-out w-full before:bg-[#1e4e00] before:bottom-0 before:content-[''] before:left-0 before:opacity-0 before:absolute before:right-0 before:transition-opacity before:duration-300 before:ease-[cubic-bezier(0.25,0.1,0.25,1.0)] before:top-0 before:origin-left before:w-full before:-z-1"
+      :class="diffInSeconds < 10 * 60 && diffInSeconds >= 0 ? 'left-0' : '-left-[105%]'"
       :style="duration > 0 ? { '--duration': `${duration}s` } : {}">
-      <div class="ad">
+      <div class="flex flex-col items-center justify-center gap-1 py-2 px-4 min-h-14">
         <template v-if="diffInSeconds > 0">
-          <span class="ad__text">
+          <span class="text-sm leading-none">
             Nächste geplante Werbepause in
           </span>
         </template>
-        <span class="ad__time">
+        <span class="text-xl leading-none font-semibold tabular-nums">
           {{ remainingTime }}
         </span>
       </div>
@@ -41,6 +41,8 @@ import { useStreamStatusStore } from '@/stores/stream-status.store';
 import { useSearchParamsComposable } from '@/composables/search-params.composable';
 
 const { debug } = useSearchParamsComposable();
+
+const DEBUG_AD_DURATION_SECONDS = 30;
 
 const streamStatusStore = useStreamStatusStore();
 const { live } = storeToRefs(streamStatusStore);
@@ -185,19 +187,17 @@ function triggerDebugCountdown() {
 function triggerDebugAd() {
   // Simulate ad break by directly setting store values
   isAdRunning.value = true;
-  adDuration.value = 180;
-  
-  // Set timeout to mark ad as finished after duration
+  adDuration.value = DEBUG_AD_DURATION_SECONDS;
+
+  // Clear store when the simulated ad ends (same duration as watcher / adDuration)
   window.setTimeout(() => {
     isAdRunning.value = false;
     adDuration.value = 0;
-  }, 180 * 1000);
+  }, DEBUG_AD_DURATION_SECONDS * 1000);
 }
 </script>
 
-<style lang="scss" scoped>
-@import '@/assets/modern.variables';
-
+<style scoped>
 @keyframes decreaseWidth {
   from {
     transform: scaleX(1);
@@ -207,86 +207,17 @@ function triggerDebugAd() {
   }
 }
 
-.ad {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  row-gap: 4px;
-  padding: $window-frame-padding * 2 $window-frame-padding * 4;
-
-  &__text {
-    font-size: 14px;
-  }
-
-  &__time {
-    font-size: 20px;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-}
-
 .ad-window {
-  background-color: rgba(255, 255, 255, 0.75);
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-  border-width: 1px;
-  bottom: 0;
-  left: -105%;
-  overflow: hidden;
-  position: fixed;
-  transition: left .5s ease-in-out;
-  width: 100%;
-
   &::before {
     animation: none;
-    background-color: #1e4e00;
-    bottom: 0;
-    content: '';
-    left: 0;
-    opacity: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transform-origin: left;
-    width: 100%;
-    z-index: -1;
-    transition: opacity 0.3s ease;
+    will-change: transform;
   }
 
   &[style*="--duration"] {
     &::before {
       animation: decreaseWidth var(--duration) linear forwards;
-      will-change: transform;
       opacity: 0.5;
     }
-  }
-}
-
-.ad-window--visible {
-  left: 0;
-}
-
-.debug-controls {
-  display: flex;
-  gap: 8px;
-  position: fixed;
-  right: 10px;
-  top: 10px;
-  z-index: 9999;
-}
-
-.debug-button {
-  background: #040079;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 8px 12px;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background: lighten(#040079, 10%);
   }
 }
 </style>
