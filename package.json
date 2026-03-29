@@ -22,7 +22,7 @@
     "lucide-vue-next": "^0.577.0",
     "obs-websocket-js": "^5.0.8",
     "pinia": "^3.0.4",
-    "pinia-shared-state": "^1.0.1",
+    "pinia-shared-state": "^2.0.1",
     "tailwindcss": "^4.2.2",
     "tmi-utils": "^1.0.1",
     "tmi.js": "^1.8.5",
