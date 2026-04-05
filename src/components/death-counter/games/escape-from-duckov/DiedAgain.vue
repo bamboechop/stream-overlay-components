@@ -8,6 +8,5 @@
 </template>
 
 <script setup lang="ts">
-import { BadgeQuestionMark } from 'lucide-vue-next';
-
+import { BadgeQuestionMark } from '@lucide/vue';
 </script>

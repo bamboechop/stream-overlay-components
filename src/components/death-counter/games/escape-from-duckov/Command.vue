@@ -8,6 +8,5 @@
 </template>
 
 <script setup lang="ts">
-import { CircleAlert } from 'lucide-vue-next';
-
+import { CircleAlert } from '@lucide/vue';
 </script>

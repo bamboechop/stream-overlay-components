@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Maximize, Minimize, X } from 'lucide-vue-next';
+import { Maximize, Minimize, X } from '@lucide/vue';
 
 const { active = false, iconPath, title } = defineProps<{ active?: boolean; iconPath?: string; title?: string }>();
 </script>

@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Skull } from 'lucide-vue-next';
+import { Skull } from '@lucide/vue';
 import Command from './escape-from-duckov/Command.vue';
 import DiedAgain from './escape-from-duckov/DiedAgain.vue';
 

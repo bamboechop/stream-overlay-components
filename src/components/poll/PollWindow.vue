@@ -45,7 +45,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { Square, SquareCheckBig, Timer, Users } from 'lucide-vue-next';
+import { Square, SquareCheckBig, Timer, Users } from '@lucide/vue';
 import PollOption from './PollOption.vue';
 import { useEventStreamComposable } from '@/composables/event-stream.composable';
 import type {

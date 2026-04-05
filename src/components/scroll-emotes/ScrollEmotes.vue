@@ -54,7 +54,7 @@
 
 <script lang="ts" setup>
 import { nextTick, onMounted, onUnmounted, ref } from 'vue';
-import { Heart, Star } from 'lucide-vue-next';
+import { Heart, Star } from '@lucide/vue';
 import { EMOTES } from '@/common/constants/emotes.constant';
 import { useApplicationStore } from '@/stores/application.store';
 import { storeToRefs } from 'pinia';
