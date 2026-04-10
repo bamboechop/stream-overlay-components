@@ -1,6 +1,6 @@
 <template>
   <li
-    class="bg-[rgba(255,223,18,0.075)] border border-[#ffdf12] border-b-0 rounded-t-lg bottom-0 text-white font-geist-mono font-semibold max-w-[656px] min-w-fit pt-[5px] absolute right-0 transition-transform duration-400 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] w-max after:bg-[rgba(17,17,17,.7)] after:rounded-t-lg after:bottom-0 after:content-[''] after:left-0 after:absolute after:right-0 after:top-0 after:-z-1"
+    class="bg-[rgba(255,223,18,0.075)] border border-[#ffdf12] border-b-0 rounded-t-lg bottom-0 text-white font-geist-mono font-semibold max-w-[656px] max-h-full min-w-fit pt-[5px] absolute right-0 transition-transform duration-400 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] w-max after:bg-[rgba(17,17,17,.7)] after:rounded-t-lg after:bottom-0 after:content-[''] after:left-0 after:absolute after:right-0 after:top-0 after:-z-1"
     :style="{ transform: transformStyle }">
     <img
       alt=""
@@ -15,7 +15,7 @@
         hat einen Kirschbaum gepflanzt und das Gleichgewicht gestärkt.
         <img
           :alt="COZY_EMOTE?.name"
-          class="max-h-[18px] max-w-[18px]"
+          class="max-h-5 max-w-5 inline-block"
           :src="COZY_EMOTE?.url" />
       </div>
   </li>
