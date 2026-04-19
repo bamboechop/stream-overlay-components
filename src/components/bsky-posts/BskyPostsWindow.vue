@@ -4,7 +4,7 @@
       :active
       class="w-full opacity-100 transition-opacity duration-500 ease-in-out"
       :class="{ 
-        'opacity-0': intermissionVideoPlaying
+        'opacity-0!': intermissionVideoPlaying
       }">
       <div
         class="bg-white grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden min-w-0"
